@@ -26,19 +26,8 @@ export default function App() {
   const { user, profile, localCredits, loading: authLoading, login, logout } = useAuth();
 
   useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        const res = await fetch('/api/health');
-        if (res.ok) {
-          setServerStatus('ok');
-        } else {
-          setServerStatus('error');
-        }
-      } catch (e) {
-        setServerStatus('error');
-      }
-    };
-    checkHealth();
+    // Health check not needed for frontend-only Vite app using Gemini API
+    setServerStatus('ok');
 
     // Handle payment callbacks
     const params = new URLSearchParams(window.location.search);

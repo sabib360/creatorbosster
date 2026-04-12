@@ -10,7 +10,7 @@ declare global {
 }
 
 // @ts-ignore
-const apiKey = process.env.GEMINI_API_KEY || '';
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
 export interface CTRAnalysis {
@@ -177,7 +177,7 @@ export async function generateVideo(prompt: string): Promise<string> {
     }
   }
 
-  const videoApiKey = process.env.GEMINI_API_KEY || '';
+  const videoApiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
   const aiInstance = new GoogleGenAI({ apiKey: videoApiKey });
 
   let operation = await aiInstance.models.generateVideos({
@@ -200,7 +200,7 @@ export async function generateVideo(prompt: string): Promise<string> {
     throw new Error("Failed to generate video.");
   }
 
-  const fetchApiKey = process.env.GEMINI_API_KEY || '';
+  const fetchApiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
   const response = await fetch(downloadLink, {
     method: 'GET',
     headers: {
