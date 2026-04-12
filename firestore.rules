@@ -1,0 +1,120 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: users
+// Document ID: {userId}
+// Fields:
+//   - email: string (required, max 100)
+//   - displayName: string (optional, max 100)
+//   - photoURL: string (optional, max 500)
+//   - credits_remaining: number (required, positive)
+//   - credits_reset_date: string (optional, ISO8601)
+//   - plan_id: string (required, enum: ['free', 'premium', 'pro', 'agency'])
+//   - role: string (optional, enum: ['user', 'admin'])
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "sabibahamed2@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['email', 'credits_remaining', 'plan_id']) &&
+             data.email is string &&
+             data.credits_remaining is number &&
+             data.plan_id in ['free', 'premium', 'pro', 'agency'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Users can only create their own profile with 'free' plan and default credits
+      allow create: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data) &&
+                    request.resource.data.plan_id == 'free' &&
+                    request.resource.data.credits_remaining == 3 &&
+                    (!('role' in request.resource.data) || request.resource.data.role == 'user');
+      
+      // Users can update their profile and their credits (usage or ads)
+      allow update: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data) &&
+                    request.resource.data.plan_id == resource.data.plan_id &&
+                    request.resource.data.role == resource.data.role &&
+                    (
+                      // Allow credit deduction (usage)
+                      request.resource.data.credits_remaining == resource.data.credits_remaining - 1 ||
+                      // Allow credit addition (ads)
+                      request.resource.data.credits_remaining == resource.data.credits_remaining + 1 ||
+                      // Allow no change to credits
+                      request.resource.data.credits_remaining == resource.data.credits_remaining
+                    );
+                    
+      // Admins have full power
+      allow write: if isAdmin();
+    }
+
+    match /subscriptions/{subscriptionId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /subscription_usage/{usageId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /history/{historyId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    match /designs/{designId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+
+    match /test_connection/{docId} {
+      allow read, write: if true;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

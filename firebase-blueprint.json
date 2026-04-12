@@ -1,0 +1,121 @@
+{
+  "entities": {
+    "users": {
+      "title": "User",
+      "description": "User profile and credit information",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "credits_remaining": { "type": "number" },
+        "credits_reset_date": { "type": "string", "format": "date-time" },
+        "plan_id": { "type": "string", "enum": ["free", "premium", "pro", "agency"] },
+        "role": { "type": "string", "enum": ["user", "admin"] }
+      },
+      "required": ["email", "credits_remaining", "plan_id"]
+    },
+    "subscriptions": {
+      "title": "Subscription",
+      "description": "User subscription details",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "plan_id": { "type": "string", "enum": ["free", "premium", "pro", "agency"] },
+        "billing_period": { "type": "string", "enum": ["monthly", "yearly"] },
+        "amount": { "type": "number" },
+        "currency": { "type": "string" },
+        "payment_method": { "type": "string" },
+        "transaction_id": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "cancelled", "expired", "past_due"] },
+        "current_period_start": { "type": "string", "format": "date-time" },
+        "current_period_end": { "type": "string", "format": "date-time" },
+        "cancel_at_period_end": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "plan_id", "status", "current_period_end"]
+    },
+    "payments": {
+      "title": "Payment",
+      "description": "Payment transaction logs",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "plan_id": { "type": "string" },
+        "amount": { "type": "number" },
+        "currency": { "type": "string" },
+        "method": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "success", "failed", "cancelled"] },
+        "gateway_txn_id": { "type": "string" },
+        "tran_id": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "plan_id", "amount", "status", "tran_id"]
+    },
+    "subscription_usage": {
+      "title": "Subscription Usage",
+      "description": "Usage tracking for a specific subscription period",
+      "type": "object",
+      "properties": {
+        "subscriptionId": { "type": "string" },
+        "credits_used": { "type": "number" },
+        "period_start": { "type": "string", "format": "date-time" },
+        "period_end": { "type": "string", "format": "date-time" }
+      },
+      "required": ["subscriptionId", "credits_used", "period_start"]
+    },
+    "history": {
+      "title": "History",
+      "description": "User generation history",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "topic": { "type": "string" },
+        "results": { "type": "object" },
+        "thumbnails": { "type": "array" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["userId", "topic", "createdAt"]
+    },
+    "designs": {
+      "title": "Saved Design",
+      "description": "User created thumbnail designs",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "state": { "type": "string" },
+        "preview": { "type": "string" },
+        "timestamp": { "type": "object" }
+      },
+      "required": ["userId", "name", "state", "preview"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "users",
+      "description": "User profile data"
+    },
+    "/subscriptions/{subscriptionId}": {
+      "schema": "subscriptions",
+      "description": "Subscription records"
+    },
+    "/payments/{paymentId}": {
+      "schema": "payments",
+      "description": "Payment transaction records"
+    },
+    "/subscription_usage/{usageId}": {
+      "schema": "subscription_usage",
+      "description": "Usage tracking records"
+    },
+    "/history/{historyId}": {
+      "schema": "history",
+      "description": "User generation history records"
+    },
+    "/designs/{designId}": {
+      "schema": "designs",
+      "description": "User saved designs"
+    }
+  }
+}
