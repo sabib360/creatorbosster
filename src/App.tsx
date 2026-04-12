@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, Youtube, Search, CreditCard, Menu, X, Sparkles, Zap, Image as ImageIcon, History, AlertCircle, LogIn, LogOut, User, Settings } from 'lucide-react';
+import { LayoutDashboard, Youtube, Search, CreditCard, Menu, X, Sparkles, Zap, Image as ImageIcon, History, AlertCircle, LogIn, LogOut, User, Settings, Shield, Mail } from 'lucide-react';
 import { cn } from './lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './hooks/useAuth';
@@ -12,11 +12,13 @@ import AdBlockerDetector from './components/AdBlockerDetector';
 import GoogleAdSense from './components/GoogleAdSense';
 import { ThemeToggle } from './components/ThemeToggle';
 import TutorialOverlay from './components/TutorialOverlay';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import ContactUs from './components/ContactUs';
 import { PlanId } from './config/pricing';
 
 import AdminDashboard from './components/admin/AdminDashboard';
 
-type View = 'generator' | 'competitor' | 'history' | 'admin';
+type View = 'generator' | 'competitor' | 'history' | 'admin' | 'privacy-policy' | 'contact-us';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('generator');
@@ -48,6 +50,11 @@ export default function App() {
     { id: 'history', label: 'History', icon: History, color: 'bg-quaternary' },
     { id: 'competitor', label: 'Competitor Analysis', icon: Search, color: 'bg-secondary' },
     ...(profile?.role === 'admin' ? [{ id: 'admin', label: 'Admin Panel', icon: Settings, color: 'bg-primary' }] : []),
+  ] as const;
+
+  const footerLinks = [
+    { id: 'privacy-policy', label: 'Privacy Policy', icon: Shield },
+    { id: 'contact-us', label: 'Contact Us', icon: Mail },
   ] as const;
 
   if (user && profile?.role === 'admin' && currentView === 'admin') {
@@ -220,10 +227,29 @@ export default function App() {
               {currentView === 'generator' && <Generator />}
               {currentView === 'history' && <HistoryTab />}
               {currentView === 'competitor' && <Competitor />}
+              {currentView === 'privacy-policy' && <PrivacyPolicy />}
+              {currentView === 'contact-us' && <ContactUs />}
             </div>
             
-            <div className="mt-20 pt-10 border-t border-slate-800/50">
+            <div className="mt-20 pt-10 border-t border-slate-800/50 space-y-8">
               <AdBanner slot="4567890123" format="rectangle" />
+              
+              {/* Footer Links */}
+              <div className="flex flex-wrap justify-center gap-4 pt-4">
+                {footerLinks.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => {
+                      setCurrentView(link.id as View);
+                      window.scrollTo(0, 0);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-black uppercase tracking-widest text-ink/60 hover:text-primary transition-colors"
+                  >
+                    <link.icon className="w-4 h-4" />
+                    {link.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
