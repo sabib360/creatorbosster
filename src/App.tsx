@@ -14,11 +14,12 @@ import { ThemeToggle } from './components/ThemeToggle';
 import TutorialOverlay from './components/TutorialOverlay';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import ContactUs from './components/ContactUs';
+import Blog from './components/Blog';
 import { PlanId } from './config/pricing';
 
 import AdminDashboard from './components/admin/AdminDashboard';
 
-type View = 'generator' | 'competitor' | 'history' | 'admin' | 'privacy-policy' | 'contact-us';
+type View = 'generator' | 'competitor' | 'history' | 'admin' | 'privacy-policy' | 'contact-us' | 'blog';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('generator');
@@ -49,6 +50,7 @@ export default function App() {
     { id: 'generator', label: 'AI Generator', icon: Sparkles, color: 'bg-primary' },
     { id: 'history', label: 'History', icon: History, color: 'bg-quaternary' },
     { id: 'competitor', label: 'Competitor Analysis', icon: Search, color: 'bg-secondary' },
+    { id: 'blog', label: 'Blog', icon: Mail, color: 'bg-secondary' },
     ...(profile?.role === 'admin' ? [{ id: 'admin', label: 'Admin Panel', icon: Settings, color: 'bg-primary' }] : []),
   ] as const;
 
@@ -227,6 +229,7 @@ export default function App() {
               {currentView === 'generator' && <Generator />}
               {currentView === 'history' && <HistoryTab />}
               {currentView === 'competitor' && <Competitor />}
+              {currentView === 'blog' && <Blog onNavigate={setCurrentView} />}
               {currentView === 'privacy-policy' && <PrivacyPolicy />}
               {currentView === 'contact-us' && <ContactUs />}
             </div>
