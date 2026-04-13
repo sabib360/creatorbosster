@@ -363,10 +363,10 @@ export default function Generator() {
       >
         <div className="absolute -left-4 top-0 w-1 h-12 bg-primary rounded-full hidden md:block" />
         <h1 className="text-4xl md:text-7xl font-display font-black uppercase tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-ink via-ink/80 to-ink/50">
-          AI Generator
+          Free YouTube Title & Thumbnail Generator
         </h1>
         <p className="text-lg md:text-xl font-medium text-ink/70 max-w-2xl">
-          Generate viral titles, thumbnails, and descriptions for your next video using advanced AI.
+          AI-powered YouTube title generator & thumbnail maker. Generate viral titles, professional thumbnails, and engaging descriptions in seconds. Increase CTR & views.
         </p>
       </motion.div>
 
@@ -395,7 +395,7 @@ export default function Generator() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         <label htmlFor="topic" className="block text-sm font-display font-black uppercase tracking-widest mb-4 text-primary">
-          What is your video about?
+          Enter Your Video Topic (YouTube Title Generator & Thumbnail Maker)
         </label>
         <div className="flex flex-col md:flex-row gap-4 relative">
           <div className="flex-1 relative">
@@ -404,7 +404,7 @@ export default function Generator() {
               type="text"
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              placeholder="e.g., How to earn money with AI in 2026"
+              placeholder="e.g., How to earn money with AI - YouTube title generator for viral videos"
               className="w-full px-6 py-5 bg-slate-950/50 brutal-border border-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-lg rounded-2xl outline-none placeholder:text-slate-600"
               required
             />
@@ -439,14 +439,14 @@ export default function Generator() {
             {/* Tabs */}
             <div className="flex overflow-x-auto border-b border-slate-800 p-4 gap-3 bg-slate-950/50 scrollbar-hide">
               {[
-                { id: 'titles', label: 'Titles', icon: Type, color: 'bg-primary' },
-                { id: 'thumbnails', label: 'Thumbnail Text', icon: Type, color: 'bg-tertiary' },
-                { id: 'hooks', label: 'Hooks', icon: MessageSquare, color: 'bg-secondary' },
-                { id: 'ideas', label: 'Thumbnail Ideas', icon: ImageIcon, color: 'bg-quaternary' },
+                { id: 'titles', label: 'YouTube Titles', icon: Type, color: 'bg-primary' },
+                { id: 'thumbnails', label: 'AI Thumbnail Text', icon: Type, color: 'bg-tertiary' },
+                { id: 'hooks', label: 'Video Hooks', icon: MessageSquare, color: 'bg-secondary' },
+                { id: 'ideas', label: 'Thumbnail Maker', icon: ImageIcon, color: 'bg-quaternary' },
                 { id: 'description', label: 'Description', icon: FileText, color: 'bg-quinary' },
                 { id: 'tags', label: 'Tags', icon: Hash, color: 'bg-surface' },
-                { id: 'analytics', label: 'Analytics', icon: BarChart3, color: 'bg-primary' },
-                { id: 'video', label: 'Video', icon: Video, color: 'bg-primary' },
+                { id: 'analytics', label: 'CTR Analytics', icon: BarChart3, color: 'bg-primary' },
+                { id: 'video', label: 'Video Gen', icon: Video, color: 'bg-primary' },
               ].map((tab) => (
                 <button
                   key={tab.id}

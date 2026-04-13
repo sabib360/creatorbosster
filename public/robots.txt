@@ -1,0 +1,32 @@
+# robots.txt for Creator Booster
+User-agent: *
+Allow: /
+Allow: /blog/
+Allow: /blog/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /.env
+
+# Slow down aggressive crawlers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Allow Google and Bing
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap location
+Sitemap: https://creatorbooster.co/sitemap.xml
+Sitemap: https://creatorbooster.co/blog-sitemap.xml
+
+# Crawl delay (optional)
+Request-rate: 1 request per 1 second

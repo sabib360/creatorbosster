@@ -38,8 +38,8 @@ export default function Pricing({ onSelectPlan }: { onSelectPlan?: (planId: Plan
       {/* Region & Billing Toggles */}
       <div className="flex flex-col items-center gap-10 sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl py-10 border-b border-slate-800/50">
         <div className="text-center space-y-4">
-          <h2 className="text-4xl md:text-6xl font-display font-black uppercase tracking-tighter text-ink">Choose Your Plan</h2>
-          <p className="text-ink/40 font-medium max-w-md mx-auto">Scale your content creation with AI-powered tools designed for growth.</p>
+          <h2 className="text-4xl md:text-6xl font-display font-black uppercase tracking-tighter text-ink">Premium YouTube Title & Thumbnail Plans</h2>
+          <p className="text-ink/40 font-medium max-w-md mx-auto">Unlock unlimited AI thumbnail generator & YouTube title generator credits. Scale your content with professional tools.</p>
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-6">

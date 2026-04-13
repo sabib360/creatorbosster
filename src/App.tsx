@@ -47,7 +47,7 @@ export default function App() {
   }, []);
 
   const navItems = [
-    { id: 'generator', label: 'AI Generator', icon: Sparkles, color: 'bg-primary' },
+    { id: 'generator', label: 'Title & Thumbnail Generator', icon: Sparkles, color: 'bg-primary' },
     { id: 'history', label: 'History', icon: History, color: 'bg-quaternary' },
     { id: 'competitor', label: 'Competitor Analysis', icon: Search, color: 'bg-secondary' },
     { id: 'blog', label: 'Blog', icon: Mail, color: 'bg-secondary' },

@@ -15,8 +15,8 @@ interface BlogArticle {
 const blogArticles: BlogArticle[] = [
   {
     id: 'viral-titles-ai',
-    title: 'How to Generate Viral Titles with AI',
-    excerpt: 'Learn the secrets of creating click-worthy yet accurate titles that boost your video engagement using AI technology.',
+    title: 'How to Generate Viral YouTube Titles with AI - YouTube Title Generator Guide',
+    excerpt: 'Learn the secrets of creating click-worthy yet accurate YouTube titles using our AI-powered YouTube title generator. Boost your video engagement and CTR.',
     author: 'Creator Booster AI',
     date: 'April 12, 2026',
     readTime: '4 min read',

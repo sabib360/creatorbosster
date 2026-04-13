@@ -70,10 +70,10 @@ export default function Competitor() {
         animate={{ opacity: 1, y: 0 }}
       >
         <h1 className="text-4xl md:text-7xl font-display font-black uppercase tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-ink via-ink/80 to-ink/50">
-          Competitor Analysis
+          YouTube Title & Thumbnail Competitor Analysis
         </h1>
         <p className="text-lg font-medium text-ink/70 border-l-4 border-secondary pl-4">
-          Paste a competitor's video title to get better alternatives and CTR tips.
+          Analyze competitor YouTube titles, get better alternatives powered by AI, and discover CTR optimization tips for thumbnails.
         </p>
       </motion.div>
 
