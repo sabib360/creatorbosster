@@ -5,7 +5,7 @@ import { analyzeCompetitor, type CompetitorAnalysis } from '../lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import { useCredits } from '../hooks/useCredits';
-import AdBanner from './AdBanner';
+
 import RewardedAdModal from './ads/RewardedAdModal';
 import ErrorState from './ErrorState';
 
@@ -121,7 +121,7 @@ export default function Competitor() {
         </div>
       </form>
 
-      <AdBanner className="h-24 opacity-50 grayscale hover:opacity-100 transition-all" />
+
 
       <AnimatePresence mode="wait">
         {results && (

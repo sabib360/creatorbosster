@@ -7,7 +7,7 @@ import { useCredits } from '../hooks/useCredits';
 import { useAuth } from '../hooks/useAuth';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import AdBanner from './AdBanner';
+
 import NativeAd from './NativeAd';
 import ThumbnailEditor from './ThumbnailEditor';
 import CreditDisplay from './CreditDisplay';
@@ -513,7 +513,7 @@ export default function Generator() {
         </div>
       </form>
 
-      <AdBanner slot="1234567890" format="auto" />
+
 
       <AnimatePresence mode="wait">
         {results && (
@@ -622,7 +622,7 @@ export default function Generator() {
                   </div>
                   
                   <div className="pt-4 border-t-4 border-outline">
-                    <AdBanner slot="2345678901" format="auto" />
+
                     <div className="text-center text-sm font-bold text-ink/60 mt-2">
                       🔥 <span className="text-primary">Upgrade to Premium</span> to remove ads & get unlimited generations
                     </div>
@@ -684,7 +684,7 @@ export default function Generator() {
                     )}
                   </div>
 
-                  <AdBanner slot="0987654321" format="fluid" layout="in-article" />
+
 
                   <div className="grid sm:grid-cols-2 gap-8">
                     {results.thumbnailIdeas.map((idea, i) => (

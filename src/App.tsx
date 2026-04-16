@@ -7,7 +7,6 @@ import Generator from './components/Generator';
 import Competitor from './components/Competitor';
 import Pricing from './components/Pricing';
 import HistoryTab from './components/HistoryTab';
-import AdBanner from './components/AdBanner';
 import AdBlockerDetector from './components/AdBlockerDetector';
 import GoogleAdSense from './components/GoogleAdSense';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -241,8 +240,6 @@ export default function App() {
             </div>
             
             <div className="mt-20 pt-10 border-t border-slate-800/50 space-y-8">
-              <AdBanner slot="4567890123" format="rectangle" />
-              
               {/* Footer Links */}
               <div className="flex flex-wrap justify-center gap-4 pt-4">
                 {footerLinks.map((link) => (
