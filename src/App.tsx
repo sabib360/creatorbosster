@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, Youtube, Search, CreditCard, Menu, X, Sparkles, Zap, Image as ImageIcon, History, AlertCircle, LogIn, LogOut, User, Settings, Shield, Mail } from 'lucide-react';
+import { LayoutDashboard, Youtube, Search, CreditCard, Menu, X, Sparkles, Zap, Image as ImageIcon, History, AlertCircle, LogIn, LogOut, User, Settings, Shield, Mail, FileText } from 'lucide-react';
 import { cn } from './lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './hooks/useAuth';
@@ -13,13 +13,15 @@ import GoogleAdSense from './components/GoogleAdSense';
 import { ThemeToggle } from './components/ThemeToggle';
 import TutorialOverlay from './components/TutorialOverlay';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
 import ContactUs from './components/ContactUs';
+import About from './components/About';
 import Blog from './components/Blog';
 import { PlanId } from './config/pricing';
 
 import AdminDashboard from './components/admin/AdminDashboard';
 
-type View = 'generator' | 'competitor' | 'history' | 'admin' | 'privacy-policy' | 'contact-us' | 'blog';
+type View = 'generator' | 'competitor' | 'history' | 'admin' | 'privacy-policy' | 'terms-of-service' | 'contact-us' | 'about' | 'blog';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('generator');
@@ -55,7 +57,9 @@ export default function App() {
   ] as const;
 
   const footerLinks = [
+    { id: 'about', label: 'About Us', icon: User },
     { id: 'privacy-policy', label: 'Privacy Policy', icon: Shield },
+    { id: 'terms-of-service', label: 'Terms of Service', icon: FileText },
     { id: 'contact-us', label: 'Contact Us', icon: Mail },
   ] as const;
 
@@ -67,7 +71,7 @@ export default function App() {
     <div className="flex h-screen bg-slate-950 overflow-hidden font-sans text-ink selection:bg-primary selection:text-black">
       <GoogleAdSense />
       <AdBlockerDetector />
-      <TutorialOverlay />
+      {/* <TutorialOverlay /> - Disabled: Tutorial overlay popup */}
       
       <AnimatePresence>
         {showSuccessToast && (
@@ -230,7 +234,9 @@ export default function App() {
               {currentView === 'history' && <HistoryTab />}
               {currentView === 'competitor' && <Competitor />}
               {currentView === 'blog' && <Blog onNavigate={setCurrentView} />}
+              {currentView === 'about' && <About />}
               {currentView === 'privacy-policy' && <PrivacyPolicy />}
+              {currentView === 'terms-of-service' && <TermsOfService />}
               {currentView === 'contact-us' && <ContactUs />}
             </div>
             

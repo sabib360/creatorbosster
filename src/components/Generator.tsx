@@ -370,6 +370,92 @@ export default function Generator() {
         </p>
       </motion.div>
 
+      {/* Homepage Description - Only show when no results */}
+      {!results && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="rounded-2xl border border-slate-800/50 bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950/50 backdrop-blur-xl p-6 md:p-8 space-y-6"
+        >
+          <div className="space-y-4">
+            <h2 className="text-2xl md:text-3xl font-display font-black uppercase tracking-tight text-primary flex items-center gap-3">
+              <Sparkles className="w-6 h-6" />
+              Why Creator Booster AI?
+            </h2>
+            
+            <div className="space-y-4 text-ink/80 leading-relaxed text-base md:text-lg">
+              <p>
+                <strong className="text-ink">YouTube content creation is harder than ever.</strong> With millions of creators competing for attention, your titles, thumbnails, and descriptions need to be exceptional. Most creators waste hours brainstorming, designing, and optimizing—only to get mediocre results.
+              </p>
+              
+              <p>
+                <strong className="text-primary">Creator Booster AI changes everything.</strong> Our AI-powered platform generates viral YouTube titles, SEO-optimized descriptions, and professional thumbnail concepts in seconds. We analyze patterns from millions of successful videos to understand what actually works.
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-4 my-6">
+                <div className="p-4 bg-primary/10 border border-primary/30 rounded-xl">
+                  <div className="flex items-start gap-3">
+                    <TrendingUp className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+                    <div>
+                      <div className="font-display font-bold text-sm uppercase tracking-wide text-primary">30% Higher CTR</div>
+                      <p className="text-sm text-ink/70 mt-1">AI-optimized titles get 30%+ more clicks than manual titles</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-secondary/10 border border-secondary/30 rounded-xl">
+                  <div className="flex items-start gap-3">
+                    <Target className="w-5 h-5 text-secondary flex-shrink-0 mt-1" />
+                    <div>
+                      <div className="font-display font-bold text-sm uppercase tracking-wide text-secondary">Keywords Built-In</div>
+                      <p className="text-sm text-ink/70 mt-1">Every title, description, and tag is SEO-optimized for YouTube search</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p>
+                <strong>How Creator Booster Helps YouTubers:</strong>
+              </p>
+              
+              <ul className="space-y-3 ml-4">
+                <li className="flex gap-3">
+                  <span className="text-primary font-bold">✓</span>
+                  <span><strong>Generate Viral Titles:</strong> Our AI creates 5-10 title variations using proven formulas (curiosity gaps, power words, keyword optimization). No more staring at a blank page wondering what will get clicks.</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-primary font-bold">✓</span>
+                  <span><strong>Design Thumbnail Concepts:</strong> Get visual inspiration for thumbnails optimized for CTR. Includes color psychology, composition tips, and text placement strategies.</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-primary font-bold">✓</span>
+                  <span><strong>Create SEO-Optimized Descriptions:</strong> Descriptions are more than filler—they're ranking factors. Our AI generates descriptions with natural keyword placement that boost visibility.</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-primary font-bold">✓</span>
+                  <span><strong>Analyze Competitor Performance:</strong> See what titles and thumbnails your competitors use and understand why they work. Learn from success instead of guessing.</span>
+                </li>
+              </ul>
+
+              <p className="border-l-4 border-primary pl-4 py-2 bg-primary/5 rounded-r">
+                <strong>The Result?</strong> YouTubers using Creator Booster see 3-5x more consistent results. Your titles get clicked more often. Your videos rank higher in search. Your subscribers grow faster. It's not magic—it's data-driven AI optimization.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-700/50 flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <div className="text-xs font-display font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-2">
+                <Lightbulb className="w-4 h-4" />
+                Pro Tip
+              </div>
+              <p className="text-sm text-ink/70">Try entering your video topic above to see 10+ title variations, thumbnail ideas, and SEO descriptions generated instantly.</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       <div className="relative z-10">
         <CreditDisplay id="credits-display" />
       </div>

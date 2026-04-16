@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default function GoogleAdSense({ publisherId = "ca-pub-YOUR_PUB_ID" }: { publisherId?: string }) {
+export default function GoogleAdSense({ publisherId = "ca-pub-2121336720951736" }: { publisherId?: string }) {
   useEffect(() => {
     // Prevent adding multiple scripts
     if (document.querySelector('script[src*="adsbygoogle.js"]')) return;
