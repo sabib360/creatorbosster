@@ -1,33 +1,53 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, Youtube, Search, CreditCard, Menu, X, Sparkles, Zap, Image as ImageIcon, History, AlertCircle, LogIn, LogOut, User, Settings, Shield, Mail, FileText } from 'lucide-react';
-import { cn } from './lib/utils';
+import { LayoutDashboard, Sparkles, Image as ImageIcon, FileText, Bot, Menu, X, Settings, Shield, Mail, File, Search, Zap, History, CreditCard, LogIn, LogOut, User, Palette } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './hooks/useAuth';
-import Generator from './components/Generator';
-import Competitor from './components/Competitor';
-import Pricing from './components/Pricing';
-import HistoryTab from './components/HistoryTab';
-import AdBlockerDetector from './components/AdBlockerDetector';
-import GoogleAdSense from './components/GoogleAdSense';
 import { ThemeToggle } from './components/ThemeToggle';
-import TutorialOverlay from './components/TutorialOverlay';
+import Dashboard from './components/Dashboard';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import AdBlockerDetector from './components/AdBlockerDetector';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import ContactUs from './components/ContactUs';
 import About from './components/About';
 import Blog from './components/Blog';
-import { PlanId } from './config/pricing';
+import BlogPost from './components/BlogPost';
+import ImageTools from './components/ImageTools';
+import PDFTools from './components/PDFTools';
+import AITools from './components/AITools';
+import ToolPage from './components/ToolPage';
+import ImageCompressor from './components/tools/ImageCompressor';
+import ImageResizer from './components/tools/ImageResizer';
+import ImageCropper from './components/tools/ImageCropper';
+import ImageRotator from './components/tools/ImageRotator';
+import PassportSizeTool from './components/tools/PassportSizeTool';
+import WatermarkTool from './components/tools/WatermarkTool';
+import ImageConverter from './components/tools/ImageConverter';
+import BulkCompressor from './components/tools/BulkCompressor';
+import TargetedCompression from './components/tools/TargetedCompression';
+import PDFMerger from './components/tools/PDFMerger';
+import PDFSplitter from './components/tools/PDFSplitter';
+import PDFRemover from './components/tools/PDFRemover';
+import PDFRotator from './components/tools/PDFRotator';
+import PDFConverter from './components/tools/PDFConverter';
+import PDFCompressor from './components/tools/PDFCompressor';
+import PDFToJPG from './components/tools/PDFToJPG';
+import JPGToPDF from './components/tools/JPGToPDF';
+import PDFSummarizer from './components/tools/PDFSummarizer';
+import BackgroundRemover from './components/tools/BackgroundRemover';
+import ImageAnalyzer from './components/tools/ImageAnalyzer';
+import AIAssistant from './components/tools/AIAssistant';
+import ThumbnailGenerator from './components/tools/ThumbnailGenerator';
 
-import AdminDashboard from './components/admin/AdminDashboard';
-
-type View = 'generator' | 'competitor' | 'history' | 'admin' | 'privacy-policy' | 'terms-of-service' | 'contact-us' | 'about' | 'blog';
+type View = 'dashboard' | 'image-tools' | 'pdf-tools' | 'ai-tools' | 'privacy-policy' | 'terms-of-service' | 'contact-us' | 'about' | 'blog';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<View>('generator');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [serverStatus, setServerStatus] = useState<'loading' | 'ok' | 'error'>('loading');
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const { user, profile, localCredits, loading: authLoading, login, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Health check not needed for frontend-only Vite app using Gemini API
@@ -37,40 +57,31 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const paymentStatus = params.get('payment');
     if (paymentStatus === 'success') {
-      setCurrentView('generator');
       setShowSuccessToast(true);
       window.history.replaceState({}, document.title, window.location.pathname);
     } else if (paymentStatus === 'failed') {
-      setCurrentView('pricing');
       alert("Payment failed. Please try again.");
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
 
   const navItems = [
-    { id: 'generator', label: 'Title & Thumbnail Generator', icon: Sparkles, color: 'bg-primary' },
-    { id: 'history', label: 'History', icon: History, color: 'bg-quaternary' },
-    { id: 'competitor', label: 'Competitor Analysis', icon: Search, color: 'bg-secondary' },
-    { id: 'blog', label: 'Blog', icon: Mail, color: 'bg-secondary' },
-    ...(profile?.role === 'admin' ? [{ id: 'admin', label: 'Admin Panel', icon: Settings, color: 'bg-primary' }] : []),
+    { id: 'dashboard', label: 'Home', icon: LayoutDashboard, path: '/' },
+    { id: 'image-tools', label: 'Image Tools', icon: ImageIcon, path: '/image-tools' },
+    { id: 'pdf-tools', label: 'PDF Tools', icon: FileText, path: '/pdf-tools' },
+    { id: 'ai-tools', label: 'AI Tools', icon: Bot, path: '/ai-tools' },
   ] as const;
 
   const footerLinks = [
-    { id: 'about', label: 'About Us', icon: User },
-    { id: 'privacy-policy', label: 'Privacy Policy', icon: Shield },
-    { id: 'terms-of-service', label: 'Terms of Service', icon: FileText },
-    { id: 'contact-us', label: 'Contact Us', icon: Mail },
+    { id: 'about', label: 'About Us', icon: User, path: '/about' },
+    { id: 'privacy-policy', label: 'Privacy Policy', icon: Shield, path: '/privacy-policy' },
+    { id: 'terms-of-service', label: 'Terms of Service', icon: FileText, path: '/terms-of-service' },
+    { id: 'contact-us', label: 'Contact Us', icon: Mail, path: '/contact-us' },
   ] as const;
-
-  if (user && profile?.role === 'admin' && currentView === 'admin') {
-    return <AdminDashboard />;
-  }
 
   return (
     <div className="flex h-screen bg-slate-950 overflow-hidden font-sans text-ink selection:bg-primary selection:text-black">
-      <GoogleAdSense />
       <AdBlockerDetector />
-      {/* <TutorialOverlay /> - Disabled: Tutorial overlay popup */}
       
       <AnimatePresence>
         {showSuccessToast && (
@@ -113,16 +124,13 @@ export default function App() {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside className={cn(
-        "fixed md:sticky top-0 left-0 h-screen w-80 bg-slate-950 border-r border-slate-800/50 z-[70] transform transition-transform duration-500 ease-in-out flex flex-col",
-        isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-      )}>
+      <aside className={`fixed md:sticky top-0 left-0 h-screen w-80 bg-slate-950 border-r border-slate-800/50 z-[70] transform transition-transform duration-500 ease-in-out flex flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
         <div className="p-8 flex items-center justify-between">
           <div className="flex items-center gap-3 font-display font-black text-2xl tracking-tighter uppercase text-ink">
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-              <Youtube className="w-6 h-6 text-black fill-black" />
+              <Sparkles className="w-6 h-6 text-black fill-black" />
             </div>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-ink to-ink/60">CreatorBoost</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-ink to-ink/60">CreatorBoost AI</span>
           </div>
           <button className="md:hidden p-2 bg-slate-900 rounded-xl border border-slate-800" onClick={() => setIsSidebarOpen(false)}>
             <X className="w-5 h-5 text-ink" />
@@ -136,19 +144,18 @@ export default function App() {
               key={item.id}
               id={`sidebar-${item.id}`}
               onClick={() => {
-                setCurrentView(item.id);
+                navigate(item.path);
                 setIsSidebarOpen(false);
               }}
-              className={cn(
-                "w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-display font-black uppercase tracking-widest transition-all duration-300 group",
-                currentView === item.id 
+              className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-display font-black uppercase tracking-widest transition-all duration-300 group ${
+                location.pathname === item.path 
                   ? "bg-slate-900 text-primary border border-slate-800 shadow-xl" 
                   : "text-ink/40 hover:text-ink hover:bg-slate-900/50"
-              )}
+              }`}
             >
-              <item.icon className={cn("w-5 h-5 transition-colors", currentView === item.id ? "text-primary" : "text-ink/20 group-hover:text-ink/40")} />
+              <item.icon className={`w-5 h-5 transition-colors ${location.pathname === item.path ? "text-primary" : "text-ink/20 group-hover:text-ink/40"}`} />
               <span>{item.label}</span>
-              {currentView === item.id && (
+              {location.pathname === item.path && (
                 <motion.div 
                   layoutId="active-nav"
                   className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]"
@@ -173,7 +180,7 @@ export default function App() {
             <p className="text-[9px] font-bold text-ink/40 uppercase tracking-wider">Resetting in 24h</p>
           </div>
 
-          {user && profile?.role === 'admin' && (
+          {user && (
             <div className="p-6 bg-slate-900/50 border border-slate-800 rounded-3xl">
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -185,8 +192,8 @@ export default function App() {
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-display font-black uppercase truncate text-ink">{profile?.displayName || 'Admin'}</div>
-                    <div className="text-[10px] font-black text-primary uppercase tracking-widest">Admin Access</div>
+                    <div className="text-sm font-display font-black uppercase truncate text-ink">{profile?.displayName || 'User'}</div>
+                    <div className="text-[10px] font-black text-primary uppercase tracking-widest">{profile?.role || 'User'}</div>
                   </div>
                 </div>
                 <button 
@@ -210,8 +217,8 @@ export default function App() {
               <Menu className="w-6 h-6 text-ink" />
             </button>
             <div className="flex items-center gap-2 font-display font-black text-xl uppercase tracking-tighter text-ink">
-              <Youtube className="w-7 h-7 text-primary fill-primary" />
-              <span>CreatorBoost</span>
+              <Sparkles className="w-7 h-7 text-primary fill-primary" />
+              <span>CreatorBoost AI</span>
             </div>
           </div>
           <ThemeToggle />
@@ -221,7 +228,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto flex flex-col min-h-full">
             {serverStatus === 'error' && (
               <div className="mb-10 p-5 bg-red-500/10 text-red-400 border border-red-500/20 rounded-2xl flex items-center gap-4 font-bold animate-in fade-in slide-in-from-top-4">
-                <AlertCircle className="w-6 h-6 shrink-0" />
+                <Search className="w-6 h-6 shrink-0" />
                 <span className="text-sm uppercase tracking-wide">Warning: Backend server is offline. Some features may be limited.</span>
               </div>
             )}
@@ -229,14 +236,48 @@ export default function App() {
               <ThemeToggle />
             </div>
             <div className="flex-1">
-              {currentView === 'generator' && <Generator />}
-              {currentView === 'history' && <HistoryTab />}
-              {currentView === 'competitor' && <Competitor />}
-              {currentView === 'blog' && <Blog onNavigate={setCurrentView} />}
-              {currentView === 'about' && <About />}
-              {currentView === 'privacy-policy' && <PrivacyPolicy />}
-              {currentView === 'terms-of-service' && <TermsOfService />}
-              {currentView === 'contact-us' && <ContactUs />}
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/image-tools" element={<ImageTools />} />
+                <Route path="/pdf-tools" element={<PDFTools />} />
+                <Route path="/ai-tools" element={<AITools />} />
+                
+                {/* Image Tools */}
+                <Route path="/tools/image-compressor" element={<ToolPage><ImageCompressor /></ToolPage>} />
+                <Route path="/tools/image-resizer" element={<ToolPage><ImageResizer /></ToolPage>} />
+                <Route path="/tools/image-cropper" element={<ToolPage><ImageCropper /></ToolPage>} />
+                <Route path="/tools/image-rotator" element={<ToolPage><ImageRotator /></ToolPage>} />
+                <Route path="/tools/passport-size" element={<ToolPage><PassportSizeTool /></ToolPage>} />
+                <Route path="/tools/watermark" element={<ToolPage><WatermarkTool /></ToolPage>} />
+                <Route path="/tools/image-converter" element={<ToolPage><ImageConverter /></ToolPage>} />
+                <Route path="/tools/bulk-compressor" element={<ToolPage><BulkCompressor /></ToolPage>} />
+                <Route path="/tools/targeted-compression" element={<ToolPage><TargetedCompression /></ToolPage>} />
+                
+                {/* PDF Tools */}
+                <Route path="/tools/pdf-merger" element={<ToolPage><PDFMerger /></ToolPage>} />
+                <Route path="/tools/pdf-splitter" element={<ToolPage><PDFSplitter /></ToolPage>} />
+                <Route path="/tools/pdf-remover" element={<ToolPage><PDFRemover /></ToolPage>} />
+                <Route path="/tools/pdf-rotator" element={<ToolPage><PDFRotator /></ToolPage>} />
+                <Route path="/tools/pdf-converter" element={<ToolPage><PDFConverter /></ToolPage>} />
+                <Route path="/tools/pdf-compressor" element={<ToolPage><PDFCompressor /></ToolPage>} />
+                <Route path="/tools/pdf-to-jpg" element={<ToolPage><PDFToJPG /></ToolPage>} />
+                <Route path="/tools/jpg-to-pdf" element={<ToolPage><JPGToPDF /></ToolPage>} />
+                
+                {/* AI Tools */}
+                <Route path="/tools/pdf-summarizer" element={<ToolPage><PDFSummarizer /></ToolPage>} />
+                <Route path="/tools/background-remover" element={<ToolPage><BackgroundRemover /></ToolPage>} />
+                <Route path="/tools/image-analyzer" element={<ToolPage><ImageAnalyzer /></ToolPage>} />
+                <Route path="/tools/ai-assistant" element={<ToolPage><AIAssistant /></ToolPage>} />
+                <Route path="/tools/thumbnail-generator" element={<ToolPage><ThumbnailGenerator /></ToolPage>} />
+                
+                {/* Static Pages */}
+                <Route path="/about" element={<About />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                <Route path="/contact-us" element={<ContactUs />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
+              </Routes>
             </div>
             
             <div className="mt-20 pt-10 border-t border-slate-800/50 space-y-8">
@@ -246,7 +287,7 @@ export default function App() {
                   <button
                     key={link.id}
                     onClick={() => {
-                      setCurrentView(link.id as View);
+                      navigate(link.path);
                       window.scrollTo(0, 0);
                     }}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-black uppercase tracking-widest text-ink/60 hover:text-primary transition-colors"
