@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Combine, Scissors, Trash2, RotateCw, FileText, Minimize2, Image, FileInput } from 'lucide-react';
+import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
   { name: 'Merge PDF', path: '/tools/pdf-merger', description: 'Combine multiple PDFs into one document', icon: Combine },
@@ -15,12 +16,20 @@ const tools = [
 
 export default function PDFTools() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
+    <>
+      <SEOHead 
+        title={categorySEOData['pdf-tools'].title}
+        description={categorySEOData['pdf-tools'].description}
+        keywords={categorySEOData['pdf-tools'].keywords}
+        canonicalUrl="https://creatorboostai.xyz/pdf-tools"
+        structuredData={categorySEOData['pdf-tools'].structuredData}
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="space-y-8"
+      >
       <div className="text-center space-y-4 py-8">
         <h1 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter text-ink">
           PDF Tools
@@ -61,5 +70,6 @@ export default function PDFTools() {
         ))}
       </div>
     </motion.div>
+    </>
   );
 }

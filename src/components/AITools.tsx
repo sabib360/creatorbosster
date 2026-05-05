@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, FileText, Eraser, Eye, Bot } from 'lucide-react';
+import { ArrowRight, FileText, Eraser, Eye, Bot, Image as ImageIcon } from 'lucide-react';
+import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
   { name: 'PDF Summarizer', path: '/tools/pdf-summarizer', description: 'AI-powered PDF content extraction and summarization', icon: FileText },
+  { name: 'AI Thumbnail Generator', path: '/tools/ai-thumbnail-generator', description: 'Generate professional YouTube thumbnails directly with AI', icon: ImageIcon },
   { name: 'Background Remover', path: '/tools/background-remover', description: 'Automatically remove image backgrounds with AI', icon: Eraser },
   { name: 'Image Analyzer', path: '/tools/image-analyzer', description: 'Intelligent image description and metadata extraction', icon: Eye },
   { name: 'AI Assistant', path: '/tools/ai-assistant', description: 'General-purpose AI chat for task assistance', icon: Bot },
@@ -11,12 +13,20 @@ const tools = [
 
 export default function AITools() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
+    <>
+      <SEOHead 
+        title={categorySEOData['ai-tools'].title}
+        description={categorySEOData['ai-tools'].description}
+        keywords={categorySEOData['ai-tools'].keywords}
+        canonicalUrl="https://creatorboostai.xyz/ai-tools"
+        structuredData={categorySEOData['ai-tools'].structuredData}
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="space-y-8"
+      >
       <div className="text-center space-y-4 py-8">
         <h1 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter text-ink">
           AI Tools
@@ -75,5 +85,6 @@ export default function AITools() {
         </div>
       </motion.div>
     </motion.div>
+    </>
   );
 }

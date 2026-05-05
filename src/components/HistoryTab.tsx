@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2, Type, Download, ChevronDown, ChevronUp, Sparkles, Share2, FileSpreadsheet, Loader2, History, LogIn } from 'lucide-react';
+import { Trash2, Type, Download, ChevronDown, ChevronUp, Sparkles, Share2, FileSpreadsheet, Loader2, History, LogIn, Search, Star } from 'lucide-react';
 import { getHistory, deleteFromHistory, clearHistory, type HistoryItem } from '../lib/history';
 import { useAuth } from '../hooks/useAuth';
 import { cn } from '../lib/utils';
@@ -14,6 +14,10 @@ export default function HistoryTab() {
   const [hasError, setHasError] = useState(false);
   const [editingImage, setEditingImage] = useState<string | null>(null);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'az'>('recent');
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
 
   const loadHistory = async () => {
     setIsLoading(true);
@@ -45,6 +49,53 @@ export default function HistoryTab() {
       await clearHistory(user?.uid);
       setHistory([]);
     }
+  };
+
+  const toggleFavorite = (id: string) => {
+    setFavorites(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const getFilteredAndSortedHistory = () => {
+    let filtered = history;
+
+    // Filter by search term
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(item => 
+        item.topic.toLowerCase().includes(term) ||
+        item.results?.titles?.viral?.some(t => t.toLowerCase().includes(term)) ||
+        item.results?.description?.toLowerCase?.().includes(term)
+      );
+    }
+
+    // Filter by favorites
+    if (showOnlyFavorites) {
+      filtered = filtered.filter(item => favorites.has(item.id));
+    }
+
+    // Sort
+    const sorted = [...filtered];
+    switch (sortBy) {
+      case 'oldest':
+        sorted.sort((a, b) => a.createdAt - b.createdAt);
+        break;
+      case 'az':
+        sorted.sort((a, b) => a.topic.localeCompare(b.topic));
+        break;
+      case 'recent':
+      default:
+        sorted.sort((a, b) => b.createdAt - a.createdAt);
+    }
+
+    return sorted;
   };
 
   const toggleExpand = (id: string) => {
@@ -200,9 +251,54 @@ export default function HistoryTab() {
         </div>
       </div>
 
+      {/* Search and Filter Controls */}
+      <div className="space-y-4 p-6 bg-slate-900/30 border border-slate-800 rounded-2xl">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/40" />
+            <input
+              type="text"
+              placeholder="🔍 Search by topic or content..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-ink placeholder:text-ink/40 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+            />
+          </div>
+          <div className="flex gap-2">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-ink font-display font-black uppercase text-xs focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+            >
+              <option value="recent">📅 Most Recent</option>
+              <option value="oldest">📅 Oldest First</option>
+              <option value="az">🔤 A-Z</option>
+            </select>
+            <button
+              onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+              className={cn(
+                "px-4 py-3 rounded-xl font-display font-black uppercase text-xs transition-all flex items-center gap-2",
+                showOnlyFavorites
+                  ? "bg-yellow-500 text-black border border-yellow-500"
+                  : "bg-slate-950 border border-slate-800 text-ink/70 hover:text-ink"
+              )}
+            >
+              <Star className="w-4 h-4" />
+              <span>Favorites</span>
+            </button>
+          </div>
+        </div>
+        {(searchTerm || showOnlyFavorites) && (
+          <p className="text-xs text-ink/50 font-medium">
+            Showing {getFilteredAndSortedHistory().length} of {history.length} items
+          </p>
+        )}
+      </div>
+
       <div className="space-y-6">
-        {history.map((item, index) => {
+        {getFilteredAndSortedHistory().map((item, index) => {
           const isExpanded = expandedItems[item.id];
+          const isFavorite = favorites.has(item.id);
           
           return (
             <motion.div 
@@ -249,6 +345,22 @@ export default function HistoryTab() {
                     )}
                   >
                     <Share2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(item.id);
+                    }}
+                    className={cn(
+                      "p-3 rounded-xl transition-all",
+                      isExpanded 
+                        ? "bg-black/10 text-black hover:bg-black/20" 
+                        : isFavorite
+                        ? "bg-yellow-500/20 text-yellow-400 border border-yellow-400/50 hover:border-yellow-400"
+                        : "bg-slate-900 text-slate-400 border border-slate-800 hover:border-yellow-400/50 hover:text-yellow-400"
+                    )}
+                  >
+                    <Star className={cn("w-4 h-4", isFavorite && "fill-current")} />
                   </button>
                   <button
                     onClick={(e) => {

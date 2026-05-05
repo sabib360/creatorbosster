@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import React from 'react';
 import { Sparkles, Loader2, Copy, Check, Type, Hash, Image as ImageIcon, FileText, MessageSquare, ExternalLink, Video, Download, Share2, BarChart3, TrendingUp, AlertTriangle, Lightbulb, Target } from 'lucide-react';
 import { generateYoutubeIdeas, generateThumbnailImages, generateVideo, analyzeCTR, type YoutubeIdeas, type CTRAnalysis } from '../lib/gemini';
@@ -21,7 +21,9 @@ export default function Generator() {
   const [results, setResults] = useState<YoutubeIdeas | null>(null);
   const [currentHistoryId, setCurrentHistoryId] = useState<string | null>(null);
   const [copiedText, setCopiedText] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'titles' | 'thumbnails' | 'hooks' | 'ideas' | 'description' | 'tags' | 'video' | 'analytics'>('titles');
+  const [activeTab, setActiveTab] = useState<'direct-thumbnail' | 'titles' | 'thumbnails' | 'hooks' | 'ideas' | 'description' | 'tags' | 'video' | 'analytics'>('direct-thumbnail');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredResults, setFilteredResults] = useState<YoutubeIdeas | null>(null);
   const [isAnalyzingCTR, setIsAnalyzingCTR] = useState(false);
   const [ctrAnalysis, setCtrAnalysis] = useState<CTRAnalysis | null>(null);
   const [generatingIndices, setGeneratingIndices] = useState<Set<number>>(new Set());
@@ -37,8 +39,131 @@ export default function Generator() {
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [generatedVideoUrl, setGeneratedVideoUrl] = useState<string | null>(null);
   const [showAdModal, setShowAdModal] = useState(false);
+  const [isGeneratingAllContent, setIsGeneratingAllContent] = useState(false);
+  const [allContentProgress, setAllContentProgress] = useState({ step: 0, total: 6, currentTask: '' });
+  const [directThumbnailPrompt, setDirectThumbnailPrompt] = useState('');
+  const [isGeneratingDirectThumbnail, setIsGeneratingDirectThumbnail] = useState(false);
+  const [directThumbnailImage, setDirectThumbnailImage] = useState<string | null>(null);
   const { user } = useAuth();
   const { credits, useCredit, isLoading: creditsLoading } = useCredits();
+
+  // Filter results based on search term
+  useEffect(() => {
+    if (!results) return;
+    
+    if (!searchTerm.trim()) {
+      setFilteredResults(results);
+      return;
+    }
+
+    const term = searchTerm.toLowerCase();
+    const filtered: YoutubeIdeas = {
+      titles: results.titles ? {
+        viral: results.titles.viral?.filter(t => t.toLowerCase().includes(term)) || [],
+        curiosity: results.titles.curiosity?.filter(t => t.toLowerCase().includes(term)) || [],
+        emotional: results.titles.emotional?.filter(t => t.toLowerCase().includes(term)) || [],
+        seo: results.titles.seo?.filter(t => t.toLowerCase().includes(term)) || [],
+        short: results.titles.short?.filter(t => t.toLowerCase().includes(term)) || [],
+        long: results.titles.long?.filter(t => t.toLowerCase().includes(term)) || [],
+      } : undefined,
+      thumbnailTexts: results.thumbnailTexts?.filter(t => t.toLowerCase().includes(term)) || [],
+      hookLines: results.hookLines?.filter(h => h.toLowerCase().includes(term)) || [],
+      thumbnailIdeas: results.thumbnailIdeas?.filter(i => i.toLowerCase().includes(term)) || [],
+      description: results.description.toLowerCase().includes(term) ? results.description : '',
+      tags: results.tags?.filter(tag => tag.toLowerCase().includes(term)) || [],
+      hashtags: results.hashtags?.filter(tag => tag.toLowerCase().includes(term)) || [],
+      ctrAnalysis: results.ctrAnalysis,
+    };
+    setFilteredResults(filtered);
+  }, [results, searchTerm]);
+
+  const handleGenerateAllContent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!topic.trim()) return;
+    
+    // Check credits (need 6 credits for all content: 1 for ideas + 1 for CTR + 4 for thumbnails)
+    if (credits < 6) {
+      setShowAdModal(true);
+      return;
+    }
+    
+    setIsGeneratingAllContent(true);
+    setError(null);
+    setGeneratedImages({}); // Reset images on new generation
+    setSelectedVariation({}); // Reset selections on new generation
+    setCtrAnalysis(null); // Reset analysis
+    setCurrentHistoryId(null);
+    
+    try {
+      // Step 1: Generate basic ideas
+      setAllContentProgress({ step: 1, total: 6, currentTask: 'Generating YouTube titles & ideas...' });
+      const creditResult1 = await useCredit(1);
+      if (!creditResult1.success) {
+        if (creditResult1.reason === 'insufficient_credits') {
+          setShowAdModal(true);
+        }
+        setIsGeneratingAllContent(false);
+        return;
+      }
+      
+      const data = await generateYoutubeIdeas(topic);
+      setResults(data);
+      setFilteredResults(data);
+      setSearchTerm('');
+      setVideoPrompt(topic);
+      
+      // Save to history
+      const historyItem = await saveIdeasToHistory(topic, data, user?.uid);
+      setCurrentHistoryId(historyItem.id);
+      
+      // Step 2: Generate CTR Analysis
+      setAllContentProgress({ step: 2, total: 6, currentTask: 'Analyzing CTR potential...' });
+      const creditResult2 = await useCredit(1);
+      if (!creditResult2.success) {
+        throw new Error('Insufficient credits for CTR analysis');
+      }
+      
+      const ctrAnalysisData = await analyzeCTR(data);
+      setCtrAnalysis(ctrAnalysisData);
+      setResults(prev => prev ? { ...prev, ctrAnalysis: ctrAnalysisData } : null);
+      
+      // Step 3-6: Generate thumbnail images for first 4 ideas
+      const thumbnailIdeas = data.thumbnailIdeas.slice(0, 4);
+      for (let i = 0; i < thumbnailIdeas.length; i++) {
+        setAllContentProgress({ 
+          step: 3 + i, 
+          total: 6, 
+          currentTask: `Generating thumbnail ${i + 1} of 4...` 
+        });
+        
+        const creditResult = await useCredit(1);
+        if (!creditResult.success) {
+          throw new Error('Insufficient credits for thumbnail generation');
+        }
+        
+        const images = await generateThumbnailImages(thumbnailIdeas[i], 3);
+        setGeneratedImages(prev => ({ ...prev, [i]: images }));
+        setSelectedVariation(prev => ({ ...prev, [i]: 0 }));
+        
+        if (currentHistoryId) {
+          await addThumbnailsToHistory(currentHistoryId, thumbnailIdeas[i], images, user?.uid);
+        }
+      }
+      
+      setActiveTab('ideas'); // Show thumbnails as final result
+      
+    } catch (error: any) {
+      console.error("Failed to generate all content:", error);
+      setError({
+        title: "Generation Failed",
+        message: error.message || "We couldn't generate all content. This might be due to a temporary connection issue or insufficient credits.",
+        retry: () => handleGenerateAllContent(e)
+      });
+    } finally {
+      setIsGeneratingAllContent(false);
+      setAllContentProgress({ step: 0, total: 6, currentTask: '' });
+    }
+  };
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +195,8 @@ export default function Generator() {
       // Call frontend Gemini API
       const data = await generateYoutubeIdeas(topic);
       setResults(data);
+      setFilteredResults(data); // Reset filtered results
+      setSearchTerm(''); // Clear search
       setVideoPrompt(topic);
       setActiveTab('ideas'); // Default to Thumbnail Ideas as requested
       
@@ -334,6 +461,60 @@ export default function Generator() {
     }
   };
 
+  const downloadThumbnail = async (imageUrl: string, index: number) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `youtube-thumbnail-${topic.replace(/\s+/g, '-').toLowerCase()}-${index + 1}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to download thumbnail:', error);
+    }
+  };
+
+  const handleGenerateDirectThumbnail = async () => {
+    if (!directThumbnailPrompt.trim()) return;
+    
+    // Check credits
+    if (credits < 1) {
+      setShowAdModal(true);
+      return;
+    }
+
+    setIsGeneratingDirectThumbnail(true);
+    setError(null);
+    try {
+      // Consume credit
+      const creditResult = await useCredit(1);
+      if (!creditResult.success) {
+        if (creditResult.reason === 'insufficient_credits') {
+          setShowAdModal(true);
+        }
+        setIsGeneratingDirectThumbnail(false);
+        return;
+      }
+
+      // Generate thumbnail directly from text
+      const images = await generateThumbnailImages(directThumbnailPrompt, 3);
+      setDirectThumbnailImage(images[0]);
+    } catch (error: any) {
+      console.error("Failed to generate direct thumbnail:", error);
+      setError({
+        title: "Thumbnail Generation Failed",
+        message: error.message || "We couldn't create the thumbnail. Please try again.",
+        retry: () => handleGenerateDirectThumbnail()
+      });
+    } finally {
+      setIsGeneratingDirectThumbnail(false);
+    }
+  };
+
   const CopyButton = ({ text }: { text: string }) => (
     <button
       onClick={() => copyToClipboard(text)}
@@ -376,81 +557,52 @@ export default function Generator() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="rounded-2xl border border-slate-800/50 bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950/50 backdrop-blur-xl p-6 md:p-8 space-y-6"
+          className="rounded-3xl border border-slate-800/50 bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950/50 backdrop-blur-xl p-8 md:p-12 space-y-8"
         >
-          <div className="space-y-4">
-            <h2 className="text-2xl md:text-3xl font-display font-black uppercase tracking-tight text-primary flex items-center gap-3">
-              <Sparkles className="w-6 h-6" />
-              Why Creator Booster AI?
+          <div className="text-center space-y-6">
+            <div className="inline-flex items-center gap-3 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-display font-black uppercase tracking-wider text-primary">AI-Powered YouTube Tools</span>
+            </div>
+            
+            <h2 className="text-3xl md:text-5xl font-display font-black uppercase tracking-tighter text-ink">
+              Create Viral YouTube Content in Seconds
             </h2>
             
-            <div className="space-y-4 text-ink/80 leading-relaxed text-base md:text-lg">
-              <p>
-                <strong className="text-ink">YouTube content creation is harder than ever.</strong> With millions of creators competing for attention, your titles, thumbnails, and descriptions need to be exceptional. Most creators waste hours brainstorming, designing, and optimizing—only to get mediocre results.
-              </p>
-              
-              <p>
-                <strong className="text-primary">Creator Booster AI changes everything.</strong> Our AI-powered platform generates viral YouTube titles, SEO-optimized descriptions, and professional thumbnail concepts in seconds. We analyze patterns from millions of successful videos to understand what actually works.
-              </p>
+            <p className="text-lg md:text-xl text-ink/70 max-w-3xl mx-auto leading-relaxed">
+              Generate titles, thumbnails, descriptions, and more with AI. No design skills needed. Just enter your topic and get everything you need for a successful YouTube video.
+            </p>
 
-              <div className="grid md:grid-cols-2 gap-4 my-6">
-                <div className="p-4 bg-primary/10 border border-primary/30 rounded-xl">
-                  <div className="flex items-start gap-3">
-                    <TrendingUp className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
-                    <div>
-                      <div className="font-display font-bold text-sm uppercase tracking-wide text-primary">30% Higher CTR</div>
-                      <p className="text-sm text-ink/70 mt-1">AI-optimized titles get 30%+ more clicks than manual titles</p>
-                    </div>
+            <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              {[
+                { icon: Type, label: "AI Titles", desc: "Viral & SEO-optimized", color: "text-primary" },
+                { icon: ImageIcon, label: "Thumbnails", desc: "Click-worthy designs", color: "text-tertiary" },
+                { icon: FileText, label: "Descriptions", desc: "Rank higher in search", color: "text-secondary" },
+                { icon: BarChart3, label: "CTR Analysis", desc: "Predict your success", color: "text-quinary" }
+              ].map((feature, i) => (
+                <div key={i} className="text-center space-y-3 p-6 bg-slate-950/50 border border-slate-800 rounded-2xl hover:border-primary/30 transition-all group">
+                  <div className={`w-12 h-12 mx-auto rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:border-primary transition-all`}>
+                    <feature.icon className={`w-6 h-6 ${feature.color}`} />
                   </div>
+                  <h3 className="font-display font-black text-sm uppercase tracking-wider text-ink">{feature.label}</h3>
+                  <p className="text-xs text-ink/60">{feature.desc}</p>
                 </div>
-                
-                <div className="p-4 bg-secondary/10 border border-secondary/30 rounded-xl">
-                  <div className="flex items-start gap-3">
-                    <Target className="w-5 h-5 text-secondary flex-shrink-0 mt-1" />
-                    <div>
-                      <div className="font-display font-bold text-sm uppercase tracking-wide text-secondary">Keywords Built-In</div>
-                      <p className="text-sm text-ink/70 mt-1">Every title, description, and tag is SEO-optimized for YouTube search</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <p>
-                <strong>How Creator Booster Helps YouTubers:</strong>
-              </p>
-              
-              <ul className="space-y-3 ml-4">
-                <li className="flex gap-3">
-                  <span className="text-primary font-bold">✓</span>
-                  <span><strong>Generate Viral Titles:</strong> Our AI creates 5-10 title variations using proven formulas (curiosity gaps, power words, keyword optimization). No more staring at a blank page wondering what will get clicks.</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-primary font-bold">✓</span>
-                  <span><strong>Design Thumbnail Concepts:</strong> Get visual inspiration for thumbnails optimized for CTR. Includes color psychology, composition tips, and text placement strategies.</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-primary font-bold">✓</span>
-                  <span><strong>Create SEO-Optimized Descriptions:</strong> Descriptions are more than filler—they're ranking factors. Our AI generates descriptions with natural keyword placement that boost visibility.</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-primary font-bold">✓</span>
-                  <span><strong>Analyze Competitor Performance:</strong> See what titles and thumbnails your competitors use and understand why they work. Learn from success instead of guessing.</span>
-                </li>
-              </ul>
-
-              <p className="border-l-4 border-primary pl-4 py-2 bg-primary/5 rounded-r">
-                <strong>The Result?</strong> YouTubers using Creator Booster see 3-5x more consistent results. Your titles get clicked more often. Your videos rank higher in search. Your subscribers grow faster. It's not magic—it's data-driven AI optimization.
-              </p>
+              ))}
             </div>
-          </div>
 
-          <div className="pt-4 border-t border-slate-700/50 flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="text-xs font-display font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-2">
-                <Lightbulb className="w-4 h-4" />
-                Pro Tip
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+              <div className="flex items-center gap-2 text-sm text-ink/60">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>No signup required</span>
               </div>
-              <p className="text-sm text-ink/70">Try entering your video topic above to see 10+ title variations, thumbnail ideas, and SEO descriptions generated instantly.</p>
+              <div className="flex items-center gap-2 text-sm text-ink/60">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Free downloads</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-ink/60">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>One-click generation</span>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -475,7 +627,6 @@ export default function Generator() {
 
       <form 
         id="generator-input-form" 
-        onSubmit={handleGenerate} 
         className="brutal-card p-6 md:p-10 bg-slate-900/50 backdrop-blur-xl border-slate-800/50 relative group overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -483,7 +634,7 @@ export default function Generator() {
         <label htmlFor="topic" className="block text-sm font-display font-black uppercase tracking-widest mb-4 text-primary">
           Enter Your Video Topic (YouTube Title Generator & Thumbnail Maker)
         </label>
-        <div className="flex flex-col md:flex-row gap-4 relative">
+        <div className="flex flex-col gap-4 relative">
           <div className="flex-1 relative">
             <input
               id="topic"
@@ -498,22 +649,102 @@ export default function Generator() {
               <Lightbulb className="w-5 h-5" />
             </div>
           </div>
-          <button
-            type="submit"
-            disabled={isGenerating || !topic.trim()}
-            className="px-10 py-5 bg-primary text-black font-display font-black text-lg uppercase tracking-wider rounded-2xl brutal-btn flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
-          >
-            {isGenerating ? (
-              <Loader2 className="w-6 h-6 animate-spin" />
-            ) : (
-              <Sparkles className="w-6 h-6 fill-black" />
-            )}
-            <span>{isGenerating ? 'Generating...' : 'Generate'}</span>
-          </button>
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              type="button"
+              onClick={handleGenerate}
+              disabled={isGenerating || isGeneratingAllContent || !topic.trim()}
+              className="flex-1 px-8 py-4 bg-primary text-black font-display font-black text-lg uppercase tracking-wider rounded-2xl brutal-btn flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
+            >
+              {isGenerating ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Sparkles className="w-5 h-5 fill-black" />
+              )}
+              <span>{isGenerating ? 'Generating...' : 'Generate Ideas'}</span>
+            </button>
+            
+            <button
+              type="button"
+              onClick={handleGenerateAllContent}
+              disabled={isGenerating || isGeneratingAllContent || !topic.trim() || credits < 6}
+              className="flex-1 px-8 py-4 bg-gradient-to-r from-primary via-secondary to-tertiary text-black font-display font-black text-lg uppercase tracking-wider rounded-2xl brutal-btn flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
+            >
+              {isGeneratingAllContent ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Sparkles className="w-5 h-5 fill-black" />
+              )}
+              <span>{isGeneratingAllContent ? 'Generating All...' : 'Generate All (6 Credits)'}</span>
+            </button>
+          </div>
+          
+          {credits < 6 && (
+            <div className="text-center text-sm font-bold text-ink/60 bg-slate-950/50 rounded-xl p-3 border border-slate-800">
+              ⚡ <span className="text-primary">Generate All</span> creates titles, thumbnails, CTR analysis, and more. Need 6 credits (you have {credits}).
+            </div>
+          )}
         </div>
       </form>
 
-
+      {/* Generate All Progress */}
+      <AnimatePresence>
+        {isGeneratingAllContent && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="brutal-card p-6 md:p-8 bg-gradient-to-br from-primary/10 via-secondary/10 to-tertiary/10 border border-primary/30"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-primary text-black rounded-full flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-display font-black uppercase tracking-wider text-ink">
+                    Generating Complete YouTube Package
+                  </h3>
+                  <p className="text-sm text-ink/60">{allContentProgress.currentTask}</p>
+                </div>
+              </div>
+              <div className="text-sm font-display font-black text-primary">
+                Step {allContentProgress.step} of {allContentProgress.total}
+              </div>
+            </div>
+            
+            <div className="relative h-4 bg-slate-900/50 rounded-full overflow-hidden border border-slate-800">
+              <motion.div 
+                className="h-full bg-gradient-to-r from-primary via-secondary to-tertiary"
+                initial={{ width: 0 }}
+                animate={{ width: `${(allContentProgress.step / allContentProgress.total) * 100}%` }}
+                transition={{ duration: 0.5 }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center text-xs font-black uppercase tracking-widest mix-blend-difference text-white">
+                {Math.round((allContentProgress.step / allContentProgress.total) * 100)}%
+              </div>
+            </div>
+            
+            <div className="mt-4 grid grid-cols-6 gap-2">
+              {['Ideas', 'CTR', 'Thumb 1', 'Thumb 2', 'Thumb 3', 'Thumb 4'].map((step, i) => (
+                <div 
+                  key={i}
+                  className={`text-center py-2 rounded-lg text-xs font-display font-black uppercase tracking-wider transition-all ${
+                    i < allContentProgress.step 
+                      ? 'bg-primary text-black' 
+                      : i === allContentProgress.step - 1 
+                      ? 'bg-secondary text-black animate-pulse'
+                      : 'bg-slate-800 text-slate-600'
+                  }`}
+                >
+                  {step}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence mode="wait">
         {results && (
@@ -525,6 +756,7 @@ export default function Generator() {
             {/* Tabs */}
             <div className="flex overflow-x-auto border-b border-slate-800 p-4 gap-3 bg-slate-950/50 scrollbar-hide">
               {[
+                { id: 'direct-thumbnail', label: '🎨 Text→Thumbnail', icon: ImageIcon, color: 'bg-gradient-to-r from-primary to-tertiary' },
                 { id: 'titles', label: 'YouTube Titles', icon: Type, color: 'bg-primary' },
                 { id: 'thumbnails', label: 'AI Thumbnail Text', icon: Type, color: 'bg-tertiary' },
                 { id: 'hooks', label: 'Video Hooks', icon: MessageSquare, color: 'bg-secondary' },
@@ -595,36 +827,180 @@ export default function Generator() {
               )}
             </AnimatePresence>
 
+            {/* Search Bar */}
+            <div className="p-4 bg-slate-950/50 border-b border-slate-800">
+              <input
+                type="text"
+                placeholder="🔍 Search results..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-6 py-3 bg-slate-900/50 border border-slate-800 rounded-xl text-ink placeholder:text-ink/40 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+              />
+            </div>
+
             {/* Content */}
             <div className="p-6 md:p-10 bg-slate-950/30">
+              {activeTab === 'direct-thumbnail' && (
+                <div className="space-y-8">
+                  <div className="text-center space-y-4">
+                    <h3 className="text-2xl font-display font-black uppercase tracking-tight text-ink">
+                      🎨 Text to Thumbnail Generator
+                    </h3>
+                    <p className="text-lg text-ink/70 max-w-2xl mx-auto">
+                      Describe your perfect thumbnail in words and AI will create it instantly. No design skills needed.
+                    </p>
+                  </div>
+
+                  <div className="max-w-2xl mx-auto space-y-6">
+                    <div>
+                      <label htmlFor="thumbnail-prompt" className="block text-sm font-display font-black uppercase tracking-widest mb-3 text-tertiary">
+                        Describe Your Thumbnail
+                      </label>
+                      <textarea
+                        id="thumbnail-prompt"
+                        value={directThumbnailPrompt}
+                        onChange={(e) => setDirectThumbnailPrompt(e.target.value)}
+                        placeholder="e.g., A person shocked looking at laptop with money flying out, bright yellow background, bold text 'I MADE $10,000', high contrast, viral YouTube style"
+                        className="w-full px-6 py-4 bg-slate-950/50 border border-slate-800 rounded-2xl text-ink placeholder:text-slate-600 focus:border-tertiary focus:ring-2 focus:ring-tertiary/20 transition-all outline-none resize-none h-32"
+                        required
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleGenerateDirectThumbnail}
+                      disabled={isGeneratingDirectThumbnail || !directThumbnailPrompt.trim() || credits < 1}
+                      className="w-full px-8 py-4 bg-gradient-to-r from-primary to-tertiary text-black font-display font-black text-lg uppercase tracking-wider rounded-2xl brutal-btn flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
+                    >
+                      {isGeneratingDirectThumbnail ? (
+                        <Loader2 className="w-6 h-6 animate-spin" />
+                      ) : (
+                        <ImageIcon className="w-6 h-6" />
+                      )}
+                      <span>{isGeneratingDirectThumbnail ? 'Creating Thumbnail...' : 'Generate Thumbnail (1 Credit)'}</span>
+                    </button>
+                  </div>
+
+                  {directThumbnailImage && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="max-w-2xl mx-auto space-y-6"
+                    >
+                      <div className="rounded-3xl overflow-hidden border border-slate-800 bg-slate-950 shadow-2xl">
+                        <img src={directThumbnailImage} alt="Generated thumbnail" className="w-full h-auto aspect-video object-cover" />
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-4">
+                        <button
+                          onClick={() => downloadThumbnail(directThumbnailImage, 0)}
+                          className="flex-1 flex items-center justify-center gap-3 px-6 py-4 bg-tertiary text-black font-display font-black uppercase tracking-widest rounded-2xl hover:shadow-lg hover:shadow-tertiary/20 transition-all"
+                        >
+                          <Download className="w-5 h-5" />
+                          <span>Download Free</span>
+                        </button>
+                        <button
+                          onClick={() => setEditingImage({ 
+                            url: directThumbnailImage,
+                            texts: ['Click Here!', 'Amazing!', 'Must Watch!']
+                          })}
+                          className="flex-1 flex items-center justify-center gap-3 px-6 py-4 bg-slate-800 text-ink font-display font-black uppercase tracking-widest rounded-2xl hover:bg-primary hover:text-black transition-all"
+                        >
+                          <Type className="w-5 h-5" />
+                          <span>Edit Text</span>
+                        </button>
+                        <button
+                          onClick={() => setDirectThumbnailPrompt('')}
+                          className="px-6 py-4 bg-slate-900 text-ink font-display font-black uppercase tracking-widest rounded-2xl border border-slate-800 hover:bg-slate-800 transition-all"
+                        >
+                          <span>New Thumbnail</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {isGeneratingDirectThumbnail && (
+                    <div className="max-w-2xl mx-auto">
+                      <div className="rounded-3xl overflow-hidden border border-slate-800 bg-slate-950 aspect-video flex flex-col items-center justify-center relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-tertiary/5 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+                        <Loader2 className="w-16 h-16 animate-spin text-tertiary mb-4" />
+                        <span className="font-display font-black uppercase tracking-[0.3em] text-tertiary animate-pulse">Creating Your Thumbnail...</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {activeTab === 'titles' && (
                 <div className="space-y-10">
-                  <div className="grid md:grid-cols-2 gap-10">
-                    {Object.entries(results.titles as Record<string, string[]>).map(([category, titles]) => (
+                  <div className="text-center space-y-4 mb-8">
+                    <h3 className="text-2xl font-display font-black uppercase tracking-tight text-primary">
+                      🎯 AI-Generated YouTube Titles
+                    </h3>
+                    <p className="text-lg text-ink/70 max-w-2xl mx-auto">
+                      Proven title formulas optimized for clicks, views, and SEO. Each category targets different viewer psychology.
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {Object.entries(filteredResults?.titles as Record<string, string[]>).map(([category, titles]) => (
                       <div key={category} className="space-y-6">
-                        <h3 className="text-sm font-display font-black uppercase tracking-[0.2em] text-primary flex items-center gap-3">
-                          <span className="w-8 h-[2px] bg-primary" />
-                          {category}
-                        </h3>
-                        <ul className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-3 h-3 rounded-full ${
+                            category === 'viral' ? 'bg-red-500' :
+                            category === 'curiosity' ? 'bg-blue-500' :
+                            category === 'emotional' ? 'bg-purple-500' :
+                            category === 'seo' ? 'bg-green-500' :
+                            category === 'short' ? 'bg-yellow-500' :
+                            'bg-orange-500'
+                          }`} />
+                          <h3 className="text-sm font-display font-black uppercase tracking-[0.2em] text-ink">
+                            {category.charAt(0).toUpperCase() + category.slice(1)}
+                          </h3>
+                          <span className="text-xs text-ink/40">({titles.length})</span>
+                        </div>
+                        <div className="space-y-3">
                           {titles.map((title, i) => (
-                            <li key={i} className="flex items-start justify-between gap-4 p-5 bg-slate-900/50 border border-slate-800 rounded-2xl group hover:border-primary/50 transition-all">
-                              <span className="text-ink font-bold text-lg leading-snug">{title}</span>
-                              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 flex-shrink-0">
-                                <ShareButton text={`YouTube Title Idea: ${title}`} />
-                                <CopyButton text={title} />
+                            <div key={i} className="group relative">
+                              <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl hover:border-primary/30 transition-all">
+                                <p className="text-ink font-bold text-sm leading-snug pr-12">{title}</p>
+                                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                  <button
+                                    onClick={() => copyToClipboard(title)}
+                                    className="p-1.5 bg-slate-800 text-ink/40 hover:text-primary rounded-lg transition-all"
+                                  >
+                                    <Copy className="w-3 h-3" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleShare(`YouTube Title: ${title}`)}
+                                    className="p-1.5 bg-slate-800 text-ink/40 hover:text-blue-400 rounded-lg transition-all"
+                                  >
+                                    <Share2 className="w-3 h-3" />
+                                  </button>
+                                </div>
                               </div>
-                            </li>
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     ))}
                   </div>
-                  
-                  <div className="pt-4 border-t-4 border-outline">
 
-                    <div className="text-center text-sm font-bold text-ink/60 mt-2">
-                      🔥 <span className="text-primary">Upgrade to Premium</span> to remove ads & get unlimited generations
+                  <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-tertiary/10 border border-primary/30 rounded-2xl p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary text-black rounded-xl flex items-center justify-center">
+                        <Lightbulb className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-display font-black text-sm uppercase tracking-wider text-ink mb-2">Title Categories Explained</h4>
+                        <div className="grid md:grid-cols-3 gap-4 text-xs text-ink/70">
+                          <div><strong className="text-red-400">Viral:</strong> High-emotion, shareable content</div>
+                          <div><strong className="text-blue-400">Curiosity:</strong> Questions that create gaps</div>
+                          <div><strong className="text-purple-400">Emotional:</strong> Stories that connect</div>
+                          <div><strong className="text-green-400">SEO:</strong> Search-optimized keywords</div>
+                          <div><strong className="text-yellow-400">Short:</strong> Punchy & memorable</div>
+                          <div><strong className="text-orange-400">Long:</strong> Detailed & descriptive</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -634,7 +1010,7 @@ export default function Generator() {
                 <div className="space-y-8">
                   <p className="text-lg font-medium text-ink/70 border-l-4 border-primary pl-4">Short, punchy text to place on your thumbnail image.</p>
                   <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {results.thumbnailTexts.map((text, i) => (
+                    {filteredResults?.thumbnailTexts?.map((text, i) => (
                       <div key={i} className="flex items-center justify-between p-6 bg-slate-900/50 border border-slate-800 rounded-2xl group hover:border-tertiary/50 transition-all">
                         <span className="font-display font-black text-2xl uppercase tracking-tighter text-tertiary">{text}</span>
                         <div className="flex gap-2">
@@ -651,7 +1027,7 @@ export default function Generator() {
                 <div className="space-y-8">
                   <p className="text-lg font-medium text-ink/70 border-l-4 border-secondary pl-4">Use these lines in the first 5 seconds of your video to retain viewers.</p>
                   <ul className="space-y-4">
-                    {(results as any).hookLines.map((hook: string, i: number) => (
+                    {(filteredResults?.hookLines || []).map((hook: string, i: number) => (
                       <li key={i} className="flex items-start justify-between gap-4 p-6 bg-slate-900/50 border border-slate-800 rounded-2xl group hover:border-secondary/50 transition-all">
                         <span className="font-bold text-xl leading-relaxed text-ink">"{hook}"</span>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 flex-shrink-0">
@@ -668,7 +1044,7 @@ export default function Generator() {
                 <div className="space-y-8">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <p className="text-lg font-medium text-ink/70 border-l-4 border-quaternary pl-4">Visual concepts for your thumbnail design. Click "Generate Image" to see an AI preview.</p>
-                    {results.thumbnailIdeas.some((_, i) => !generatedImages[i]) && (
+                    {filteredResults?.thumbnailIdeas.some((_, i) => !generatedImages[i]) && (
                       <button
                         onClick={handleGenerateAllThumbnails}
                         disabled={isGeneratingAll}
@@ -687,7 +1063,7 @@ export default function Generator() {
 
 
                   <div className="grid sm:grid-cols-2 gap-8">
-                    {results.thumbnailIdeas.map((idea, i) => (
+                    {filteredResults?.thumbnailIdeas.map((idea, i) => (
                       <div key={i} className="p-8 bg-slate-900/50 border border-slate-800 rounded-3xl flex flex-col gap-6 group hover:border-quaternary/50 transition-all">
                         <div className="flex gap-6">
                           <div className="w-14 h-14 rounded-2xl bg-slate-950 border border-slate-800 text-quaternary flex items-center justify-center flex-shrink-0 font-display font-black text-2xl shadow-inner">
@@ -747,6 +1123,13 @@ export default function Generator() {
                                 <Type className="w-5 h-5 group-hover/edit:scale-110 transition-transform" /> 
                                 <span>Edit Thumbnail</span>
                               </button>
+                              <button
+                                onClick={() => downloadThumbnail(generatedImages[i][selectedVariation[i] || 0], i)}
+                                className="flex items-center gap-3 px-6 py-4 bg-tertiary/10 text-tertiary border border-tertiary/20 font-display font-black uppercase tracking-widest rounded-2xl hover:bg-tertiary hover:text-black transition-all"
+                              >
+                                <Download className="w-5 h-5" /> 
+                                <span>Download</span>
+                              </button>
                               <a
                                 href="https://www.canva.com/create/youtube-thumbnails/"
                                 target="_blank"
@@ -788,82 +1171,217 @@ export default function Generator() {
               )}
 
               {activeTab === 'description' && (
-                <div className="relative group">
-                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-3 z-10">
-                    <button
-                      onClick={() => handleShare(`YouTube Video Description Idea:\n\n${results.description}`)}
-                      className="flex items-center gap-2 px-5 py-3 bg-slate-800 text-ink border border-slate-700 rounded-xl font-display font-black uppercase text-xs hover:bg-blue-500 hover:text-white transition-all"
-                    >
-                      <Share2 className="w-4 h-4" />
-                      <span>Share</span>
-                    </button>
-                    <button
-                      onClick={() => copyToClipboard(results.description)}
-                      className="flex items-center gap-2 px-5 py-3 bg-primary text-black rounded-xl font-display font-black uppercase text-xs hover:shadow-lg hover:shadow-primary/20 transition-all"
-                    >
-                      {copiedText === results.description ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                      <span>Copy All</span>
-                    </button>
+                <div className="space-y-8">
+                  <div className="text-center space-y-4">
+                    <h3 className="text-2xl font-display font-black uppercase tracking-tight text-secondary">
+                      📝 SEO-Optimized Description
+                    </h3>
+                    <p className="text-lg text-ink/70 max-w-2xl mx-auto">
+                      YouTube algorithm-friendly description with natural keywords, timestamps, and engagement hooks.
+                    </p>
                   </div>
-                  <div className="p-8 md:p-12 bg-slate-900/50 border border-slate-800 rounded-3xl relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-tertiary opacity-30" />
-                    <pre className="whitespace-pre-wrap font-sans text-lg font-medium leading-relaxed text-ink/90">
-                      {results.description}
-                    </pre>
+
+                  <div className="relative group">
+                    <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-3 z-10">
+                      <button
+                        onClick={() => handleShare(`YouTube Video Description:\n\n${results.description}`)}
+                        className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-ink border border-slate-700 rounded-lg font-display font-black uppercase text-xs hover:bg-blue-500 hover:text-white transition-all"
+                      >
+                        <Share2 className="w-4 h-4" />
+                        <span>Share</span>
+                      </button>
+                      <button
+                        onClick={() => copyToClipboard(filteredResults?.description || '')}
+                        className="flex items-center gap-2 px-4 py-2 bg-secondary text-black rounded-lg font-display font-black uppercase text-xs hover:shadow-lg hover:shadow-secondary/20 transition-all"
+                      >
+                        {copiedText === filteredResults?.description ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                        <span>Copy All</span>
+                      </button>
+                    </div>
+                    
+                    <div className="p-8 md:p-12 bg-slate-900/50 border border-slate-800 rounded-3xl relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary via-tertiary to-quaternary opacity-30" />
+                      
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center">
+                            <FileText className="w-4 h-4 text-secondary" />
+                          </div>
+                          <div className="text-xs font-display font-black uppercase tracking-widest text-secondary">
+                            YouTube Description
+                          </div>
+                        </div>
+                        
+                        <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-ink/90 bg-slate-950/30 p-6 rounded-xl border border-slate-800">
+                          {filteredResults?.description}
+                        </pre>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-secondary/10 via-tertiary/10 to-quaternary/10 border border-secondary/30 rounded-2xl p-6">
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Check className="w-4 h-4 text-green-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-display font-black text-xs uppercase tracking-wider text-ink mb-1">SEO Keywords</h4>
+                          <p className="text-xs text-ink/60">Natural keyword placement for search ranking</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Check className="w-4 h-4 text-blue-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-display font-black text-xs uppercase tracking-wider text-ink mb-1">Engagement Hooks</h4>
+                          <p className="text-xs text-ink/60">Questions and CTAs to boost interaction</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Check className="w-4 h-4 text-purple-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-display font-black text-xs uppercase tracking-wider text-ink mb-1">Timestamps Ready</h4>
+                          <p className="text-xs text-ink/60">Structured for chapter navigation</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
 
               {activeTab === 'tags' && (
-                <div className="space-y-12">
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-display font-black uppercase tracking-[0.2em] text-quinary flex items-center gap-3">
-                        <span className="w-8 h-[2px] bg-quinary" />
-                        Hashtags
-                      </h3>
-                      <button
-                        onClick={() => handleShare(`YouTube Hashtags: ${results.hashtags.join(' ')}`)}
-                        className="text-[10px] font-display font-black uppercase tracking-widest text-ink/50 hover:text-blue-400 transition-colors"
-                      >
-                        Share Hashtags
-                      </button>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      {results.hashtags.map((tag, i) => (
-                        <span key={i} className="px-5 py-2.5 bg-slate-900/50 border border-slate-800 rounded-full font-bold text-ink/80 hover:border-quinary/50 transition-all cursor-default">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                <div className="space-y-10">
+                  <div className="text-center space-y-4">
+                    <h3 className="text-2xl font-display font-black uppercase tracking-tight text-quinary">
+                      🔖 SEO Tags & Hashtags
+                    </h3>
+                    <p className="text-lg text-ink/70 max-w-2xl mx-auto">
+                      Trending keywords and hashtags to boost your video's discoverability and search ranking.
+                    </p>
                   </div>
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-display font-black uppercase tracking-[0.2em] text-primary flex items-center gap-3">
-                        <span className="w-8 h-[2px] bg-primary" />
-                        Tags
-                      </h3>
-                      <div className="flex gap-6">
+
+                  <div className="grid md:grid-cols-2 gap-8">
+                    {/* Hashtags Section */}
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                            <Hash className="w-4 h-4 text-white" />
+                          </div>
+                          <h4 className="text-sm font-display font-black uppercase tracking-[0.2em] text-ink">
+                            Trending Hashtags
+                          </h4>
+                          <span className="text-xs text-ink/40 bg-slate-800 px-2 py-1 rounded-lg">
+                            {results.hashtags.length}
+                          </span>
+                        </div>
                         <button
-                          onClick={() => handleShare(`YouTube Video Tags: ${results.tags.join(', ')}`)}
-                          className="text-[10px] font-display font-black uppercase tracking-widest text-ink/50 hover:text-blue-400 transition-colors"
-                        >
-                          Share
-                        </button>
-                        <button
-                          onClick={() => copyToClipboard(results.tags.join(', '))}
-                          className="text-[10px] font-display font-black uppercase tracking-widest text-ink/50 hover:text-primary transition-colors"
+                          onClick={() => copyToClipboard(results.hashtags.join(' '))}
+                          className="text-xs font-display font-black uppercase tracking-widest text-ink/50 hover:text-blue-400 transition-colors px-3 py-1 rounded-lg hover:bg-slate-800"
                         >
                           Copy All
                         </button>
                       </div>
+                      
+                      <div className="flex flex-wrap gap-2">
+                        {results.hashtags.map((tag, i) => (
+                          <button
+                            key={i}
+                            onClick={() => copyToClipboard(tag)}
+                            className="group px-4 py-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-full font-bold text-sm text-ink hover:border-blue-400 transition-all cursor-pointer relative overflow-hidden"
+                          >
+                            <span className="relative z-10">{tag}</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <Copy className="w-3 h-3 absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity text-blue-400" />
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <TrendingUp className="w-3 h-3 text-blue-400" />
+                          </div>
+                          <div>
+                            <h5 className="font-display font-black text-xs uppercase tracking-wider text-blue-400 mb-1">Hashtag Strategy</h5>
+                            <p className="text-xs text-ink/60">Mix broad and niche hashtags for maximum reach. Use 3-5 popular tags and 5-10 specific ones.</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-3">
-                      {results.tags.map((tag, i) => (
-                        <span key={i} className="px-5 py-2.5 bg-slate-900/50 border border-slate-800 rounded-xl font-bold text-ink/80 hover:border-primary/50 transition-all cursor-default">
-                          {tag}
-                        </span>
-                      ))}
+
+                    {/* Tags Section */}
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                            <Target className="w-4 h-4 text-white" />
+                          </div>
+                          <h4 className="text-sm font-display font-black uppercase tracking-[0.2em] text-ink">
+                            SEO Keywords
+                          </h4>
+                          <span className="text-xs text-ink/40 bg-slate-800 px-2 py-1 rounded-lg">
+                            {results.tags.length}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => copyToClipboard(results.tags.join(', '))}
+                          className="text-xs font-display font-black uppercase tracking-widest text-ink/50 hover:text-green-400 transition-colors px-3 py-1 rounded-lg hover:bg-slate-800"
+                        >
+                          Copy All
+                        </button>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-2">
+                        {results.tags.map((tag, i) => (
+                          <button
+                            key={i}
+                            onClick={() => copyToClipboard(tag)}
+                            className="group px-4 py-2 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl font-bold text-sm text-ink hover:border-green-400 transition-all cursor-pointer"
+                          >
+                            <span>{tag}</span>
+                            <Copy className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-green-400" />
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="bg-green-500/5 border border-green-500/20 rounded-xl p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Target className="w-3 h-3 text-green-400" />
+                          </div>
+                          <div>
+                            <h5 className="font-display font-black text-xs uppercase tracking-wider text-green-400 mb-1">Keyword Tips</h5>
+                            <p className="text-xs text-ink/60">Include long-tail keywords and variations. Think about what your audience would search for.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-quinary/10 via-slate-800/50 to-quinary/10 border border-quinary/30 rounded-2xl p-6">
+                    <div className="text-center space-y-4">
+                      <h4 className="font-display font-black text-sm uppercase tracking-wider text-quinary">
+                        🚀 Pro Tag Strategy
+                      </h4>
+                      <div className="grid md:grid-cols-3 gap-4 text-xs">
+                        <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800">
+                          <div className="text-green-400 font-bold mb-2">High Volume</div>
+                          <p className="text-ink/60">2-3 popular tags with 100K+ searches</p>
+                        </div>
+                        <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800">
+                          <div className="text-yellow-400 font-bold mb-2">Medium Competition</div>
+                          <p className="text-ink/60">5-7 tags with 10K-100K searches</p>
+                        </div>
+                        <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800">
+                          <div className="text-blue-400 font-bold mb-2">Long Tail</div>
+                          <p className="text-ink/60">3-5 specific phrases under 10K</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

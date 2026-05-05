@@ -1,20 +1,21 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, Sparkles, Image as ImageIcon, FileText, Bot, Menu, X, Settings, Shield, Mail, File, Search, Zap, History, CreditCard, LogIn, LogOut, User, Palette } from 'lucide-react';
+import { LayoutDashboard, Sparkles, Image as ImageIcon, FileText, Bot, Menu, X, Settings, Shield, Mail, File, Search, Zap, History, CreditCard, LogIn, LogOut, User, Palette, Calculator, Hash, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './hooks/useAuth';
 import { ThemeToggle } from './components/ThemeToggle';
+import { HelmetProvider } from 'react-helmet-async';
 import Dashboard from './components/Dashboard';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import AdBlockerDetector from './components/AdBlockerDetector';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import ContactUs from './components/ContactUs';
 import About from './components/About';
-import Blog from './components/Blog';
-import BlogPost from './components/BlogPost';
+import Blog, { BlogPostRoute } from './components/Blog';
 import ImageTools from './components/ImageTools';
 import PDFTools from './components/PDFTools';
 import AITools from './components/AITools';
+import Competitor from './components/Competitor';
 import ToolPage from './components/ToolPage';
 import ImageCompressor from './components/tools/ImageCompressor';
 import ImageResizer from './components/tools/ImageResizer';
@@ -38,8 +39,24 @@ import BackgroundRemover from './components/tools/BackgroundRemover';
 import ImageAnalyzer from './components/tools/ImageAnalyzer';
 import AIAssistant from './components/tools/AIAssistant';
 import ThumbnailGenerator from './components/tools/ThumbnailGenerator';
+import AIThumbnailGenerator from './components/tools/AIThumbnailGenerator';
+import LoanEMICalculator from './components/tools/LoanEMICalculator';
+import HashtagGenerator from './components/tools/HashtagGenerator';
+import FinanceTools from './components/FinanceTools';
+import SocialMediaTools from './components/SocialMediaTools';
+import SIPCalculator from './components/tools/SIPCalculator';
+import BudgetPlanner from './components/tools/BudgetPlanner';
+import TaxCalculator from './components/tools/TaxCalculator';
+import FDCalculator from './components/tools/FDCalculator';
+import CurrencyConverter from './components/tools/CurrencyConverter';
+import ContentIdeaGenerator from './components/tools/ContentIdeaGenerator';
+import CaptionWriter from './components/tools/CaptionWriter';
+import SocialAnalytics from './components/tools/SocialAnalytics';
+import LinkShortener from './components/tools/LinkShortener';
+import EmojiPicker from './components/tools/EmojiPicker';
+import HowToUse from './components/HowToUse';
 
-type View = 'dashboard' | 'image-tools' | 'pdf-tools' | 'ai-tools' | 'privacy-policy' | 'terms-of-service' | 'contact-us' | 'about' | 'blog';
+type View = 'dashboard' | 'image-tools' | 'pdf-tools' | 'ai-tools' | 'finance-tools' | 'social-media-tools' | 'privacy-policy' | 'terms-of-service' | 'contact-us' | 'about' | 'blog';
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -70,6 +87,9 @@ export default function App() {
     { id: 'image-tools', label: 'Image Tools', icon: ImageIcon, path: '/image-tools' },
     { id: 'pdf-tools', label: 'PDF Tools', icon: FileText, path: '/pdf-tools' },
     { id: 'ai-tools', label: 'AI Tools', icon: Bot, path: '/ai-tools' },
+    { id: 'finance-tools', label: 'Finance Tools', icon: Calculator, path: '/finance-tools' },
+    { id: 'social-media-tools', label: 'Social Media', icon: Hash, path: '/social-media-tools' },
+    { id: 'how-to-use', label: 'How to Use', icon: BookOpen, path: '/how-to-use' },
   ] as const;
 
   const footerLinks = [
@@ -165,21 +185,8 @@ export default function App() {
           ))}
         </nav>
 
-        {/* Credits Status */}
+        {/* User Profile Section */}
         <div className="p-6 mt-auto space-y-4">
-          <div className="p-5 bg-primary/10 border border-primary/20 rounded-3xl relative overflow-hidden group">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Zap className="w-4 h-4 text-black fill-black" />
-              </div>
-              <span className="text-[10px] font-display font-black uppercase tracking-widest text-primary">Daily Credits</span>
-            </div>
-            <div className="text-2xl font-display font-black text-ink mb-1">
-              {user ? profile?.credits_remaining : localCredits.available} <span className="text-xs text-ink/30">Credits</span>
-            </div>
-            <p className="text-[9px] font-bold text-ink/40 uppercase tracking-wider">Resetting in 24h</p>
-          </div>
-
           {user && (
             <div className="p-6 bg-slate-900/50 border border-slate-800 rounded-3xl">
               <div className="space-y-4">
@@ -238,9 +245,12 @@ export default function App() {
             <div className="flex-1">
               <Routes>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/image-tools" element={<ImageTools />} />
                 <Route path="/pdf-tools" element={<PDFTools />} />
                 <Route path="/ai-tools" element={<AITools />} />
+                <Route path="/finance-tools" element={<FinanceTools />} />
+                <Route path="/social-media-tools" element={<SocialMediaTools />} />
                 
                 {/* Image Tools */}
                 <Route path="/tools/image-compressor" element={<ToolPage><ImageCompressor /></ToolPage>} />
@@ -268,7 +278,25 @@ export default function App() {
                 <Route path="/tools/background-remover" element={<ToolPage><BackgroundRemover /></ToolPage>} />
                 <Route path="/tools/image-analyzer" element={<ToolPage><ImageAnalyzer /></ToolPage>} />
                 <Route path="/tools/ai-assistant" element={<ToolPage><AIAssistant /></ToolPage>} />
+                <Route path="/tools/ai-thumbnail-generator" element={<ToolPage><AIThumbnailGenerator /></ToolPage>} />
                 <Route path="/tools/thumbnail-generator" element={<ToolPage><ThumbnailGenerator /></ToolPage>} />
+                <Route path="/tools/competitor-analysis" element={<ToolPage><Competitor /></ToolPage>} />
+                
+                {/* Finance Tools */}
+                <Route path="/tools/loan-emi-calculator" element={<ToolPage><LoanEMICalculator /></ToolPage>} />
+                <Route path="/tools/sip-calculator" element={<ToolPage><SIPCalculator /></ToolPage>} />
+                <Route path="/tools/budget-planner" element={<ToolPage><BudgetPlanner /></ToolPage>} />
+                <Route path="/tools/tax-calculator" element={<ToolPage><TaxCalculator /></ToolPage>} />
+                <Route path="/tools/fd-calculator" element={<ToolPage><FDCalculator /></ToolPage>} />
+                <Route path="/tools/currency-converter" element={<ToolPage><CurrencyConverter /></ToolPage>} />
+                
+                {/* Social Media Tools */}
+                <Route path="/tools/hashtag-generator" element={<ToolPage><HashtagGenerator /></ToolPage>} />
+                <Route path="/tools/content-idea-generator" element={<ToolPage><ContentIdeaGenerator /></ToolPage>} />
+                <Route path="/tools/caption-writer" element={<ToolPage><CaptionWriter /></ToolPage>} />
+                <Route path="/tools/social-analytics" element={<ToolPage><SocialAnalytics /></ToolPage>} />
+                <Route path="/tools/link-shortener" element={<ToolPage><LinkShortener /></ToolPage>} />
+                <Route path="/tools/emoji-picker" element={<ToolPage><EmojiPicker /></ToolPage>} />
                 
                 {/* Static Pages */}
                 <Route path="/about" element={<About />} />
@@ -276,7 +304,9 @@ export default function App() {
                 <Route path="/terms-of-service" element={<TermsOfService />} />
                 <Route path="/contact-us" element={<ContactUs />} />
                 <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/blog/:slug" element={<BlogPostRoute />} />
+                <Route path="/how-to-use" element={<HowToUse />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>
             

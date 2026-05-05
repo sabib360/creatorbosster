@@ -469,7 +469,7 @@ export default function ThumbnailEditor({ imageUrl, onClose, suggestedTexts = []
         break;
       case 'repeat':
         setBgRepeat(value);
-        canvas.backgroundImageRepeat = value;
+        (canvas as any).backgroundImageRepeat = value;
         break;
     }
     canvas.renderAll();
@@ -504,7 +504,7 @@ export default function ThumbnailEditor({ imageUrl, onClose, suggestedTexts = []
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
     if (activeObject && activeObject.type === 'i-text') {
-      activeObject.set('fontFamily', e.target.value);
+      (activeObject as fabric.IText).set('fontFamily', e.target.value);
       canvas.renderAll();
       saveHistory();
     }
@@ -516,7 +516,7 @@ export default function ThumbnailEditor({ imageUrl, onClose, suggestedTexts = []
     if (activeObject && activeObject.type === 'i-text') {
       const currentSize = (activeObject as fabric.IText).fontSize || 60;
       const newSize = Math.max(10, currentSize + delta);
-      activeObject.set('fontSize', newSize);
+      (activeObject as fabric.IText).set('fontSize', newSize);
       setSelectedFontSize(newSize);
       canvas.renderAll();
       saveHistory();
@@ -528,7 +528,7 @@ export default function ThumbnailEditor({ imageUrl, onClose, suggestedTexts = []
     if (!isNaN(newSize) && canvasInstance.current) {
       const activeObject = canvasInstance.current.getActiveObject();
       if (activeObject && activeObject.type === 'i-text') {
-        activeObject.set('fontSize', newSize);
+        (activeObject as fabric.IText).set('fontSize', newSize);
         canvasInstance.current.renderAll();
         setSelectedFontSize(newSize);
         saveHistory();
@@ -540,7 +540,7 @@ export default function ThumbnailEditor({ imageUrl, onClose, suggestedTexts = []
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
     if (activeObject && activeObject.type === 'i-text') {
-      activeObject.set('textAlign', align);
+      (activeObject as fabric.IText).set('textAlign', align);
       setSelectedTextAlign(align);
       canvas.renderAll();
       saveHistory();
@@ -746,7 +746,7 @@ export default function ThumbnailEditor({ imageUrl, onClose, suggestedTexts = []
         case 'front': activeObject.bringToFront(); break;
         case 'back': activeObject.sendToBack(); break;
         case 'forward': activeObject.bringForward(); break;
-        case 'backward': activeObject.sendBackward(); break;
+        case 'backward': (activeObject as any).sendBackwards(); break;
       }
       canvas.renderAll();
       saveHistory();
@@ -1001,7 +1001,7 @@ export default function ThumbnailEditor({ imageUrl, onClose, suggestedTexts = []
           </div>
 
           <button 
-            onClick={addText} 
+            onClick={() => addText()} 
             className="flex items-center gap-3 px-6 py-3.5 bg-primary text-black rounded-2xl font-display font-black uppercase text-[10px] tracking-widest hover:brightness-110 transition-all shadow-xl shadow-primary/10 active:scale-95"
           >
             <Type className="w-4 h-4" /> Add Text

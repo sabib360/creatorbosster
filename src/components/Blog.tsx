@@ -1,6 +1,6 @@
 import { Calendar, ArrowRight } from 'lucide-react';
 import BlogPost from './BlogPost';
-import { useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 interface BlogArticle {
   id: string;
@@ -653,30 +653,7 @@ const blogArticles: BlogArticle[] = [
   }
 ];
 
-interface BlogProps {
-  onNavigate: (view: string) => void;
-}
-
-export default function Blog({ onNavigate }: BlogProps) {
-  const [selectedPost, setSelectedPost] = useState<string | null>(null);
-
-  if (selectedPost) {
-    const post = blogArticles.find(a => a.id === selectedPost);
-    if (post) {
-      return (
-        <BlogPost
-          id={post.id}
-          title={post.title}
-          author={post.author}
-          date={post.date}
-          readTime={post.readTime}
-          content={post.content}
-          onBack={() => setSelectedPost(null)}
-        />
-      );
-    }
-  }
-
+export default function Blog() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 pt-20 pb-12">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
@@ -691,42 +668,40 @@ export default function Blog({ onNavigate }: BlogProps) {
         {/* Blog Posts Grid */}
         <div className="grid md:grid-cols-1 gap-8">
           {blogArticles.map((article) => (
-            <article
-              key={article.id}
-              className="bg-card border border-border rounded-lg hover:border-primary/50 transition-all hover:shadow-lg overflow-hidden group cursor-pointer"
-              onClick={() => setSelectedPost(article.id)}
-            >
-              <div className="p-8">
-                {/* Category Badge */}
-                <div className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-4">
-                  Content Creation
-                </div>
+            <Link key={article.id} to={`/blog/${article.id}`} className="group cursor-pointer">
+              <article className="bg-card border border-border rounded-lg hover:border-primary/50 transition-all hover:shadow-lg overflow-hidden">
+                <div className="p-8">
+                  {/* Category Badge */}
+                  <div className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-4">
+                    Content Creation
+                  </div>
 
-                {/* Title */}
-                <h2 className="text-3xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                  {article.title}
-                </h2>
+                  {/* Title */}
+                  <h2 className="text-3xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                    {article.title}
+                  </h2>
 
-                {/* Excerpt */}
-                <p className="text-muted-foreground text-lg mb-4 leading-relaxed">
-                  {article.excerpt}
-                </p>
+                  {/* Excerpt */}
+                  <p className="text-muted-foreground text-lg mb-4 leading-relaxed">
+                    {article.excerpt}
+                  </p>
 
-                {/* Meta */}
-                <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <Calendar size={16} />
-                      <span>{article.date}</span>
+                  {/* Meta */}
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={16} />
+                        <span>{article.date}</span>
+                      </div>
+                      <span>{article.readTime}</span>
                     </div>
-                    <span>{article.readTime}</span>
-                  </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowRight className="text-primary" />
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ArrowRight className="text-primary" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </Link>
           ))}
         </div>
 
@@ -736,14 +711,51 @@ export default function Blog({ onNavigate }: BlogProps) {
           <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
             Use Creator Booster AI to generate viral titles, SEO-optimized descriptions, and eye-catching thumbnails instantly.
           </p>
-          <button
-            onClick={() => onNavigate('generator')}
+          <Link
+            to="/tools/ai-assistant"
             className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-8 rounded-lg transition-colors"
           >
             Get Started Now
-          </button>
+          </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+export const BlogPostRoute = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const post = blogArticles.find((article) => article.id === slug);
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 pt-20 pb-12">
+        <div className="max-w-4xl mx-auto px-4 md:px-8 text-center">
+          <h1 className="text-4xl font-bold text-foreground mb-6">Blog post not found</h1>
+          <p className="text-muted-foreground mb-8">
+            We couldn't find the blog post you're looking for. Please return to the blog overview and choose another article.
+          </p>
+          <button
+            onClick={() => navigate('/blog')}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-8 rounded-lg transition-colors"
+          >
+            Back to Blog
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <BlogPost
+      id={post.id}
+      title={post.title}
+      author={post.author}
+      date={post.date}
+      readTime={post.readTime}
+      content={post.content}
+      onBack={() => navigate('/blog')}
+    />
   );
 }

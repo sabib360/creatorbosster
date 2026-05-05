@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import React from 'react';
-import { Search, Loader2, TrendingUp, AlertCircle, Copy, Check, Sparkles } from 'lucide-react';
+import { Search, Loader2, TrendingUp, AlertCircle, Copy, Check, Sparkles, Download, Share2, Trash2, Star } from 'lucide-react';
 import { analyzeCompetitor, type CompetitorAnalysis } from '../lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
@@ -13,9 +13,12 @@ export default function Competitor() {
   const [title, setTitle] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<CompetitorAnalysis | null>(null);
+  const [analysisHistory, setAnalysisHistory] = useState<Array<{id: string; title: string; results: CompetitorAnalysis; timestamp: number}>>([]);
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [showAdModal, setShowAdModal] = useState(false);
   const [error, setError] = useState<{ title: string; message: string; retry: () => void } | null>(null);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [showHistory, setShowHistory] = useState(false);
   const { user } = useAuth();
   const { credits, useCredit } = useCredits();
 
@@ -61,6 +64,48 @@ export default function Competitor() {
     navigator.clipboard.writeText(text);
     setCopiedText(text);
     setTimeout(() => setCopiedText(null), 2000);
+  };
+
+  const handleSaveToHistory = () => {
+    if (!results) return;
+    const analysisId = crypto.randomUUID();
+    setAnalysisHistory(prev => [{
+      id: analysisId,
+      title,
+      results,
+      timestamp: Date.now()
+    }, ...prev]);
+  };
+
+  const toggleFavorite = (id: string) => {
+    setFavorites(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleExportAnalysis = () => {
+    if (!results) return;
+    const exportData = {
+      title,
+      timestamp: new Date().toISOString(),
+      betterTitles: results.betterTitles,
+      betterThumbnailTexts: results.betterThumbnailTexts,
+      ctrSuggestions: results.ctrSuggestions
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `competitor-analysis-${title.replace(/\s+/g, '-').toLowerCase()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -214,6 +259,93 @@ export default function Competitor() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Action Buttons for Results */}
+      {results && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-wrap gap-4 justify-center p-6 bg-slate-900/30 border border-slate-800 rounded-2xl"
+        >
+          <button
+            onClick={handleSaveToHistory}
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-black font-display font-black uppercase text-xs tracking-wider rounded-xl hover:shadow-lg hover:shadow-primary/20 transition-all hover:-translate-y-1"
+          >
+            <Sparkles className="w-4 h-4" />
+            Save Analysis
+          </button>
+          <button
+            onClick={handleExportAnalysis}
+            className="flex items-center gap-2 px-6 py-3 bg-secondary text-black font-display font-black uppercase text-xs tracking-wider rounded-xl hover:shadow-lg hover:shadow-secondary/20 transition-all hover:-translate-y-1"
+          >
+            <Download className="w-4 h-4" />
+            Export JSON
+          </button>
+          <button
+            onClick={() => {
+              const shareText = `Check out this competitor analysis:\n${title}\n\nBetter alternatives: ${results.betterTitles.join(', ')}\n\nGenerated with CreatorBoost AI`;
+              navigator.clipboard.writeText(shareText);
+              setCopiedText('share');
+              setTimeout(() => setCopiedText(null), 2000);
+            }}
+            className="flex items-center gap-2 px-6 py-3 bg-tertiary text-black font-display font-black uppercase text-xs tracking-wider rounded-xl hover:shadow-lg hover:shadow-tertiary/20 transition-all hover:-translate-y-1"
+          >
+            <Share2 className="w-4 h-4" />
+            Copy to Share
+          </button>
+          {analysisHistory.length > 0 && (
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="flex items-center gap-2 px-6 py-3 bg-slate-800 text-ink font-display font-black uppercase text-xs tracking-wider rounded-xl border border-slate-700 hover:border-primary transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              History ({analysisHistory.length})
+            </button>
+          )}
+        </motion.div>
+      )}
+
+      {/* Analysis History */}
+      {showHistory && analysisHistory.length > 0 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4 p-6 bg-slate-900/30 border border-slate-800 rounded-2xl"
+        >
+          <h3 className="text-lg font-display font-black uppercase tracking-tight text-primary mb-4">Recent Analyses</h3>
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {analysisHistory.map((analysis) => (
+              <button
+                key={analysis.id}
+                onClick={() => {
+                  setResults(analysis.results);
+                  setTitle(analysis.title);
+                  setShowHistory(false);
+                }}
+                className="w-full p-4 bg-slate-950/50 border border-slate-800 rounded-xl text-left hover:border-primary hover:bg-slate-900 transition-all group flex items-start justify-between"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-ink truncate group-hover:text-primary transition-colors">{analysis.title}</p>
+                  <p className="text-xs text-ink/40 mt-1">{new Date(analysis.timestamp).toLocaleString()}</p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(analysis.id);
+                  }}
+                  className={`p-2 rounded-lg transition-colors flex-shrink-0 ml-2 ${
+                    favorites.has(analysis.id)
+                      ? 'bg-yellow-500/20 text-yellow-400'
+                      : 'bg-slate-900 text-slate-400 hover:text-yellow-400'
+                  }`}
+                >
+                  <Star className={`w-4 h-4 ${favorites.has(analysis.id) && 'fill-current'}`} />
+                </button>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      )}
 
       <RewardedAdModal 
         isOpen={showAdModal} 

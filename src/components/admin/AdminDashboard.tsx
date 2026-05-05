@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-mono text-slate-300">
-                      {user.credits_remaining}
+                      Unlimited
                     </TableCell>
                   </TableRow>
                 ))}
@@ -339,7 +339,7 @@ function UsersManagement() {
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+                      <DropdownMenuTrigger>
                         <Button variant="ghost" className="h-8 px-2 hover:bg-slate-800">
                           <Badge className={cn(
                             "capitalize",
@@ -360,14 +360,14 @@ function UsersManagement() {
                     </DropdownMenu>
                   </TableCell>
                   <TableCell className="font-mono text-slate-300">
-                    {user.credits_remaining}
+                    Unlimited
                   </TableCell>
                   <TableCell>
                     <Badge className="bg-green-500/10 text-green-500">Active</Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+                      <DropdownMenuTrigger>
                         <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
                           <MoreHorizontal className="w-5 h-5" />
                         </Button>

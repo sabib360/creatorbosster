@@ -35,10 +35,10 @@ export default function PDFRemover() {
     try {
       const arrayBuffer = await selectedFile.arrayBuffer();
       const pdf = await PDFDocument.load(arrayBuffer);
-      const pagesToRemove = pagesToRemove.split(',').map(p => parseInt(p.trim()) - 1);
+      const pageIndices = pagesToRemove.split(',').map(p => parseInt(p.trim()) - 1);
       
       const newPdf = await PDFDocument.create();
-      const allPages = pdf.getPageIndices().filter(i => !pagesToRemove.includes(i));
+      const allPages = pdf.getPageIndices().filter(i => !pageIndices.includes(i));
       const copiedPages = await newPdf.copyPages(pdf, allPages);
       copiedPages.forEach(page => newPdf.addPage(page));
 

@@ -70,7 +70,7 @@ export default function TermsOfService() {
           <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">4. Credits & Payments</h2>
           <div className="space-y-4 text-lg">
             <p>
-              <strong>Free Tier:</strong> Creator Booster AI provides 3 free credits daily. Daily credits reset every 24 hours. Unused credits do not roll over to the next day.
+              <strong>Free Tier:</strong> Creator Booster AI provides free access to all tools. No credits or subscriptions required.
             </p>
             <p>
               <strong>Premium Plans:</strong> Paid premium plans come with specific credit amounts and pricing. Purchased credits are non-refundable except where required by law. Premium subscriptions are subject to recurring billing.

@@ -113,93 +113,7 @@ export default function Dashboard() {
         </motion.div>
       </div>
 
-      {/* Featured Tools Section */}
-      {!searchQuery && (
-        <motion.div variants={itemVariants} className="space-y-6">
-          <h2 className="text-3xl font-display font-black uppercase tracking-tight text-ink">Featured Tools</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* YouTube Title & Thumbnail Generator */}
-            <Link
-              to="/dashboard"
-              className="group relative overflow-hidden rounded-3xl border border-slate-800 hover:border-primary/50 transition-all duration-300"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent" />
-              <div className="relative z-10 p-8 h-64 flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
-                    <Sparkles className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-ink mb-2">YouTube Title & Thumbnail</h3>
-                  <p className="text-ink/60">Generate viral YouTube titles and thumbnails with AI assistance</p>
-                </div>
-                <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest">
-                  Try Now <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            </Link>
 
-            {/* Thumbnail Generator */}
-            <Link
-              to="/tools/thumbnail-generator"
-              className="group relative overflow-hidden rounded-3xl border border-slate-800 hover:border-secondary/50 transition-all duration-300"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/20 via-transparent to-transparent" />
-              <div className="relative z-10 p-8 h-64 flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-secondary/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-secondary/30 transition-colors">
-                    <Palette className="w-6 h-6 text-secondary" />
-                  </div>
-                  <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-ink mb-2">Thumbnail Creator</h3>
-                  <p className="text-ink/60">Design professional thumbnails with 6 stunning templates</p>
-                </div>
-                <div className="flex items-center gap-2 text-secondary font-bold uppercase tracking-widest">
-                  Try Now <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            </Link>
-
-            {/* Competitor Analysis */}
-            <Link
-              to="/dashboard"
-              className="group relative overflow-hidden rounded-3xl border border-slate-800 hover:border-tertiary/50 transition-all duration-300"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-tertiary/20 via-transparent to-transparent" />
-              <div className="relative z-10 p-8 h-64 flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-tertiary/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-tertiary/30 transition-colors">
-                    <BarChart3 className="w-6 h-6 text-tertiary" />
-                  </div>
-                  <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-ink mb-2">Competitor Analysis</h3>
-                  <p className="text-ink/60">Analyze competitor YouTube titles and optimize your CTR</p>
-                </div>
-                <div className="flex items-center gap-2 text-tertiary font-bold uppercase tracking-widest">
-                  Try Now <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            </Link>
-
-            {/* AI Assistant */}
-            <Link
-              to="/tools/ai-assistant"
-              className="group relative overflow-hidden rounded-3xl border border-slate-800 hover:border-primary/50 transition-all duration-300"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent" />
-              <div className="relative z-10 p-8 h-64 flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
-                    <Bot className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-ink mb-2">AI Assistant</h3>
-                  <p className="text-ink/60">Chat with AI for creative ideas and content tips</p>
-                </div>
-                <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest">
-                  Try Now <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            </Link>
-          </div>
-        </motion.div>
-      )}
 
       {/* Search Results */}
       {searchQuery && filteredTools && (
@@ -289,7 +203,7 @@ export default function Dashboard() {
               <Sparkles className="w-8 h-8 text-tertiary" />
             </div>
             <h3 className="text-xl font-bold text-ink">Free to Use</h3>
-            <p className="text-ink/60">Access all tools with daily credits. No subscription required.</p>
+            <p className="text-ink/60">Access all tools for free. No subscription required.</p>
           </div>
         </div>
       </motion.div>

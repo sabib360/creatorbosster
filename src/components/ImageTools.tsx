@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Minimize2, Maximize, Crop, RotateCw, User, Stamp, RefreshCw, Package, Target, Sparkles } from 'lucide-react';
+import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
   { name: 'Compress Image', path: '/tools/image-compressor', description: 'Reduce image file size while maintaining quality', icon: Minimize2 },
@@ -17,12 +18,20 @@ const tools = [
 
 export default function ImageTools() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
+    <>
+      <SEOHead 
+        title={categorySEOData['image-tools'].title}
+        description={categorySEOData['image-tools'].description}
+        keywords={categorySEOData['image-tools'].keywords}
+        canonicalUrl="https://creatorboostai.xyz/image-tools"
+        structuredData={categorySEOData['image-tools'].structuredData}
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="space-y-8"
+      >
       <div className="text-center space-y-4 py-8">
         <h1 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter text-ink">
           Image Tools
@@ -63,5 +72,6 @@ export default function ImageTools() {
         ))}
       </div>
     </motion.div>
+    </>
   );
 }
