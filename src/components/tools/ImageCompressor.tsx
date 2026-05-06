@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Upload, Download, X, Minimize2, SlidersHorizontal, CheckCircle2, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import imageCompression from 'browser-image-compression';
+import SEOHead from '../SEOHead';
 
 export default function ImageCompressor() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -87,16 +88,26 @@ export default function ImageCompressor() {
     : null;
 
   return (
-    <div className="space-y-8">
-      <div className="text-center space-y-4">
-        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
-          <Minimize2 className="w-8 h-8 text-primary" />
+    <>
+      <SEOHead
+        title="Free Image Compressor Online | Reduce Image Size Without Quality Loss"
+        description="Compress images online for free. Reduce image file size while maintaining quality. Best image optimizer for web, social media, and email. No watermark."
+        keywords="image compressor, compress image online, reduce image size, image optimizer, image compression tool, JPEG compressor, PNG compressor"
+        canonicalUrl="https://creatorboostai.xyz/image-tools/compressor"
+        ogImage="/og-images/image-compressor.png"
+        toolId="image-compressor"
+        categoryId="image-tools"
+      />
+      <div className="space-y-8">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
+            <Minimize2 className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="text-3xl font-display font-black uppercase tracking-tighter text-ink">
+            Free Image Compressor
+          </h1>
+          <p className="text-ink/60">Reduce image file size while maintaining quality. Perfect for web, social media, and email.</p>
         </div>
-        <h1 className="text-3xl font-display font-black uppercase tracking-tighter text-ink">
-          Compress Image
-        </h1>
-        <p className="text-ink/60">Reduce image file size while maintaining quality</p>
-      </div>
 
       {/* Upload Area */}
       {!selectedFile && (
@@ -246,6 +257,7 @@ export default function ImageCompressor() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
