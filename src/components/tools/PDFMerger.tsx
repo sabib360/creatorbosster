@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { Upload, Download, X, Combine, AlertCircle, Trash2, MoveUp, MoveDown } from 'lucide-react';
 import { PDFDocument } from 'pdf-lib';
-import SEOHead from '../SEOHead';
 
 export default function PDFMerger() {
   const [files, setFiles] = useState<File[]>([]);
@@ -57,7 +56,7 @@ export default function PDFMerger() {
       }
       
       const pdfBytes = await mergedPdf.save();
-      const blob = new Blob([pdfBytes] as BlobPart[], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       setMergedPdf(blob);
     } catch (err) {
       setError('Failed to merge PDFs. Please try again.');
@@ -83,30 +82,27 @@ export default function PDFMerger() {
   };
 
   return (
-    <>
-      <SEOHead
-        title="Free PDF Merger Online | Combine Multiple PDF Files"
-        description="Merge PDF files online for free. Combine multiple PDFs into one document. No watermark, no registration required. Fast and secure PDF merging."
-        keywords="PDF merger, merge PDF files, combine PDF, PDF joiner, concatenate PDF, merge multiple PDFs, free PDF merger"
-        canonicalUrl="https://creatorboostai.xyz/pdf-tools/merger"
-        ogImage="/og-images/pdf-merger.png"
-        toolId="pdf-merger"
-        categoryId="pdf-tools"
-      />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
-        <div className="space-y-8">
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mx-auto">
-              <Combine className="w-8 h-8 text-secondary" />
-            </div>
-            <h1 className="text-3xl font-display font-black uppercase tracking-tighter text-ink">
-              Free PDF Merger
-            </h1>
-            <p className="text-ink/60">Combine multiple PDF files into one document. No watermark, fast and secure.</p>
-          </div>
+    <div className="space-y-8">
+      <div className="text-center space-y-4">
+        <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mx-auto">
+          <Combine className="w-8 h-8 text-secondary" />
         </div>
+        <h1 className="text-3xl font-display font-black uppercase tracking-tighter text-ink">
+          Merge PDF
+        </h1>
+        <p className="text-ink/60">Combine multiple PDFs into one document</p>
+      </div>
 
-        {error && (
+      {files.length === 0 && (
+        <div onDrop={handleDrop} onDragOver={(e) => e.preventDefault()} onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed border-slate-700 rounded-2xl p-12 text-center hover:border-secondary transition-colors cursor-pointer group">
+          <input ref={fileInputRef} type="file" multiple accept="application/pdf" onChange={(e) => handleFileSelect(e.target.files)} className="hidden" />
+          <Upload className="w-12 h-12 text-ink/40 mx-auto mb-4 group-hover:text-secondary transition-colors" />
+          <p className="text-lg font-bold text-ink mb-2">Drop PDF files here</p>
+          <p className="text-ink/60">or click to browse</p>
+        </div>
+      )}
+
+      {error && (
         <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           <span>{error}</span>
@@ -160,6 +156,5 @@ export default function PDFMerger() {
         </div>
       )}
     </div>
-    </>
   );
 }

@@ -6,7 +6,6 @@ import { useCredits } from '../../hooks/useCredits';
 import { useAuth } from '../../hooks/useAuth';
 import { cn } from '../../lib/utils';
 import { saveIdeasToHistory } from '../../lib/history';
-import SEOHead from '../SEOHead';
 
 export default function AIThumbnailGenerator() {
   const [topic, setTopic] = useState('');
@@ -91,17 +90,7 @@ export default function AIThumbnailGenerator() {
   };
 
   return (
-    <>
-      <SEOHead
-        title="Free AI YouTube Thumbnail Generator | Create Viral Thumbnails"
-        description="Generate stunning YouTube thumbnails with AI in seconds. Free AI thumbnail creator for content creators. No signup required. Create viral thumbnails that boost engagement."
-        keywords="AI thumbnail generator, YouTube thumbnail maker AI, AI thumbnail creator, free AI thumbnail generator, AI YouTube thumbnail generator free, thumbnail generator using AI"
-        canonicalUrl="https://creatorboostai.xyz/ai-tools/thumbnail-generator"
-        ogImage="/og-images/ai-thumbnail-generator.png"
-        toolId="ai-thumbnail-generator"
-        categoryId="ai-tools"
-      />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
       <div className="max-w-6xl mx-auto space-y-8">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-5xl md:text-6xl font-display font-black uppercase tracking-tighter mb-4 bg-gradient-to-r from-ink to-primary bg-clip-text">
@@ -258,7 +247,7 @@ export default function AIThumbnailGenerator() {
         {/* Hidden Canvas */}
         <canvas ref={canvasRef} className="hidden" />
       </div>
-      </div>
-    </>
+    </div>
   );
 }
+
