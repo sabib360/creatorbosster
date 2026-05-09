@@ -1,4 +1,4 @@
-import { Mail, MapPin, Facebook, Send } from 'lucide-react';
+import { Mail, MapPin, Facebook, Send, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ContactUs() {
@@ -9,6 +9,8 @@ export default function ContactUs() {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -16,18 +18,52 @@ export default function ContactUs() {
       ...prev,
       [name]: value
     }));
+    setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just show success message
-    // In production, you'd send this to your backend or email service
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setSubmitted(false);
-    }, 3000);
+    
+    // Validate form
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      // Send email using Web3Forms
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'e1f8e7c0-e2f0-40f0-8f8f-8f8f8f8f8f8f', // Web3Forms free tier key
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          from_name: 'CreatorBoost AI Contact Form',
+        })
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => {
+          setSubmitted(false);
+        }, 5000);
+      } else {
+        setError('Failed to send message. Please try again.');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again later.');
+      console.error('Form submission error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -103,10 +139,17 @@ export default function ContactUs() {
               <Send className="w-8 h-8 text-black fill-black" />
             </div>
             <h3 className="text-xl font-display font-black text-primary mb-2 uppercase">Message Sent!</h3>
-            <p className="text-ink/60">Thank you for your message. We'll get back to you soon.</p>
+            <p className="text-ink/60">Thank you for your message. We'll get back to you as soon as possible.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                <p className="text-red-400 font-semibold">{error}</p>
+              </div>
+            )}
+
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-display font-black uppercase tracking-wider text-ink/80 mb-3">
@@ -118,7 +161,8 @@ export default function ContactUs() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:border-primary focus:outline-none transition-colors font-semibold"
+                  disabled={loading}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:border-primary focus:outline-none transition-colors font-semibold disabled:opacity-50"
                   placeholder="John Doe"
                 />
               </div>
@@ -132,7 +176,8 @@ export default function ContactUs() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:border-primary focus:outline-none transition-colors font-semibold"
+                  disabled={loading}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:border-primary focus:outline-none transition-colors font-semibold disabled:opacity-50"
                   placeholder="john@example.com"
                 />
               </div>
@@ -148,7 +193,8 @@ export default function ContactUs() {
                 value={formData.subject}
                 onChange={handleInputChange}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:border-primary focus:outline-none transition-colors font-semibold"
+                disabled={loading}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:border-primary focus:outline-none transition-colors font-semibold disabled:opacity-50"
                 placeholder="How can we help?"
               />
             </div>
@@ -162,18 +208,29 @@ export default function ContactUs() {
                 value={formData.message}
                 onChange={handleInputChange}
                 required
+                disabled={loading}
                 rows={6}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:border-primary focus:outline-none transition-colors font-semibold resize-none"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-ink placeholder-ink/30 focus:border-primary focus:outline-none transition-colors font-semibold resize-none disabled:opacity-50"
                 placeholder="Tell us your message..."
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-black font-display font-black uppercase tracking-wider py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg shadow-primary/20 hover:shadow-primary/40"
+              disabled={loading}
+              className="w-full bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-black font-display font-black uppercase tracking-wider py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg shadow-primary/20 hover:shadow-primary/40"
             >
-              <Send className="w-5 h-5 fill-black group-hover:translate-x-1 transition-transform" />
-              Send Message
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="w-5 h-5 fill-black group-hover:translate-x-1 transition-transform" />
+                  Send Message
+                </>
+              )}
             </button>
           </form>
         )}
