@@ -37,6 +37,16 @@ export default function FinanceTools() {
         </p>
       </div>
 
+      {/* Introduction */}
+      <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-8 space-y-4">
+        <p className="text-ink/70 leading-relaxed">
+          <strong>Our Finance Tools</strong> empower you to take control of your financial future. Whether you're planning to buy a home, invest in stocks through SIP, manage your budget, calculate taxes, or make international currency conversions - our suite of financial calculators provides accurate, instant results.
+        </p>
+        <p className="text-ink/70 leading-relaxed">
+          Designed for individual investors, salaried professionals, and entrepreneurs in India and beyond. Make informed financial decisions with our transparent, easy-to-use calculators that require no special expertise.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {tools.map((tool, index) => (
           <motion.div

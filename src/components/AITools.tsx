@@ -36,6 +36,16 @@ export default function AITools() {
         </p>
       </div>
 
+      {/* Introduction */}
+      <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-8 space-y-4">
+        <p className="text-ink/70 leading-relaxed">
+          <strong>Our AI Tools</strong> harness the power of Google's advanced Gemini AI model to transform how you work with documents and images. Automatically summarize PDFs, generate professional thumbnails, remove backgrounds intelligently, analyze images, or chat with an AI assistant for creative help.
+        </p>
+        <p className="text-ink/70 leading-relaxed">
+          These tools are perfect for content creators, designers, marketers, and anyone looking to leverage cutting-edge AI technology. Save hours of manual work and unlock creative possibilities that would be impossible to achieve manually.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
         {tools.map((tool, index) => (
           <motion.div

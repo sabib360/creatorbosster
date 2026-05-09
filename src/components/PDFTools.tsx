@@ -39,6 +39,16 @@ export default function PDFTools() {
         </p>
       </div>
 
+      {/* Introduction */}
+      <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-8 space-y-4">
+        <p className="text-ink/70 leading-relaxed">
+          <strong>Our PDF Tools</strong> simplify document management tasks that would normally require expensive desktop software. Merge multiple PDFs, extract specific pages, remove unwanted sections, convert documents between formats, and compress large files - all without leaving your browser.
+        </p>
+        <p className="text-ink/70 leading-relaxed">
+          Perfect for students, professionals, and business owners who work with PDF documents regularly. Process your files instantly and securely - no uploads, no servers storing your data, complete privacy guaranteed.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tools.map((tool, index) => (
           <motion.div

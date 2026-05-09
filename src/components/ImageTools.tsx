@@ -41,6 +41,16 @@ export default function ImageTools() {
         </p>
       </div>
 
+      {/* Introduction */}
+      <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-8 space-y-4">
+        <p className="text-ink/70 leading-relaxed">
+          <strong>Our Image Tools</strong> provide a complete solution for image processing without installing any software. Whether you need to compress images for web uploads, resize photos for social media, convert between formats, or create professional content - we've got everything you need in one place.
+        </p>
+        <p className="text-ink/70 leading-relaxed">
+          All processing happens securely in your browser. Your images never get uploaded to our servers, ensuring complete privacy. The tools are optimized for creators, photographers, and anyone working with digital images regularly.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tools.map((tool, index) => (
           <motion.div

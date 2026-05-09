@@ -113,6 +113,51 @@ export default function Dashboard() {
         </motion.div>
       </div>
 
+      {/* Introduction Section */}
+      {!searchQuery && (
+        <motion.div variants={itemVariants} className="bg-slate-900/30 border border-slate-800 rounded-3xl p-8 md:p-12 space-y-6">
+          <h2 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tight text-ink">
+            Your Complete Creator Toolkit
+          </h2>
+          <div className="space-y-4 text-ink/70 leading-relaxed text-lg">
+            <p>
+              CreatorBoost AI is a comprehensive, browser-based platform designed to help content creators, digital professionals, and everyday users accomplish essential tasks with powerful, easy-to-use tools. Whether you're managing images, working with PDFs, or need AI-powered assistance, we've got you covered.
+            </p>
+            <p>
+              Our platform combines cutting-edge AI technology with practical utility tools to deliver results without requiring downloads, installations, or complicated software. All processing happens securely in your browser, ensuring your data remains private while you work on your projects.
+            </p>
+            <p>
+              From image optimization and PDF manipulation to AI-powered content analysis and financial calculations, CreatorBoost AI offers 50+ tools organized across six main categories. Whether you're a YouTube creator optimizing thumbnails, a business professional managing documents, or someone who needs quick utility solutions, our tools are built to save you time and deliver professional results.
+            </p>
+          </div>
+          
+          {/* Key Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-slate-700">
+            <div className="space-y-3">
+              <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                <Zap className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-ink">Fast & Efficient</h3>
+              <p className="text-sm text-ink/60">Process files instantly without downloads or waiting times</p>
+            </div>
+            <div className="space-y-3">
+              <div className="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-6 h-6 text-secondary" />
+              </div>
+              <h3 className="font-bold text-ink">50+ Tools</h3>
+              <p className="text-sm text-ink/60">Comprehensive solutions for image, PDF, AI, and finance needs</p>
+            </div>
+            <div className="space-y-3">
+              <div className="w-10 h-10 bg-tertiary/20 rounded-lg flex items-center justify-center">
+                <AlertCircle className="w-6 h-6 text-tertiary" />
+              </div>
+              <h3 className="font-bold text-ink">100% Free & Private</h3>
+              <p className="text-sm text-ink/60">No account required for most tools, your data stays secure</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
 
 
       {/* Search Results */}

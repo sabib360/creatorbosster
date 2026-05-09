@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Crown, Sparkles, Download, Trash2, Palette, Type, Upload, AlertCircle, CheckCircle2, History, Rocket, Stars, Infinity, Zap, Flame, Wand2, Video, Play, Film, BarChart3, Layers, ZapOff, Brain, QrCode, Link, Share2, Smartphone, Shield, Key, Lock, Unlock, Copy, RefreshCw, Calculator, DollarSign, Ruler, Weight, TrendingUp, ArrowRightLeft, Star, FileText, Scissors, Merge, FilePlus, FileMinus, Grid, List, Eye, DownloadCloud, Trash2 as Delete, PiggyBank, CreditCard, Calendar, TrendingDown, Hash, Search, Copy as CopyIcon, Lightbulb, Target, Zap as ZapIcon, Clock, Users, Heart, Music, Camera, Video as VideoIcon, Briefcase, Car, Home, Plane, BookOpen } from 'lucide-react';
+import { Crown, Sparkles, Download, Trash2, Palette, Type, Upload, AlertCircle, CheckCircle2, History, Rocket, Stars, Infinity, Zap, Flame, Wand2, Video, Play, Film, BarChart3, Layers, ZapOff, Brain, QrCode, Link, Share2, Smartphone, Shield, Key, Lock, Unlock, Copy, RefreshCw, Calculator, DollarSign, Ruler, Weight, TrendingUp, ArrowRightLeft, Star, FileText, Scissors, Merge, FilePlus, FileMinus, Grid, List, Eye, DownloadCloud, Trash2 as Delete, PiggyBank, CreditCard, Calendar, TrendingDown, Hash, Search, Copy as CopyIcon, Lightbulb, Target, Zap as ZapIcon, Clock, Users, Heart, Music, Camera, Video as VideoIcon, Briefcase, Car, Home, Plane, BookOpen, Layout, Save } from 'lucide-react';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import html2canvas from 'html2canvas';
 import {
@@ -1791,7 +1791,7 @@ export default function ThumbnailGenerator() {
           }}
           transition={{
             duration: 20,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "linear"
           }}
           className="absolute top-20 left-20 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"
@@ -1803,7 +1803,7 @@ export default function ThumbnailGenerator() {
           }}
           transition={{
             duration: 15,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "linear"
           }}
           className="absolute bottom-20 right-20 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl"
@@ -1815,7 +1815,7 @@ export default function ThumbnailGenerator() {
           }}
           transition={{
             duration: 25,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "linear"
           }}
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"
@@ -1839,7 +1839,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 4,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
                 className="relative"
@@ -1854,7 +1854,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeOut"
                     }}
                     className="absolute inset-0 bg-white/20 rounded-full"
@@ -1887,7 +1887,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   >
@@ -1912,7 +1912,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 1.5
                     }}
@@ -1926,7 +1926,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                     className="absolute -inset-4 bg-gradient-to-r from-pink-500/20 to-orange-500/20 rounded-3xl blur-xl"
@@ -1949,7 +1949,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                   className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-md rounded-full border border-yellow-400/30"
@@ -1969,7 +1969,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                   className="text-2xl font-black text-white"
@@ -1984,7 +1984,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                     delay: 0.5
                   }}
@@ -2001,7 +2001,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 3,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut"
                 }}
                 className="flex items-center gap-6 text-white/80 font-medium"
@@ -2064,7 +2064,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 8,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut"
                 }}
               />
@@ -2077,7 +2077,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 4,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
               />
@@ -2098,7 +2098,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       delay: Math.random() * 2,
                       ease: "easeInOut"
                     }}
@@ -2131,7 +2131,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 >
@@ -2151,7 +2151,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 3,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                     delay: 0.5
                   }}
@@ -2183,7 +2183,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                       className="relative"
@@ -2210,7 +2210,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 2,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                       />
@@ -2223,7 +2223,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 3,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                         style={{
@@ -2265,7 +2265,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                 />
@@ -2276,7 +2276,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 1.5,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 />
@@ -2292,7 +2292,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 />
@@ -2310,7 +2310,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2 + Math.random() * 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         delay: Math.random() * 2,
                         ease: "easeInOut"
                       }}
@@ -2326,7 +2326,7 @@ export default function ThumbnailGenerator() {
                     <>
                       <motion.div
                         animate={{ rotate: 360 }}
-                        transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                        transition={{ duration: 0.8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                         className="relative"
                       >
                         <div className="absolute inset-0 bg-white/30 rounded-full blur-lg animate-pulse" />
@@ -2337,7 +2337,7 @@ export default function ThumbnailGenerator() {
                           opacity: [0.5, 1, 0.5],
                           scale: [0.95, 1.05, 0.95]
                         }}
-                        transition={{ duration: 1, repeat: Infinity }}
+                        transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
                         className="drop-shadow-lg"
                       >
                         GENERATING...
@@ -2353,7 +2353,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 1.5,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                         className="relative"
@@ -2371,7 +2371,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 2,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                         className="drop-shadow-lg font-black"
@@ -2403,7 +2403,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2.5,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                 />
@@ -2414,7 +2414,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 1.8,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 />
@@ -2430,7 +2430,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2.2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 />
@@ -2448,7 +2448,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2.5 + Math.random() * 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         delay: Math.random() * 2,
                         ease: "easeInOut"
                       }}
@@ -2468,7 +2468,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                     className="relative"
@@ -2486,7 +2486,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 2.5,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                     className="drop-shadow-lg font-black"
@@ -2515,7 +2515,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 3,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                 />
@@ -2526,7 +2526,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 />
@@ -2542,7 +2542,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2.5,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 />
@@ -2555,7 +2555,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "linear"
                     }}
                     className="relative"
@@ -2573,7 +2573,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                     className="font-black"
@@ -2642,7 +2642,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 8,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
               />
@@ -2661,7 +2661,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       delay: Math.random() * 3,
                       ease: "easeInOut"
                     }}
@@ -2681,7 +2681,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                   className="relative"
@@ -2701,7 +2701,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 >
@@ -2717,7 +2717,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   >
@@ -2756,7 +2756,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                     />
@@ -2769,7 +2769,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                     >
@@ -2787,7 +2787,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 1,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut"
                           }}
                         >
@@ -2807,7 +2807,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 0.5
                     }}
@@ -2847,7 +2847,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut",
                         delay: 1
                       }}
@@ -2861,7 +2861,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut",
                         delay: 0.5
                       }}
@@ -2880,7 +2880,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 1,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut"
                           }}
                         >
@@ -3122,7 +3122,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                     className="inline-block mb-3"
@@ -3652,7 +3652,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 8,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
               />
@@ -3671,7 +3671,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       delay: Math.random() * 3,
                       ease: "easeInOut"
                     }}
@@ -3691,7 +3691,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                   className="relative"
@@ -3711,7 +3711,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 >
@@ -3729,7 +3729,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   >
@@ -3768,7 +3768,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 0.5
                     }}
@@ -3807,7 +3807,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                     />
@@ -3823,7 +3823,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 1
                     }}
@@ -3863,7 +3863,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 1.5
                     }}
@@ -3914,7 +3914,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "linear"
                     }}
                   />
@@ -3925,7 +3925,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 1.5,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   />
@@ -3941,7 +3941,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 2,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut"
                 }}
               />
@@ -3950,7 +3950,7 @@ export default function ThumbnailGenerator() {
                       <>
                         <motion.div
                           animate={{ rotate: 360 }}
-                          transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                          transition={{ duration: 0.8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                           className="relative"
                         >
                           <div className="absolute inset-0 bg-purple-400 rounded-full blur-lg opacity-50 animate-pulse" />
@@ -3961,7 +3961,7 @@ export default function ThumbnailGenerator() {
                             opacity: [0.5, 1, 0.5],
                             scale: [0.95, 1.05, 0.95]
                           }}
-                          transition={{ duration: 1, repeat: Infinity }}
+                          transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
                           className="drop-shadow-lg"
                         >
                           GENERATING...
@@ -3977,7 +3977,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 1.5,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut"
                           }}
                           className="relative"
@@ -3995,7 +3995,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 2,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut"
                           }}
                           className="drop-shadow-lg font-black"
@@ -4032,7 +4032,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 2,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut"
                           }}
                           className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg"
@@ -4089,7 +4089,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 8,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
               />
@@ -4108,7 +4108,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       delay: Math.random() * 3,
                       ease: "easeInOut"
                     }}
@@ -4128,7 +4128,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                   className="relative"
@@ -4148,7 +4148,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 >
@@ -4166,7 +4166,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   >
@@ -4203,7 +4203,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 0.5
                     }}
@@ -4257,7 +4257,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 1
                     }}
@@ -4322,7 +4322,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "linear"
                     }}
                   />
@@ -4333,7 +4333,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 1.5,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   />
@@ -4349,7 +4349,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   />
@@ -4358,7 +4358,7 @@ export default function ThumbnailGenerator() {
                       <>
                         <motion.div
                           animate={{ rotate: 360 }}
-                          transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                          transition={{ duration: 0.8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                           className="relative"
                         >
                           <div className="absolute inset-0 bg-red-400 rounded-full blur-lg opacity-50 animate-pulse" />
@@ -4369,7 +4369,7 @@ export default function ThumbnailGenerator() {
                             opacity: [0.5, 1, 0.5],
                             scale: [0.95, 1.05, 0.95]
                           }}
-                          transition={{ duration: 1, repeat: Infinity }}
+                          transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
                           className="drop-shadow-lg"
                         >
                           GENERATING...
@@ -4385,7 +4385,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 1.5,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut"
                           }}
                           className="relative"
@@ -4403,7 +4403,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 2,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut"
                           }}
                           className="drop-shadow-lg font-black"
@@ -4434,7 +4434,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 3,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "linear"
                           }}
                           className="p-4 rounded-lg border border-red-500/30"
@@ -4450,7 +4450,7 @@ export default function ThumbnailGenerator() {
                               }}
                               transition={{
                                 duration: 2,
-                                repeat: Infinity,
+                                repeat: Number.POSITIVE_INFINITY,
                                 ease: "easeInOut"
                               }}
                               className="font-mono text-lg text-white break-all flex-1 mr-3"
@@ -4499,7 +4499,7 @@ export default function ThumbnailGenerator() {
                             }}
                             transition={{
                               duration: 2,
-                              repeat: Infinity,
+                              repeat: Number.POSITIVE_INFINITY,
                               ease: "easeInOut"
                             }}
                           />
@@ -4554,7 +4554,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 8,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
               />
@@ -4573,7 +4573,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       delay: Math.random() * 3,
                       ease: "easeInOut"
                     }}
@@ -4593,7 +4593,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                   className="relative"
@@ -4613,7 +4613,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 >
@@ -4631,7 +4631,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   >
@@ -4684,7 +4684,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 0.5
                     }}
@@ -4724,7 +4724,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 2,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                       />
@@ -4775,7 +4775,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 1
                     }}
@@ -4796,7 +4796,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 3,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "linear"
                         }}
                         className="p-4 rounded-lg border border-green-500/30"
@@ -4811,7 +4811,7 @@ export default function ThumbnailGenerator() {
                           }}
                           transition={{
                             duration: 2,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut"
                           }}
                           className="font-mono text-lg text-white"
@@ -4864,7 +4864,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "linear"
                       }}
                     />
@@ -4873,7 +4873,7 @@ export default function ThumbnailGenerator() {
                         <>
                           <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                            transition={{ duration: 0.8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                             className="relative"
                           >
                             <div className="absolute inset-0 bg-green-400 rounded-full blur-lg opacity-50 animate-pulse" />
@@ -4884,7 +4884,7 @@ export default function ThumbnailGenerator() {
                               opacity: [0.5, 1, 0.5],
                               scale: [0.95, 1.05, 0.95]
                             }}
-                            transition={{ duration: 1, repeat: Infinity }}
+                            transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
                             className="drop-shadow-lg"
                           >
                             CONVERTING...
@@ -4900,7 +4900,7 @@ export default function ThumbnailGenerator() {
                             }}
                             transition={{
                               duration: 1.5,
-                              repeat: Infinity,
+                              repeat: Number.POSITIVE_INFINITY,
                               ease: "easeInOut"
                             }}
                             className="relative"
@@ -4918,7 +4918,7 @@ export default function ThumbnailGenerator() {
                             }}
                             transition={{
                               duration: 2,
-                              repeat: Infinity,
+                              repeat: Number.POSITIVE_INFINITY,
                               ease: "easeInOut"
                             }}
                             className="drop-shadow-lg font-black"
@@ -5002,7 +5002,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 8,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
               />
@@ -5021,7 +5021,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       delay: Math.random() * 3,
                       ease: "easeInOut"
                     }}
@@ -5041,7 +5041,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                   className="relative"
@@ -5061,7 +5061,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 >
@@ -5079,7 +5079,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   >
@@ -5120,7 +5120,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 0.5
                     }}
@@ -5153,7 +5153,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                       className="flex flex-col items-center gap-3"
@@ -5186,7 +5186,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 3,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut",
                         delay: 1
                       }}
@@ -5246,7 +5246,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 3,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut",
                         delay: 1.5
                       }}
@@ -5282,7 +5282,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 2,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                       />
@@ -5316,7 +5316,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "linear"
                       }}
                     />
@@ -5325,7 +5325,7 @@ export default function ThumbnailGenerator() {
                         <>
                           <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                            transition={{ duration: 0.8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                             className="relative"
                           >
                             <div className="absolute inset-0 bg-purple-400 rounded-full blur-lg opacity-50 animate-pulse" />
@@ -5336,7 +5336,7 @@ export default function ThumbnailGenerator() {
                               opacity: [0.5, 1, 0.5],
                               scale: [0.95, 1.05, 0.95]
                             }}
-                            transition={{ duration: 1, repeat: Infinity }}
+                            transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
                             className="drop-shadow-lg"
                           >
                             {pdfOperation === 'merge' ? 'MERGING...' : 'SPLITTING...'}
@@ -5352,7 +5352,7 @@ export default function ThumbnailGenerator() {
                             }}
                             transition={{
                               duration: 1.5,
-                              repeat: Infinity,
+                              repeat: Number.POSITIVE_INFINITY,
                               ease: "easeInOut"
                             }}
                             className="relative"
@@ -5370,7 +5370,7 @@ export default function ThumbnailGenerator() {
                             }}
                             transition={{
                               duration: 2,
-                              repeat: Infinity,
+                              repeat: Number.POSITIVE_INFINITY,
                               ease: "easeInOut"
                             }}
                             className="drop-shadow-lg font-black"
@@ -5462,7 +5462,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 8,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
               />
@@ -5481,7 +5481,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       delay: Math.random() * 3,
                       ease: "easeInOut"
                     }}
@@ -5501,7 +5501,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                   className="relative"
@@ -5521,7 +5521,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 >
@@ -5539,7 +5539,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   >
@@ -5579,7 +5579,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 0.5
                     }}
@@ -5615,7 +5615,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                     />
@@ -5631,7 +5631,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 1
                     }}
@@ -5668,7 +5668,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                     />
@@ -5684,7 +5684,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 1.5
                     }}
@@ -5720,7 +5720,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                     />
@@ -5749,7 +5749,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "linear"
                       }}
                     />
@@ -5762,7 +5762,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 1.5,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                         className="relative"
@@ -5780,7 +5780,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 2,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                         className="drop-shadow-lg font-black"
@@ -5888,7 +5888,7 @@ export default function ThumbnailGenerator() {
                 }}
                 transition={{
                   duration: 8,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "linear"
                 }}
               />
@@ -5907,7 +5907,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       delay: Math.random() * 3,
                       ease: "easeInOut"
                     }}
@@ -5927,7 +5927,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "linear"
                   }}
                   className="relative"
@@ -5947,7 +5947,7 @@ export default function ThumbnailGenerator() {
                   }}
                   transition={{
                     duration: 2,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut"
                   }}
                 >
@@ -5965,7 +5965,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut"
                     }}
                   >
@@ -6003,7 +6003,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 0.5
                     }}
@@ -6039,7 +6039,7 @@ export default function ThumbnailGenerator() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       ease: "easeInOut",
                       delay: 1
                     }}
@@ -6075,7 +6075,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "easeInOut"
                       }}
                     />
@@ -6104,7 +6104,7 @@ export default function ThumbnailGenerator() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         ease: "linear"
                       }}
                     />
@@ -6117,7 +6117,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 1.5,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                         className="relative"
@@ -6135,7 +6135,7 @@ export default function ThumbnailGenerator() {
                         }}
                         transition={{
                           duration: 2,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "easeInOut"
                         }}
                         className="drop-shadow-lg font-black"

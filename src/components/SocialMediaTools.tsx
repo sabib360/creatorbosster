@@ -37,6 +37,16 @@ export default function SocialMediaTools() {
         </p>
       </div>
 
+      {/* Introduction */}
+      <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-8 space-y-4">
+        <p className="text-ink/70 leading-relaxed">
+          <strong>Our Social Media Tools</strong> are built for content creators and social media managers who want to grow their audience and increase engagement. Generate viral hashtags, brainstorm engaging content ideas, write compelling captions, track your performance, and optimize your social media strategy - all in one place.
+        </p>
+        <p className="text-ink/70 leading-relaxed">
+          Whether you're managing a personal brand, growing a business account on Instagram, TikTok, or YouTube - these tools are designed to save you time and help you create content that resonates with your audience.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {tools.map((tool, index) => (
           <motion.div
