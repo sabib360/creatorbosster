@@ -344,6 +344,40 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
+    
+    // Sitemap and Robots.txt routes
+    app.get('/sitemap.xml', (req, res) => {
+      try {
+        // Dynamic import for ESM module
+        import('./src/config/sitemap-generator.ts').then(module => {
+          const { generateSitemapXML } = module;
+          res.type('application/xml').send(generateSitemapXML());
+        }).catch(err => {
+          console.error('Error loading sitemap generator:', err);
+          res.status(500).send('Error generating sitemap');
+        });
+      } catch (error) {
+        console.error('Sitemap error:', error);
+        res.status(500).send('Error generating sitemap');
+      }
+    });
+
+    app.get('/robots.txt', (req, res) => {
+      try {
+        // Dynamic import for ESM module
+        import('./src/config/sitemap-generator.ts').then(module => {
+          const { generateRobotsTxt } = module;
+          res.type('text/plain').send(generateRobotsTxt());
+        }).catch(err => {
+          console.error('Error loading robots generator:', err);
+          res.status(500).send('Error generating robots.txt');
+        });
+      } catch (error) {
+        console.error('Robots.txt error:', error);
+        res.status(500).send('Error generating robots.txt');
+      }
+    });
+    
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });

@@ -55,6 +55,12 @@ import SocialAnalytics from './components/tools/SocialAnalytics';
 import LinkShortener from './components/tools/LinkShortener';
 import EmojiPicker from './components/tools/EmojiPicker';
 import HowToUse from './components/HowToUse';
+import DynamicSEOToolPage from './components/DynamicSEOToolPage';
+import JSONFormatter from './components/tools/JSONFormatter';
+import Base64EncoderDecoder from './components/tools/Base64EncoderDecoder';
+import AgeCalculator from './components/tools/AgeCalculator';
+import PDFToWord from './components/tools/PDFToWord';
+import YouTubeDownloader from './components/tools/YouTubeDownloader';
 
 type View = 'dashboard' | 'image-tools' | 'pdf-tools' | 'ai-tools' | 'finance-tools' | 'social-media-tools' | 'privacy-policy' | 'terms-of-service' | 'contact-us' | 'about' | 'blog';
 
@@ -298,6 +304,13 @@ export default function App() {
                 <Route path="/tools/link-shortener" element={<ToolPage><LinkShortener /></ToolPage>} />
                 <Route path="/tools/emoji-picker" element={<ToolPage><EmojiPicker /></ToolPage>} />
                 
+                {/* Quick-Win Tools */}
+                <Route path="/tools/json-formatter" element={<ToolPage><JSONFormatter /></ToolPage>} />
+                <Route path="/tools/base64-encoder" element={<ToolPage><Base64EncoderDecoder /></ToolPage>} />
+                <Route path="/tools/age-calculator" element={<ToolPage><AgeCalculator /></ToolPage>} />
+                <Route path="/tools/pdf-to-word" element={<ToolPage><PDFToWord /></ToolPage>} />
+                <Route path="/tools/youtube-downloader" element={<ToolPage><YouTubeDownloader /></ToolPage>} />
+                
                 {/* Static Pages */}
                 <Route path="/about" element={<About />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -306,6 +319,10 @@ export default function App() {
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPostRoute />} />
                 <Route path="/how-to-use" element={<HowToUse />} />
+                
+                {/* Dynamic SEO Pages Route (must be last before wildcard) */}
+                <Route path="/tools/:toolPath" element={<DynamicSEOToolPage />} />
+                
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>

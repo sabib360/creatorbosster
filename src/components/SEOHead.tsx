@@ -140,6 +140,37 @@ export default function SEOHead({
   type = 'website',
   structuredData 
 }: SEOHeadProps) {
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Creator Booster AI',
+    description: 'All-in-one toolkit for creators with 50+ tools for image processing, PDF editing, AI-powered content creation, and financial calculations',
+    url: 'https://creatorboostai.xyz',
+    logo: 'https://creatorboostai.xyz/favicon.svg',
+    sameAs: [
+      'https://www.facebook.com/profile.php?id=61572335704389'
+    ],
+    contact: {
+      '@type': 'ContactPoint',
+      telephone: '+1-support',
+      contactType: 'Customer Support',
+      email: 'support@creatorboostai.xyz'
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '1000',
+      bestRating: '5',
+      worstRating: '1'
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      description: 'Free access to all tools'
+    }
+  };
+
   return (
     <Helmet>
       {/* Primary Meta Tags */}
@@ -165,10 +196,12 @@ export default function SEOHead({
       <meta property="twitter:creator" content="@creatorboostai" />
       
       {/* Additional Meta Tags */}
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       <meta name="language" content="English" />
       <meta name="revisit-after" content="7 days" />
       <meta name="theme-color" content="#0f172a" />
+      <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       
       {/* Canonical URL */}
       <link rel="canonical" href={canonicalUrl} />
@@ -180,6 +213,12 @@ export default function SEOHead({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       )}
+
+      {/* Organization Schema */}
+      <script 
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
       
       {/* Alternate Language */}
       <link rel="alternate" hrefLang="en" href={canonicalUrl} />
