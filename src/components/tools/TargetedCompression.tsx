@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 import { Upload, Download, X, Target, AlertCircle } from 'lucide-react';
 import imageCompression from 'browser-image-compression';
 
@@ -6,10 +6,20 @@ export default function TargetedCompression() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [compressedFile, setCompressedFile] = useState<Blob | null>(null);
+  const [compressedPreview, setCompressedPreview] = useState<string | null>(null);
   const [targetSize, setTargetSize] = useState<'50' | '100' | '200'>('50');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const compressedPreviewUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+      if (compressedPreviewUrlRef.current) URL.revokeObjectURL(compressedPreviewUrlRef.current);
+    };
+  }, []);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -17,9 +27,15 @@ export default function TargetedCompression() {
       return;
     }
     setError(null);
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (compressedPreviewUrlRef.current) URL.revokeObjectURL(compressedPreviewUrlRef.current);
+    const url = URL.createObjectURL(file);
+    previewUrlRef.current = url;
     setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
+    setPreview(url);
     setCompressedFile(null);
+    setCompressedPreview(null);
+    compressedPreviewUrlRef.current = null;
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -43,7 +59,11 @@ export default function TargetedCompression() {
         quality: 0.6,
       };
       const compressedBlob = await imageCompression(selectedFile, options);
+      if (compressedPreviewUrlRef.current) URL.revokeObjectURL(compressedPreviewUrlRef.current);
+      const url = URL.createObjectURL(compressedBlob);
+      compressedPreviewUrlRef.current = url;
       setCompressedFile(compressedBlob);
+      setCompressedPreview(url);
     } catch (err) {
       setError('Failed to compress image. Please try again.');
     } finally {
@@ -52,20 +72,23 @@ export default function TargetedCompression() {
   };
 
   const handleDownload = () => {
-    if (!compressedFile) return;
-    const url = URL.createObjectURL(compressedFile);
+    if (!compressedFile || !compressedPreview) return;
     const a = document.createElement('a');
-    a.href = url;
+    a.href = compressedPreview;
     a.download = `compressed_${targetSize}kb_${selectedFile?.name || 'image.jpg'}`;
     a.click();
-    URL.revokeObjectURL(url);
   };
 
   const reset = () => {
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (compressedPreviewUrlRef.current) URL.revokeObjectURL(compressedPreviewUrlRef.current);
     setSelectedFile(null);
     setPreview(null);
     setCompressedFile(null);
+    setCompressedPreview(null);
     setError(null);
+    previewUrlRef.current = null;
+    compressedPreviewUrlRef.current = null;
   };
 
   const formatFileSize = (bytes: number) => {
@@ -121,7 +144,7 @@ export default function TargetedCompression() {
               <h3 className="font-bold text-ink uppercase tracking-widest text-sm">Compressed</h3>
               <div className="relative rounded-xl overflow-hidden border border-slate-700">
                 {compressedFile ? (
-                  <img src={URL.createObjectURL(compressedFile)} alt="Compressed" className="w-full h-64 object-contain bg-slate-800" />
+                  <img src={compressedPreview || ''} alt="Compressed" className="w-full h-64 object-contain bg-slate-800" />
                 ) : (
                   <div className="w-full h-64 flex items-center justify-center bg-slate-800 text-ink/40">
                     <span>Preview will appear here</span>

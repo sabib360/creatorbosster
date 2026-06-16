@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Download, X, Crop, AlertCircle } from 'lucide-react';
 
 export default function ImageCropper() {
@@ -10,6 +10,15 @@ export default function ImageCropper() {
   const [error, setError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const croppedImageUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+      if (croppedImageUrlRef.current) URL.revokeObjectURL(croppedImageUrlRef.current);
+    };
+  }, []);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -17,9 +26,14 @@ export default function ImageCropper() {
       return;
     }
     setError(null);
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (croppedImageUrlRef.current) URL.revokeObjectURL(croppedImageUrlRef.current);
+    const url = URL.createObjectURL(file);
+    previewUrlRef.current = url;
     setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
+    setPreview(url);
     setCroppedImage(null);
+    croppedImageUrlRef.current = null;
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -36,6 +50,10 @@ export default function ImageCropper() {
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
+    img.onerror = () => {
+      setError('Failed to load image');
+      setIsProcessing(false);
+    };
     img.onload = () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -52,7 +70,9 @@ export default function ImageCropper() {
       
       canvas.toBlob((blob) => {
         if (blob) {
+          if (croppedImageUrlRef.current) URL.revokeObjectURL(croppedImageUrlRef.current);
           const url = URL.createObjectURL(blob);
+          croppedImageUrlRef.current = url;
           setCroppedImage(url);
         }
         setIsProcessing(false);
@@ -70,10 +90,14 @@ export default function ImageCropper() {
   };
 
   const reset = () => {
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (croppedImageUrlRef.current) URL.revokeObjectURL(croppedImageUrlRef.current);
     setSelectedFile(null);
     setPreview(null);
     setCroppedImage(null);
     setError(null);
+    previewUrlRef.current = null;
+    croppedImageUrlRef.current = null;
   };
 
   return (

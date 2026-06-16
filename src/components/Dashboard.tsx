@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, ImageIcon, FileText, Bot, Zap, ArrowRight, Sparkles, Palette, BarChart3, AlertCircle, Lock, Download, Clock, Shield, Eye, Filter, Edit3, Share2, Check, Smile, Gauge, Cloud, Smartphone, Cpu } from 'lucide-react';
+import { Search, ImageIcon, FileText, Bot, Zap, ArrowRight, Sparkles, Palette, BarChart3, AlertCircle, Lock, Download, Clock, Shield, Eye, Filter, Edit3, Share2, Check, Smile, Gauge, Cloud, Smartphone, Cpu, CreditCard } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const categories = [
@@ -286,6 +286,150 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
+      {/* Most-Searched Daily Use Features */}
+      <motion.div variants={itemVariants} className="py-16 border-t border-slate-800">
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">Most-Searched Daily Use Features</h2>
+          <p className="text-ink/60 max-w-2xl mx-auto">The most searched daily utility tools your users want, organized by category.</p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <ImageIcon className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-ink">Image Tools</h3>
+                <p className="text-ink/60 text-sm">Top image utilities for creators and everyday users.</p>
+              </div>
+            </div>
+            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
+              <li>Background Remover</li>
+              <li>Image Compressor</li>
+              <li>Image to PDF</li>
+              <li>Passport Photo Maker</li>
+              <li>Image Resizer</li>
+              <li>Photo Enhancer/Upscaler</li>
+              <li>Meme Generator</li>
+              <li>Screenshot to Text (OCR)</li>
+              <li>Watermark Remover</li>
+              <li>Color Picker from Image</li>
+            </ol>
+          </div>
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
+                <FileText className="w-6 h-6 text-secondary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-ink">PDF Tools</h3>
+                <p className="text-ink/60 text-sm">The highest-demand PDF utilities for office and document work.</p>
+              </div>
+            </div>
+            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
+              <li>PDF to Word</li>
+              <li>Word to PDF</li>
+              <li>PDF Compressor</li>
+              <li>PDF Merger</li>
+              <li>PDF to Excel</li>
+              <li>PDF Password Remover</li>
+              <li>PDF Editor</li>
+              <li>E-Signature Tool</li>
+            </ol>
+          </div>
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-tertiary/10 flex items-center justify-center">
+                <Bot className="w-6 h-6 text-tertiary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-ink">AI Tools</h3>
+                <p className="text-ink/60 text-sm">Trending AI utilities for students, creators, and professionals.</p>
+              </div>
+            </div>
+            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
+              <li>AI Background Remover</li>
+              <li>AI Resume/CV Builder</li>
+              <li>AI Cover Letter Writer</li>
+              <li>AI Grammar Checker</li>
+              <li>AI Paraphraser</li>
+              <li>AI Plagiarism Checker</li>
+              <li>AI Translator</li>
+              <li>AI Summarizer</li>
+              <li>AI Chatbot</li>
+            </ol>
+          </div>
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <CreditCard className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-ink">Finance Tools</h3>
+                <p className="text-ink/60 text-sm">Daily financial calculators for global users.</p>
+              </div>
+            </div>
+            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
+              <li>VAT Calculator</li>
+              <li>GST Calculator</li>
+              <li>Currency Converter</li>
+              <li>Invoice Generator</li>
+              <li>Salary Calculator</li>
+              <li>Loan/EMI Calculator</li>
+              <li>Tip Calculator</li>
+            </ol>
+          </div>
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-secondary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-ink">Social Media Tools</h3>
+                <p className="text-ink/60 text-sm">Tools that creators use every day for content growth.</p>
+              </div>
+            </div>
+            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
+              <li>YouTube Thumbnail Maker</li>
+              <li>Instagram Post Resizer</li>
+              <li>TikTok Watermark Remover</li>
+              <li>Hashtag Generator</li>
+              <li>Bio Link Page Builder</li>
+              <li>YouTube Title/Tag Generator</li>
+              <li>Social Media Caption Writer</li>
+              <li>QR Code Generator</li>
+            </ol>
+          </div>
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6 md:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-tertiary/10 flex items-center justify-center">
+                <AlertCircle className="w-6 h-6 text-tertiary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-ink">Everyday Utility Tools</h3>
+                <p className="text-ink/60 text-sm">Simple utilities that drive daily search volume.</p>
+              </div>
+            </div>
+            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
+              <li>Word Counter</li>
+              <li>Age Calculator</li>
+              <li>BMI Calculator</li>
+              <li>Password Generator</li>
+              <li>Unit Converter</li>
+              <li>Timer/Stopwatch</li>
+              <li>Note Pad Online</li>
+              <li>Internet Speed Test</li>
+            </ol>
+          </div>
+        </div>
+      </motion.div>
+
       {/* 25 Key Features Section */}
       <motion.div variants={itemVariants} className="py-16 border-t border-slate-800">
         <div className="mb-12 text-center">
@@ -295,211 +439,213 @@ export default function Dashboard() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {/* Image Processing Features */}
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/image-compressor" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
               <ImageIcon className="w-5 h-5 text-primary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">Image Compression</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">Image Compression</h4>
             <p className="text-xs text-ink/60">Reduce file size while maintaining quality</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/background-remover" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
               <Palette className="w-5 h-5 text-secondary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">Background Removal</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">Background Removal</h4>
             <p className="text-xs text-ink/60">Remove backgrounds from images instantly</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/image-resizer" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
               <Edit3 className="w-5 h-5 text-tertiary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">Image Resizing</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">Image Resizing</h4>
             <p className="text-xs text-ink/60">Resize images to any dimensions instantly</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/image-cropper" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
               <Filter className="w-5 h-5 text-primary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">Image Cropping</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">Image Cropping</h4>
             <p className="text-xs text-ink/60">Crop and adjust images with precision</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/image-converter" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
               <Share2 className="w-5 h-5 text-secondary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">Image Conversion</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">Image Conversion</h4>
             <p className="text-xs text-ink/60">Convert between JPEG, PNG, WebP, GIF</p>
-          </motion.div>
+          </Link>
 
           {/* PDF Processing Features */}
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/pdf-compressor" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
               <FileText className="w-5 h-5 text-tertiary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">PDF Compression</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">PDF Compression</h4>
             <p className="text-xs text-ink/60">Reduce PDF file sizes significantly</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/pdf-merger" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
               <Zap className="w-5 h-5 text-primary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">PDF Merging</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">PDF Merging</h4>
             <p className="text-xs text-ink/60">Combine multiple PDFs into one file</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/pdf-splitter" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
               <FileText className="w-5 h-5 text-secondary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">PDF Splitting</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">PDF Splitting</h4>
             <p className="text-xs text-ink/60">Extract specific pages from PDFs</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/pdf-to-word" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
               <FileText className="w-5 h-5 text-tertiary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">PDF to Word</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">PDF to Word</h4>
             <p className="text-xs text-ink/60">Convert PDF documents to Word format</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/pdf-rotator" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
               <Download className="w-5 h-5 text-primary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">PDF Rotation</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">PDF Rotation</h4>
             <p className="text-xs text-ink/60">Rotate pages in PDF documents</p>
-          </motion.div>
+          </Link>
 
           {/* AI Features */}
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/ai-assistant" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
               <Bot className="w-5 h-5 text-secondary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">AI Writing Assistant</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">AI Writing Assistant</h4>
             <p className="text-xs text-ink/60">Generate content with AI assistance</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/image-analyzer" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
               <Sparkles className="w-5 h-5 text-tertiary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">AI Image Analysis</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">AI Image Analysis</h4>
             <p className="text-xs text-ink/60">Analyze and describe images with AI</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/pdf-summarizer" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
               <BarChart3 className="w-5 h-5 text-primary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">PDF Summarization</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">PDF Summarization</h4>
             <p className="text-xs text-ink/60">Get AI summaries of documents</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/caption-writer" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
               <Edit3 className="w-5 h-5 text-secondary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">AI Caption Writer</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">AI Caption Writer</h4>
             <p className="text-xs text-ink/60">Generate captions for social media</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/ai-thumbnail-generator" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
               <Palette className="w-5 h-5 text-tertiary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">AI Thumbnail Generator</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">AI Thumbnail Generator</h4>
             <p className="text-xs text-ink/60">Create stunning thumbnails with AI</p>
-          </motion.div>
+          </Link>
 
           {/* Security & Performance */}
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
+          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
             <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
               <Lock className="w-5 h-5 text-primary" />
             </div>
             <h4 className="font-bold text-ink mb-1">100% Private</h4>
             <p className="text-xs text-ink/60">Files never leave your device</p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
+          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
             <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
               <Clock className="w-5 h-5 text-secondary" />
             </div>
             <h4 className="font-bold text-ink mb-1">Lightning Fast</h4>
             <p className="text-xs text-ink/60">Process files instantly in-browser</p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
+          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
             <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
               <Shield className="w-5 h-5 text-tertiary" />
             </div>
             <h4 className="font-bold text-ink mb-1">No Registration</h4>
             <p className="text-xs text-ink/60">Start using tools immediately</p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
+          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
             <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
               <Eye className="w-5 h-5 text-primary" />
             </div>
             <h4 className="font-bold text-ink mb-1">Ad-Free Experience</h4>
             <p className="text-xs text-ink/60">Premium members get ad-free tools</p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
+          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
             <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
               <Check className="w-5 h-5 text-secondary" />
             </div>
             <h4 className="font-bold text-ink mb-1">Auto-Save Work</h4>
             <p className="text-xs text-ink/60">Your progress is saved automatically</p>
-          </motion.div>
+          </div>
 
           {/* Developer & Utility */}
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/json-formatter" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
               <Cpu className="w-5 h-5 text-tertiary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">JSON Tools</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">JSON Tools</h4>
             <p className="text-xs text-ink/60">Format, validate, and minify JSON</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
+          <Link to="/tools/bulk-compressor" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
               <Gauge className="w-5 h-5 text-primary" />
             </div>
-            <h4 className="font-bold text-ink mb-1">Batch Processing</h4>
+            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">Batch Processing</h4>
             <p className="text-xs text-ink/60">Process multiple files at once</p>
-          </motion.div>
+          </Link>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
+          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
             <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
               <Cloud className="w-5 h-5 text-secondary" />
             </div>
             <h4 className="font-bold text-ink mb-1">Cloud Integration</h4>
             <p className="text-xs text-ink/60">Works on all devices seamlessly</p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
+          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
             <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
               <Smartphone className="w-5 h-5 text-tertiary" />
             </div>
             <h4 className="font-bold text-ink mb-1">Mobile Friendly</h4>
             <p className="text-xs text-ink/60">Fully responsive on all screens</p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
+          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
             <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
               <Smile className="w-5 h-5 text-primary" />
             </div>
             <h4 className="font-bold text-ink mb-1">Easy to Use</h4>
             <p className="text-xs text-ink/60">Intuitive interface for everyone</p>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
+
+
     </motion.div>
   );
 }

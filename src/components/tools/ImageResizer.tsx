@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Download, X, Maximize, AlertCircle } from 'lucide-react';
 
 export default function ImageResizer() {
@@ -13,6 +13,15 @@ export default function ImageResizer() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const resizedImageUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+      if (resizedImageUrlRef.current) URL.revokeObjectURL(resizedImageUrlRef.current);
+    };
+  }, []);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -20,8 +29,12 @@ export default function ImageResizer() {
       return;
     }
     setError(null);
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (resizedImageUrlRef.current) URL.revokeObjectURL(resizedImageUrlRef.current);
+    
     setSelectedFile(file);
     const url = URL.createObjectURL(file);
+    previewUrlRef.current = url;
     setPreview(url);
     
     const img = new Image();
@@ -31,8 +44,12 @@ export default function ImageResizer() {
       setNewHeight(img.height);
       setAspectRatio(img.width / img.height);
     };
+    img.onerror = () => {
+      setError('Failed to load image');
+    };
     img.src = url;
     setResizedImage(null);
+    resizedImageUrlRef.current = null;
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -72,11 +89,18 @@ export default function ImageResizer() {
       
       canvas.toBlob((blob) => {
         if (blob) {
+          if (resizedImageUrlRef.current) URL.revokeObjectURL(resizedImageUrlRef.current);
           const url = URL.createObjectURL(blob);
+          resizedImageUrlRef.current = url;
           setResizedImage(url);
         }
         setIsProcessing(false);
       }, selectedFile.type);
+    };
+    
+    img.onerror = () => {
+      setError('Failed to load image');
+      setIsProcessing(false);
     };
     
     img.src = preview || '';
@@ -91,6 +115,10 @@ export default function ImageResizer() {
   };
 
   const reset = () => {
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (resizedImageUrlRef.current) URL.revokeObjectURL(resizedImageUrlRef.current);
+    previewUrlRef.current = null;
+    resizedImageUrlRef.current = null;
     setSelectedFile(null);
     setPreview(null);
     setImageDimensions({ width: 0, height: 0 });

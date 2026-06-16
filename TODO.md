@@ -1,28 +1,27 @@
-# TODO - Add all trending features + SEO tool pages
+# TODO - Content Tools Category (500+ programmatic SEO pages)
 
-## Step 1: Confirm SEO architecture
-- [x] Inspect `src/components/DynamicSEOToolPage.tsx`, `src/config/programmatic-seo.ts`, sitemap generator, and tools registry
-- [ ] Refactor so SEO can render any tool that exists (no hardcoded switch-only)
+## Step 1 — Scalability foundation (DONE/IN PROGRESS)
+- [ ] Refactor `src/components/DynamicSEOToolPage.tsx` to remove the hardcoded `switch (variant.toolId)`.
+- [ ] Implement `toolId -> ReactComponent` map so new tools can be added without editing logic.
 
 
-## Step 2: Add missing tool components
-- [ ] Create tools under `src/components/tools/` for each missing item in the user list
-  - AI: Image Upscaler, Headshot Generator, Resume/CV Builder, Caption Generator
-  - Social: Instagram Story/Reel Size Converter, TikTok Video Downloader (no watermark), Twitter/X Banner Maker, LinkedIn Banner Creator
-  - Finance: VAT Calculator (UK + Dubai 5%), GST Calculator (Australia), Invoice Generator (PDF export), Salary Tax Calculator by country
-  - Content: Blog Title Generator, YouTube SEO Title/Description Writer, Plagiarism Checker, Word Counter / Readability Scorer
 
-## Step 3: Wire routes in `src/App.tsx`
-- [ ] Add `Route path="/tools/<slug>" element={<ToolPage><Component/></ToolPage>}` for every new tool
+## Step 2 — Programmatic variant generation
 
-## Step 4: Add tiles to category pages
-- [ ] Update `src/components/AITools.tsx`, `src/components/SocialMediaTools.tsx`, `src/components/FinanceTools.tsx` so new tools appear
+- [ ] Replace the static-only approach in `src/config/programmatic-seo.ts` with a data-driven generator:
+  - base tool definitions (toolId, component, URL base)
+  - niche templates (20 niches)
+  - variant fields (title/description/keywords/h1/FAQ/internalLinks)
+- [ ] Ensure each generated variant has unique `path` and correct `toolId`.
 
-## Step 5: Programmatic SEO + “Free” keywords + Arabic option
-- [ ] Ensure each tool page has correct Helmet tags + canonical URL
-- [ ] Add Arabic mode/labels for Dubai-related finance tools
+## Step 3 — SEO sitemap and consistency
+- [ ] Update sitemap generation (`src/config/sitemap*.ts`) so all generated variants are included.
+- [ ] Verify canonical URL domain consistency between `ToolPage.tsx` and `DynamicSEOToolPage.tsx`.
 
-## Step 6: Build & verify
-- [ ] Run `npm run build` and fix any TS/router issues
-- [ ] Smoke-test key routes in dev server
+## Step 4 — Verification
+- [ ] Run `npm run lint` and `npm run build`.
+- [ ] Manually test several generated niche URLs to confirm:
+  - correct SEO metadata
+  - correct tool UI renders
+  - FAQ + related links render
 

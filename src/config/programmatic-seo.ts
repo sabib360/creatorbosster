@@ -338,41 +338,100 @@ export const PDF_COMPRESSOR_VARIANTS: SEOPageVariant[] = [
   },
 ];
 
-// Helper functions
-export const getSEOPageVariants = (toolId: string): SEOPageVariant[] => {
-  const allVariants = [
-    ...AGE_CALCULATOR_VARIANTS,
-    ...IMAGE_COMPRESSOR_VARIANTS,
-    ...PDF_COMPRESSOR_VARIANTS,
+import { NICHES_20, nicheSlug } from './niche-templates';
+import { ALL_TOOLS, ToolVariant } from './tools-registry';
+
+const SEO_TITLE_BASE = (toolName: string, niche: string) => `${toolName} for ${niche} - ${toolName} Online`;
+
+const makeVariant = (baseTool: ToolVariant, niche: string, idx: number): SEOPageVariant => {
+  const toolName = baseTool.name;
+  const base = baseTool.id;
+  const nicheSlugified = nicheSlug(niche);
+
+  const path = `/tools/${nicheSlugified}-${base}`;
+
+  const title = SEO_TITLE_BASE(toolName, niche);
+  const description = `Use ${toolName} for ${niche}. Generate results instantly with a free online ${toolName.toLowerCase()} tool.`;
+  const keywords = [
+    `${toolName}`.toLowerCase(),
+    `${toolName} for ${niche}`.toLowerCase(),
+    niche.toLowerCase(),
+    baseTool.category.toLowerCase(),
+    ...baseTool.keywords,
+  ].filter(Boolean) as string[];
+
+  const h1 = `${toolName} for ${niche} - Online ${toolName}`;
+  const shortDescription = `Fast ${toolName} for ${niche}.`;
+  const longDescription = `Our online ${toolName} helps you get the output you need for ${niche}. Choose your inputs, run the tool instantly, and download your results. Built for creators, teams, and professionals who want speed and reliability.`;
+
+  const faq: SEOPageVariant['faq'] = [
+    {
+      q: `How does ${toolName} help with ${niche}?`,
+      a: `This tool is designed to process your input for ${niche} use-cases. Enter your content, run the conversion/analysis/generation, and download the result.`,
+    },
+    {
+      q: `Is this ${toolName} free to use?`,
+      a: `Yes—this is an online free tool. You can use it without installing software.`,
+    },
   ];
-  return allVariants.filter(variant => variant.toolId === toolId);
-};
 
-export const getTotalSEOPages = (): number => {
-  return (
-    AGE_CALCULATOR_VARIANTS.length +
-    IMAGE_COMPRESSOR_VARIANTS.length +
-    PDF_COMPRESSOR_VARIANTS.length
-  );
-};
+  const internalLinks: SEOPageVariant['internalLinks'] = [
+    { text: 'Blog', path: '/blog' },
+    { text: 'How to Use', path: '/how-to-use' },
+  ];
 
-export const getAllSEOVariants = () => {
   return {
-    ageCalculator: AGE_CALCULATOR_VARIANTS,
-    imageCompressor: IMAGE_COMPRESSOR_VARIANTS,
-    pdfCompressor: PDF_COMPRESSOR_VARIANTS,
+    id: `${nicheSlugified}-${base}-${idx}`,
+    toolId: base,
+    title,
+    description,
+    keywords,
+    path,
+    h1,
+    shortDescription,
+    longDescription,
+    faq,
+    internalLinks,
   };
 };
 
-// Get variations for sitemap
+// Base tools => 20 niche variations
+export const ALL_PROGRAMMATIC_VARIANTS: SEOPageVariant[] = (() => {
+  const toolsWithComponent = ALL_TOOLS.filter(t => Boolean(t.component));
+
+  // Keep existing hand-authored variants for the three tools
+  const legacy = [...AGE_CALCULATOR_VARIANTS, ...IMAGE_COMPRESSOR_VARIANTS, ...PDF_COMPRESSOR_VARIANTS];
+
+  const generated: SEOPageVariant[] = [];
+
+  for (const tool of toolsWithComponent) {
+    for (let i = 0; i < NICHES_20.length; i++) {
+      const niche = NICHES_20[i];
+      generated.push(makeVariant(tool, niche, i));
+    }
+  }
+
+  // Prefer generated variants for /tools/:... patterns; keep legacy as-is
+  return [...legacy, ...generated];
+})();
+
+export const getSEOPageVariants = (toolId: string): SEOPageVariant[] => {
+  return ALL_PROGRAMMATIC_VARIANTS.filter(variant => variant.toolId === toolId);
+};
+
+export const getTotalSEOPages = (): number => {
+  return ALL_PROGRAMMATIC_VARIANTS.length;
+};
+
+export const getAllSEOVariants = () => {
+  return ALL_PROGRAMMATIC_VARIANTS;
+};
+
 export const getSitemapEntries = () => {
-  return [
-    ...AGE_CALCULATOR_VARIANTS,
-    ...IMAGE_COMPRESSOR_VARIANTS,
-    ...PDF_COMPRESSOR_VARIANTS,
-  ].map(variant => ({
+  return ALL_PROGRAMMATIC_VARIANTS.map(variant => ({
     path: variant.path,
     priority: 0.8,
     changefreq: 'monthly' as const,
   }));
 };
+

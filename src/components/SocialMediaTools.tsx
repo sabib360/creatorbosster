@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Hash, Heart, MessageCircle, Share2, Users, TrendingUp, Sparkles, Edit3, BarChart3, Link2, Smile } from 'lucide-react';
+import { ArrowRight, Hash, MessageCircle, Sparkles, Edit3, BarChart3, Link2, Smile, Image as ImageIcon, Type, QrCode } from 'lucide-react';
 import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
-  { name: 'Hashtag Generator', path: '/tools/hashtag-generator', description: 'Generate trending and relevant hashtags for Instagram and TikTok to boost your social media reach', icon: Hash },
-  { name: 'Content Idea Generator', path: '/tools/content-idea-generator', description: 'Generate creative content ideas tailored to your platforms and audience preferences', icon: Edit3 },
-  { name: 'Instagram Caption Writer', path: '/tools/caption-writer', description: 'Create engaging Instagram captions with the perfect tone and hashtags for maximum reach', icon: Sparkles },
-  { name: 'Social Media Analytics', path: '/tools/social-analytics', description: 'Track your social media performance across all platforms with detailed analytics', icon: BarChart3 },
-  { name: 'Link Shortener', path: '/tools/link-shortener', description: 'Create short, memorable links and track their performance across platforms', icon: Link2 },
-  { name: 'Emoji Picker', path: '/tools/emoji-picker', description: 'Find and copy the perfect emoji for your social media posts and messages', icon: Smile },
+  { name: 'YouTube Thumbnail Maker', path: '/tools/youtube-thumbnail-maker', description: 'Create attention-grabbing YouTube thumbnails with AI-powered design and title suggestions', icon: ImageIcon },
+  { name: 'Instagram Post Resizer', path: '/tools/instagram-post-resizer', description: 'Resize and optimize visuals for Instagram posts, stories, and reels', icon: ImageIcon },
+  { name: 'TikTok Watermark Remover', path: '/tools/tiktok-watermark-remover', description: 'Remove TikTok watermarks from videos and image exports quickly', icon: Sparkles },
+  { name: 'Hashtag Generator', path: '/tools/hashtag-generator', description: 'Generate trending hashtags to boost your Instagram and TikTok reach', icon: Hash },
+  { name: 'Bio Link Page Builder', path: '/tools/bio-link-page-builder', description: 'Build a mobile-friendly link-in-bio landing page for your social profiles', icon: Link2 },
+  { name: 'YouTube Title/Tag Generator', path: '/tools/youtube-title-tag-generator', description: 'Generate clickable YouTube titles and SEO-friendly tags for better discovery', icon: Type },
+  { name: 'Social Media Caption Writer', path: '/tools/social-media-caption-writer', description: 'Write engaging captions for posts, reels, and stories in seconds', icon: MessageCircle },
+  { name: 'QR Code Generator', path: '/tools/qr-code-generator', description: 'Generate custom QR codes for links, campaigns, and profile sharing', icon: QrCode },
 ];
 
 export default function SocialMediaTools() {

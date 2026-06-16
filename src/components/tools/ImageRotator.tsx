@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Download, X, RotateCw, RotateCcw, FlipHorizontal2, FlipVertical2, AlertCircle } from 'lucide-react';
 
 export default function ImageRotator() {
@@ -11,6 +11,15 @@ export default function ImageRotator() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const rotatedImageUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+      if (rotatedImageUrlRef.current) URL.revokeObjectURL(rotatedImageUrlRef.current);
+    };
+  }, []);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -18,9 +27,14 @@ export default function ImageRotator() {
       return;
     }
     setError(null);
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (rotatedImageUrlRef.current) URL.revokeObjectURL(rotatedImageUrlRef.current);
+    const url = URL.createObjectURL(file);
+    previewUrlRef.current = url;
     setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
+    setPreview(url);
     setRotatedImage(null);
+    rotatedImageUrlRef.current = null;
     setRotation(0);
     setFlipH(false);
     setFlipV(false);
@@ -39,6 +53,10 @@ export default function ImageRotator() {
     setError(null);
 
     const img = new Image();
+    img.onerror = () => {
+      setError('Failed to load image');
+      setIsProcessing(false);
+    };
     img.onload = () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -59,7 +77,10 @@ export default function ImageRotator() {
       
       canvas.toBlob((blob) => {
         if (blob) {
-          setRotatedImage(URL.createObjectURL(blob));
+          if (rotatedImageUrlRef.current) URL.revokeObjectURL(rotatedImageUrlRef.current);
+          const url = URL.createObjectURL(blob);
+          rotatedImageUrlRef.current = url;
+          setRotatedImage(url);
         }
         setIsProcessing(false);
       }, selectedFile.type);
@@ -76,6 +97,8 @@ export default function ImageRotator() {
   };
 
   const reset = () => {
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (rotatedImageUrlRef.current) URL.revokeObjectURL(rotatedImageUrlRef.current);
     setSelectedFile(null);
     setPreview(null);
     setRotatedImage(null);
@@ -83,6 +106,8 @@ export default function ImageRotator() {
     setFlipH(false);
     setFlipV(false);
     setError(null);
+    previewUrlRef.current = null;
+    rotatedImageUrlRef.current = null;
   };
 
   return (

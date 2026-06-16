@@ -41,6 +41,8 @@ import AIAssistant from './components/tools/AIAssistant';
 import ThumbnailGenerator from './components/tools/ThumbnailGenerator';
 import AIThumbnailGenerator from './components/tools/AIThumbnailGenerator';
 import LoanEMICalculator from './components/tools/LoanEMICalculator';
+import SimpleInterestCalculator from './components/tools/SimpleInterestCalculator';
+import CompoundInterestCalculator from './components/tools/CompoundInterestCalculator';
 import HashtagGenerator from './components/tools/HashtagGenerator';
 import FinanceTools from './components/FinanceTools';
 import SocialMediaTools from './components/SocialMediaTools';
@@ -54,6 +56,7 @@ import CaptionWriter from './components/tools/CaptionWriter';
 import SocialAnalytics from './components/tools/SocialAnalytics';
 import LinkShortener from './components/tools/LinkShortener';
 import EmojiPicker from './components/tools/EmojiPicker';
+import BioLinkPageBuilder from './components/tools/BioLinkPageBuilder';
 import HowToUse from './components/HowToUse';
 import DynamicSEOToolPage from './components/DynamicSEOToolPage';
 import JSONFormatter from './components/tools/JSONFormatter';
@@ -290,6 +293,8 @@ export default function App() {
                 
                 {/* Finance Tools */}
                 <Route path="/tools/loan-emi-calculator" element={<ToolPage><LoanEMICalculator /></ToolPage>} />
+                <Route path="/tools/simple-interest-calculator" element={<ToolPage><SimpleInterestCalculator /></ToolPage>} />
+                <Route path="/tools/compound-interest-calculator" element={<ToolPage><CompoundInterestCalculator /></ToolPage>} />
                 <Route path="/tools/sip-calculator" element={<ToolPage><SIPCalculator /></ToolPage>} />
                 <Route path="/tools/budget-planner" element={<ToolPage><BudgetPlanner /></ToolPage>} />
                 <Route path="/tools/tax-calculator" element={<ToolPage><TaxCalculator /></ToolPage>} />
@@ -298,12 +303,19 @@ export default function App() {
                 
                 {/* Social Media Tools */}
                 <Route path="/tools/hashtag-generator" element={<ToolPage><HashtagGenerator /></ToolPage>} />
+                <Route path="/tools/youtube-thumbnail-maker" element={<ToolPage><AIThumbnailGenerator /></ToolPage>} />
+                <Route path="/tools/instagram-post-resizer" element={<ToolPage><ImageResizer /></ToolPage>} />
+                <Route path="/tools/tiktok-watermark-remover" element={<ToolPage><WatermarkTool /></ToolPage>} />
+                <Route path="/tools/bio-link-page-builder" element={<ToolPage><BioLinkPageBuilder /></ToolPage>} />
+                <Route path="/tools/youtube-title-tag-generator" element={<ToolPage><AIThumbnailGenerator /></ToolPage>} />
+                <Route path="/tools/social-media-caption-writer" element={<ToolPage><CaptionWriter /></ToolPage>} />
+                <Route path="/tools/qr-code-generator" element={<ToolPage><ThumbnailGenerator /></ToolPage>} />
                 <Route path="/tools/content-idea-generator" element={<ToolPage><ContentIdeaGenerator /></ToolPage>} />
                 <Route path="/tools/caption-writer" element={<ToolPage><CaptionWriter /></ToolPage>} />
                 <Route path="/tools/social-analytics" element={<ToolPage><SocialAnalytics /></ToolPage>} />
                 <Route path="/tools/link-shortener" element={<ToolPage><LinkShortener /></ToolPage>} />
                 <Route path="/tools/emoji-picker" element={<ToolPage><EmojiPicker /></ToolPage>} />
-                
+
                 {/* Quick-Win Tools */}
                 <Route path="/tools/json-formatter" element={<ToolPage><JSONFormatter /></ToolPage>} />
                 <Route path="/tools/base64-encoder" element={<ToolPage><Base64EncoderDecoder /></ToolPage>} />

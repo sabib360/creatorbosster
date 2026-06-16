@@ -376,8 +376,8 @@ export const TIMELINE = {
   'Week 4': {
     focus: 'Phase 4 & 5: Monetization & Marketing',
     hours: 30,
-    tools: 30+,
-    pages: 200+,
+    tools: '30+',
+    pages: '200+',
     expectedTraffic: '+250,000/month (total)',
   },
 };
@@ -398,7 +398,7 @@ export const PROJECTIONS = {
 // CRITICAL SUCCESS FACTORS
 // =======================================
 export const SUCCESS_FACTORS = [
-  '✅ Deploy quickly - Don't wait for perfection',
+  "✅ Deploy quickly - Don't wait for perfection",
   '✅ Focus on high-traffic tools first',
   '✅ Use programmatic SEO to scale pages',
   '✅ Monitor rankings daily',

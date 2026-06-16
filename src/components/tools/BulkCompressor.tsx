@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Download, X, Package, AlertCircle } from 'lucide-react';
 import JSZip from 'jszip';
 import imageCompression from 'browser-image-compression';
@@ -11,6 +11,13 @@ export default function BulkCompressor() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlsRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    return () => {
+      previewUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, []);
 
   const handleFileSelect = (files: FileList | null) => {
     if (!files) return;
@@ -19,9 +26,12 @@ export default function BulkCompressor() {
       setError('Please select valid image files');
       return;
     }
+    previewUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+    const newUrls = imageFiles.map(f => URL.createObjectURL(f));
+    previewUrlsRef.current = newUrls;
     setError(null);
     setSelectedFiles(imageFiles);
-    setPreviews(imageFiles.map(f => URL.createObjectURL(f)));
+    setPreviews(newUrls);
     setCompressedFiles([]);
   };
 
@@ -67,6 +77,8 @@ export default function BulkCompressor() {
   };
 
   const reset = () => {
+    previewUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+    previewUrlsRef.current = [];
     setSelectedFiles([]);
     setPreviews([]);
     setCompressedFiles([]);

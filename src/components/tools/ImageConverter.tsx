@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Download, X, RefreshCw, AlertCircle } from 'lucide-react';
 
 type OutputFormat = 'image/jpeg' | 'image/png' | 'image/webp';
@@ -12,6 +12,15 @@ export default function ImageConverter() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const convertedImageUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+      if (convertedImageUrlRef.current) URL.revokeObjectURL(convertedImageUrlRef.current);
+    };
+  }, []);
 
   const formatLabels: Record<OutputFormat, string> = {
     'image/jpeg': 'JPG',
@@ -25,9 +34,14 @@ export default function ImageConverter() {
       return;
     }
     setError(null);
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (convertedImageUrlRef.current) URL.revokeObjectURL(convertedImageUrlRef.current);
+    const url = URL.createObjectURL(file);
+    previewUrlRef.current = url;
     setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
+    setPreview(url);
     setConvertedImage(null);
+    convertedImageUrlRef.current = null;
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -43,6 +57,10 @@ export default function ImageConverter() {
     setError(null);
 
     const img = new Image();
+    img.onerror = () => {
+      setError('Failed to load image');
+      setIsProcessing(false);
+    };
     img.onload = () => {
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
@@ -52,7 +70,10 @@ export default function ImageConverter() {
       
       canvas.toBlob((blob) => {
         if (blob) {
-          setConvertedImage(URL.createObjectURL(blob));
+          if (convertedImageUrlRef.current) URL.revokeObjectURL(convertedImageUrlRef.current);
+          const url = URL.createObjectURL(blob);
+          convertedImageUrlRef.current = url;
+          setConvertedImage(url);
         }
         setIsProcessing(false);
       }, outputFormat, quality);
@@ -70,10 +91,14 @@ export default function ImageConverter() {
   };
 
   const reset = () => {
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (convertedImageUrlRef.current) URL.revokeObjectURL(convertedImageUrlRef.current);
     setSelectedFile(null);
     setPreview(null);
     setConvertedImage(null);
     setError(null);
+    previewUrlRef.current = null;
+    convertedImageUrlRef.current = null;
   };
 
   return (

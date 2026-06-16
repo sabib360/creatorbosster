@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Download, X, Minimize2, SlidersHorizontal, CheckCircle2, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import imageCompression from 'browser-image-compression';
@@ -13,6 +13,15 @@ export default function ImageCompressor() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const compressedPreviewUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+      if (compressedPreviewUrlRef.current) URL.revokeObjectURL(compressedPreviewUrlRef.current);
+    };
+  }, []);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -20,10 +29,16 @@ export default function ImageCompressor() {
       return;
     }
     setError(null);
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (compressedPreviewUrlRef.current) URL.revokeObjectURL(compressedPreviewUrlRef.current);
+    
     setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
+    const newPreviewUrl = URL.createObjectURL(file);
+    previewUrlRef.current = newPreviewUrl;
+    setPreview(newPreviewUrl);
     setCompressedFile(null);
     setCompressedPreview(null);
+    compressedPreviewUrlRef.current = null;
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -48,9 +63,13 @@ export default function ImageCompressor() {
 
       const compressedBlob = await imageCompression(selectedFile, options);
       setCompressedFile(compressedBlob);
-      setCompressedPreview(URL.createObjectURL(compressedBlob));
+      if (compressedPreviewUrlRef.current) URL.revokeObjectURL(compressedPreviewUrlRef.current);
+      const newCompressedPreviewUrl = URL.createObjectURL(compressedBlob);
+      compressedPreviewUrlRef.current = newCompressedPreviewUrl;
+      setCompressedPreview(newCompressedPreviewUrl);
     } catch (err) {
       setError('Failed to compress image. Please try again.');
+      console.error('Compression error:', err);
     } finally {
       setIsProcessing(false);
     }
@@ -67,6 +86,10 @@ export default function ImageCompressor() {
   };
 
   const reset = () => {
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (compressedPreviewUrlRef.current) URL.revokeObjectURL(compressedPreviewUrlRef.current);
+    previewUrlRef.current = null;
+    compressedPreviewUrlRef.current = null;
     setSelectedFile(null);
     setPreview(null);
     setCompressedFile(null);

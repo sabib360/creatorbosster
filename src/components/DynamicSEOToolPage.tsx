@@ -41,44 +41,40 @@ export default function DynamicSEOToolPage() {
     return <Navigate to="/" />;
   }
 
-  // Get tool info
+  // Get tool info (for future extension; currently only used for existence checks)
   const tool = getTool(variant.toolId);
 
+
   // Render the appropriate tool component based on toolId
-  const renderToolComponent = () => {
-    switch (variant.toolId) {
-      case 'age-calculator':
-        return <AgeCalculator />;
-      case 'image-compressor':
-        return <ImageCompressor />;
-      case 'pdf-compressor':
-        return <PDFCompressor />;
-      case 'json-formatter':
-        return <JSONFormatter />;
-      case 'base64-encoder-decoder':
-        return <Base64EncoderDecoder />;
-      case 'pdf-to-word':
-        return <PDFToWord />;
-      case 'youtube-video-downloader':
-        return <YouTubeDownloader />;
-      default:
-        return <div className="text-white">Tool not found</div>;
-    }
+  const toolComponentMap: Record<string, React.ReactNode> = {
+
+    'age-calculator': <AgeCalculator />,
+    'image-compressor': <ImageCompressor />,
+    'pdf-compressor': <PDFCompressor />,
+    'json-formatter': <JSONFormatter />,
+    'base64-encoder-decoder': <Base64EncoderDecoder />,
+    'pdf-to-word': <PDFToWord />,
+    'youtube-video-downloader': <YouTubeDownloader />,
   };
+
+  const renderToolComponent = () => {
+    return toolComponentMap[variant.toolId] ?? <div className="text-white">Tool not found</div>;
+  };
+
 
   return (
     <>
       <Helmet>
-        <title>{variant.seoTitle}</title>
-        <meta name="description" content={variant.seoDescription} />
+        <title>{variant.title}</title>
+        <meta name="description" content={variant.description} />
         <meta name="keywords" content={variant.keywords.join(', ')} />
-        <meta property="og:title" content={variant.seoTitle} />
-        <meta property="og:description" content={variant.seoDescription} />
+        <meta property="og:title" content={variant.title} />
+        <meta property="og:description" content={variant.description} />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={variant.seoTitle} />
-        <meta name="twitter:description" content={variant.seoDescription} />
-        <canonical name="canonical" content={`https://creatorboost.ai${variant.path}`} />
+        <meta name="twitter:title" content={variant.title} />
+        <meta name="twitter:description" content={variant.description} />
+        <link rel="canonical" href={`https://creatorboost.ai${variant.path}`} />
       </Helmet>
 
       <motion.div
