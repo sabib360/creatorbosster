@@ -57,8 +57,8 @@ export default function AIAssistant() {
     try {
       // Placeholder implementation - in a real app, this would call a backend API
       setTimeout(() => {
-        const assistantMessage: Message = { 
-          role: 'assistant', 
+        const assistantMessage: Message = {
+          role: 'assistant',
           content: "This AI assistant feature requires server-side processing. In a production environment, this would use Google's Gemini API to provide intelligent responses to your questions and tasks."
         };
         setMessages(prev => [...prev, assistantMessage]);
@@ -85,6 +85,54 @@ export default function AIAssistant() {
     <div className="space-y-8">
       <div className="text-center space-y-4"><div className="w-16 h-16 bg-tertiary/10 rounded-2xl flex items-center justify-center mx-auto"><Bot className="w-8 h-8 text-tertiary" /></div>
         <h1 className="text-3xl font-display font-black uppercase tracking-tighter text-ink">AI Assistant</h1><p className="text-ink/60">Chat with AI for any questions or tasks</p></div>
+
+      <p className="text-ink/70 leading-relaxed text-center max-w-2xl mx-auto">
+        Ask anything about YouTube growth, content strategy, SEO, or thumbnail design. This chatbot is tuned for creator-specific topics and can suggest titles, hook lines, tag sets, and competitive positioning based on your channel niche.
+      </p>
+
+      <div className="space-y-4">
+        <h2 className="text-xl font-display font-black uppercase tracking-wider text-ink">How to Use the AI Assistant</h2>
+        <ol className="space-y-3 text-ink/70 list-decimal list-inside">
+          <li>Click one of the suggestion buttons or type your own question in the input field.</li>
+          <li>Press Enter or click the send button to submit your message.</li>
+          <li>Read the AI's response in the chat window above.</li>
+          <li>Follow up with additional questions to refine the suggestions.</li>
+          <li>Copy any useful titles, tags, or ideas into your content planning document.</li>
+        </ol>
+      </div>
+
+      <div className="space-y-3">
+        <h2 className="text-xl font-display font-black uppercase tracking-wider text-ink">Common Use Cases</h2>
+        <ul className="space-y-2 text-ink/70">
+          <li className="flex gap-3"><span className="text-primary font-black">•</span><span>Brainstorming title variations when you have a video topic but cannot find the right hook.</span></li>
+          <li className="flex gap-3"><span className="text-primary font-black">•</span><span>Getting thumbnail composition advice for a specific video concept or niche.</span></li>
+          <li className="flex gap-3"><span className="text-primary font-black">•</span><span>Researching YouTube SEO tag combinations that competing channels in your space use.</span></li>
+          <li className="flex gap-3"><span className="text-primary font-black">•</span><span>Drafting a weekly content calendar when you are stuck on what to film next.</span></li>
+        </ul>
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="text-xl font-display font-black uppercase tracking-wider text-ink">Frequently Asked Questions</h2>
+        <div className="space-y-3">
+          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+            <h3 className="font-bold text-ink mb-2">What topics can I ask about?</h3>
+            <p className="text-ink/60 text-sm leading-relaxed">The assistant is optimized for YouTube content creation — titles, thumbnails, SEO tags, channel growth, and competitor analysis. You can also ask general questions, but the strongest responses come from creator-focused prompts.</p>
+          </div>
+          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+            <h3 className="font-bold text-ink mb-2">Does it cost credits to chat?</h3>
+            <p className="text-ink/60 text-sm leading-relaxed">Each message exchange consumes one AI credit from your daily balance. Free users get 3 credits per day; premium users have higher limits depending on their plan.</p>
+          </div>
+          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+            <h3 className="font-bold text-ink mb-2">Is my conversation stored?</h3>
+            <p className="text-ink/60 text-sm leading-relaxed">Your chat history is kept in your browser session only. It is not saved to any server and is lost when you close or refresh the page.</p>
+          </div>
+          <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+            <h3 className="font-bold text-ink mb-2">Can it write full video scripts?</h3>
+            <p className="text-ink/60 text-sm leading-relaxed">The assistant can generate outline structures, hook lines, and talking-point bullet lists. For full-length scripts with narration and timing, you would need to expand on its output manually or use a dedicated scriptwriting tool.</p>
+          </div>
+        </div>
+      </div>
+
       {error && <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400"><AlertCircle className="w-5 h-5" /><span>{error}</span></div>}
       <div className="bg-slate-800/50 rounded-2xl p-6 space-y-4 max-h-96 overflow-y-auto">
         {messages.length === 0 && (

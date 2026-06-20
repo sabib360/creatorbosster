@@ -1,230 +1,160 @@
 import { Helmet } from 'react-helmet-async';
+import { SEO_CONFIG } from '../config/seo-config';
+import { organizationSchema } from '../lib/schema';
+
+export const categorySEOData: Record<string, {
+  title: string;
+  description: string;
+  keywords: string;
+  structuredData: object;
+}> = {
+  'ai-tools': {
+    title: 'Free AI Tools Online | AI Content Generator & Image Creator | CreatorBoost AI',
+    description: 'Best free AI tools online: AI content generator, thumbnail creator, image generator. No signup required.',
+    keywords: 'AI tools online, free AI tools, AI content generator',
+    structuredData: { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'AI Tools Suite', applicationCategory: 'MultimediaApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+  },
+  'image-tools': {
+    title: 'Free Image Tools Online | Image Editor, Compressor & Converter | CreatorBoost AI',
+    description: 'Professional image tools: editor, compressor, resizer, converter. Optimize images for web.',
+    keywords: 'image editor online, image compression tool, image resizer',
+    structuredData: { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Image Tools Suite', applicationCategory: 'GraphicsApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+  },
+  'pdf-tools': {
+    title: 'Free PDF Tools Online | PDF Editor, Merger & Converter | CreatorBoost AI',
+    description: 'Complete PDF toolkit: editor, merger, splitter, compressor, converter.',
+    keywords: 'PDF editor online, PDF merger, PDF converter, PDF compressor',
+    structuredData: { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'PDF Tools Suite', applicationCategory: 'OfficeApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+  },
+  'finance-tools': {
+    title: 'Free Financial Calculators | Loan, EMI, SIP & Budget Calculator | CreatorBoost AI',
+    description: 'Essential financial tools: loan EMI calculator, SIP calculator, budget planner.',
+    keywords: 'financial calculator, loan calculator, EMI calculator',
+    structuredData: { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Financial Tools Suite', applicationCategory: 'FinanceApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+  },
+  'social-media-tools': {
+    title: 'Free Social Media Tools | Hashtag Generator, Content Ideas & More | CreatorBoost AI',
+    description: 'Ultimate social media toolkit: hashtag generator, content ideas, caption writer.',
+    keywords: 'social media tools, hashtag generator, content idea generator',
+    structuredData: { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Social Media Tools Suite', applicationCategory: 'SocialMediaApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+  },
+};
 
 interface SEOHeadProps {
   title: string;
   description: string;
-  keywords: string;
+  keywords?: string;
   canonicalUrl?: string;
   ogImage?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
   type?: string;
-  structuredData?: object;
+  structuredData?: object | object[];
+  robots?: string;
+  noindex?: boolean;
+  article?: {
+    publishedTime?: string;
+    modifiedTime?: string;
+    author?: string;
+    section?: string;
+    tags?: string[];
+  };
 }
 
-const categorySEOData = {
-  'ai-tools': {
-    title: 'Free AI Tools Online | AI Content Generator & Image Creator | Creator Booster',
-    description: 'Best free AI tools online: AI content generator, thumbnail creator, image generator. No signup required. Create viral content with AI-powered tools.',
-    keywords: 'AI tools online, free AI tools, AI content generator, AI image generator, AI thumbnail creator, artificial intelligence tools, AI writing assistant, AI design tools',
-    structuredData: {
-      '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: 'AI Tools Suite - Creator Booster',
-      description: 'Free AI-powered tools for content creation, image generation, and thumbnail design',
-      applicationCategory: 'MultimediaApplication',
-      operatingSystem: 'Web',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD'
-      }
-    }
-  },
-  'image-tools': {
-    title: 'Free Image Tools Online | Image Editor, Compressor & Converter | Creator Booster',
-    description: 'Professional image tools: editor, compressor, resizer, converter. Optimize images for web. Free online image processing tools.',
-    keywords: 'image editor online, image compression tool, image resizer, image converter, photo editor, image optimizer, free image tools, bulk image editor',
-    structuredData: {
-      '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: 'Image Tools Suite - Creator Booster',
-      description: 'Free online image editing, compression, and conversion tools',
-      applicationCategory: 'GraphicsApplication',
-      operatingSystem: 'Web',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD'
-      }
-    }
-  },
-  'pdf-tools': {
-    title: 'Free PDF Tools Online | PDF Editor, Merger & Converter | Creator Booster',
-    description: 'Complete PDF toolkit: editor, merger, splitter, compressor, converter. Edit PDF files online for free. No watermark.',
-    keywords: 'PDF editor online, PDF merger, PDF converter, PDF compressor, PDF splitter, free PDF tools, online PDF editor, PDF file converter',
-    structuredData: {
-      '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: 'PDF Tools Suite - Creator Booster',
-      description: 'Free online PDF editing, merging, and conversion tools',
-      applicationCategory: 'OfficeApplication',
-      operatingSystem: 'Web',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD'
-      }
-    }
-  },
-  'finance-tools': {
-    title: 'Free Financial Calculators | Loan, EMI, SIP & Budget Calculator | Creator Booster',
-    description: 'Essential financial tools: loan EMI calculator, SIP calculator, budget planner, tax calculator. Make informed financial decisions.',
-    keywords: 'financial calculator, loan calculator, EMI calculator, SIP calculator, budget planner, tax calculator, currency converter, finance tools online',
-    structuredData: {
-      '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: 'Financial Tools Suite - Creator Booster',
-      description: 'Free financial calculators for loans, investments, and budget planning',
-      applicationCategory: 'FinanceApplication',
-      operatingSystem: 'Web',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD'
-      }
-    }
-  },
-  'social-media-tools': {
-    title: 'Free Social Media Tools | Hashtag Generator, Content Ideas & Scheduler | Creator Booster',
-    description: 'Ultimate social media toolkit: hashtag generator, content ideas, caption writer, analytics, emoji picker. Boost your social media presence.',
-    keywords: 'social media tools, hashtag generator, Instagram hashtag generator, content idea generator, social media scheduler, emoji picker, link shortener',
-    structuredData: {
-      '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: 'Social Media Tools Suite - Creator Booster',
-      description: 'Free social media management and content creation tools',
-      applicationCategory: 'SocialMediaApplication',
-      operatingSystem: 'Web',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD'
-      }
-    }
-  }
-};
-
-const toolSpecificSEOData = {
-  'ai-thumbnail-generator': {
-    title: 'Free AI YouTube Thumbnail Generator | Create Viral Thumbnails | Creator Booster',
-    description: 'Generate stunning YouTube thumbnails with AI in seconds. Free AI thumbnail creator for content creators. No signup required.',
-    keywords: 'AI thumbnail generator, YouTube thumbnail creator, AI image generator, video thumbnail maker, free thumbnail generator, YouTube thumbnail AI'
-  },
-  'image-compressor': {
-    title: 'Free Image Compressor Online | Reduce Image Size Without Quality Loss | Creator Booster',
-    description: 'Compress images online for free. Reduce image file size while maintaining quality. Best image optimizer for web.',
-    keywords: 'image compressor, compress image online, reduce image size, image optimizer, image compression tool, JPEG compressor, PNG compressor'
-  },
-  'pdf-merger': {
-    title: 'Free PDF Merger Online | Combine Multiple PDF Files | Creator Booster',
-    description: 'Merge PDF files online for free. Combine multiple PDFs into one document. No watermark, no registration required.',
-    keywords: 'PDF merger, merge PDF files, combine PDF, PDF joiner, concatenate PDF, merge multiple PDFs, free PDF merger'
-  },
-  'loan-emi-calculator': {
-    title: 'Free Loan EMI Calculator | Calculate Monthly EMI Online | Creator Booster',
-    description: 'Calculate loan EMI instantly with our free online calculator. Check monthly payments, total interest, and payment schedule.',
-    keywords: 'loan EMI calculator, EMI calculator, loan calculator, monthly EMI calculation, home loan calculator, personal loan EMI, car loan EMI'
-  },
-  'hashtag-generator': {
-    title: 'Free Instagram Hashtag Generator | Best Hashtags for Posts | Creator Booster',
-    description: 'Generate trending hashtags for Instagram and TikTok. Free hashtag generator to boost your social media reach and engagement.',
-    keywords: 'Instagram hashtag generator, hashtag generator, best hashtags for Instagram, TikTok hashtag generator, viral hashtags, hashtag research tool'
-  }
-};
-
-export default function SEOHead({ 
-  title, 
-  description, 
-  keywords, 
-  canonicalUrl = 'https://creatorboostai.xyz/', 
-  ogImage = '/og-image.png',
+export default function SEOHead({
+  title,
+  description,
+  keywords = '',
+  canonicalUrl,
+  ogImage,
+  ogImageWidth,
+  ogImageHeight,
   type = 'website',
-  structuredData 
+  structuredData,
+  robots,
+  noindex = false,
+  article,
 }: SEOHeadProps) {
-  const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Creator Booster AI',
-    description: 'All-in-one toolkit for creators with 50+ tools for image processing, PDF editing, AI-powered content creation, and financial calculations',
-    url: 'https://creatorboostai.xyz',
-    logo: 'https://creatorboostai.xyz/favicon.svg',
-    sameAs: [
-      'https://www.facebook.com/profile.php?id=61572335704389'
-    ],
-    contact: {
-      '@type': 'ContactPoint',
-      telephone: '+1-support',
-      contactType: 'Customer Support',
-      email: 'support@creatorboostai.xyz'
-    },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      ratingCount: '1000',
-      bestRating: '5',
-      worstRating: '1'
-    },
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-      description: 'Free access to all tools'
-    }
-  };
+  const config = SEO_CONFIG;
+  const finalOgImage = ogImage
+    ? ogImage.startsWith('http') ? ogImage : `${config.siteUrl}${ogImage}`
+    : config.defaultOgImage;
+  const finalCanonical = canonicalUrl || `${config.siteUrl}/`;
+  const finalRobots = noindex ? 'noindex, nofollow' : (robots || config.robots);
+
+  const orgSchema = organizationSchema();
+  const allSchemas = structuredData
+    ? Array.isArray(structuredData)
+      ? [orgSchema, ...structuredData]
+      : [orgSchema, structuredData]
+    : [orgSchema];
 
   return (
     <Helmet>
       {/* Primary Meta Tags */}
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta name="keywords" content={keywords} />
-      <meta name="author" content="Creator Booster AI" />
-      
+      {keywords && <meta name="keywords" content={keywords} />}
+      <meta name="author" content={config.author} />
+      <meta name="language" content={config.languageName} />
+      <meta name="revisit-after" content={config.revisitAfter} />
+
+      {/* Robots */}
+      <meta name="robots" content={finalRobots} />
+      <meta name="googlebot" content={config.googlebot} />
+      <meta name="bingbot" content={config.bingbot} />
+
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:url" content={finalCanonical} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={`https://creatorboostai.xyz${ogImage}`} />
-      <meta property="og:site_name" content="Creator Booster" />
-      
-      {/* Twitter */}
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={canonicalUrl} />
-      <meta property="twitter:title" content={title} />
-      <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={`https://creatorboostai.xyz${ogImage}`} />
-      <meta property="twitter:creator" content="@creatorboostai" />
-      
-      {/* Additional Meta Tags */}
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-      <meta name="language" content="English" />
-      <meta name="revisit-after" content="7 days" />
-      <meta name="theme-color" content="#0f172a" />
-      <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-      <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-      
-      {/* Canonical URL */}
-      <link rel="canonical" href={canonicalUrl} />
-      
-      {/* Structured Data */}
-      {structuredData && (
-        <script 
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+      <meta property="og:image" content={finalOgImage} />
+      <meta property="og:image:width" content={String(ogImageWidth || config.ogImageWidth)} />
+      <meta property="og:image:height" content={String(ogImageHeight || config.ogImageHeight)} />
+      <meta property="og:site_name" content={config.siteName} />
+      <meta property="og:locale" content="en_US" />
+
+      {/* Twitter Card */}
+      <meta name="twitter:card" content={config.twitterCard} />
+      <meta name="twitter:url" content={finalCanonical} />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={finalOgImage} />
+      <meta name="twitter:creator" content={config.twitterUsername} />
+
+      {/* Article-specific Open Graph */}
+      {article && (
+        <>
+          {article.publishedTime && <meta property="article:published_time" content={article.publishedTime} />}
+          {article.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+          {article.author && <meta property="article:author" content={article.author} />}
+          {article.section && <meta property="article:section" content={article.section} />}
+          {article.tags?.map((tag, i) => (
+            <meta key={i} property="article:tag" content={tag} />
+          ))}
+        </>
       )}
 
-      {/* Organization Schema */}
-      <script 
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      
-      {/* Alternate Language */}
-      <link rel="alternate" hrefLang="en" href={canonicalUrl} />
-      <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
+      {/* Theme & Mobile */}
+      <meta name="theme-color" content={config.themeColor} />
+      <meta name="msapplication-TileColor" content={config.msapplicationTileColor} />
+
+      {/* Canonical URL */}
+      <link rel="canonical" href={finalCanonical} />
+
+      {/* Hreflang for multi-language */}
+      <link rel="alternate" hrefLang="en" href={finalCanonical} />
+      <link rel="alternate" hrefLang="x-default" href={finalCanonical} />
+
+      {/* All Structured Data */}
+      {allSchemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
     </Helmet>
   );
 }
-
-export { categorySEOData, toolSpecificSEOData };

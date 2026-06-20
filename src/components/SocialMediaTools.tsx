@@ -1,17 +1,24 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Hash, MessageCircle, Sparkles, Edit3, BarChart3, Link2, Smile, Image as ImageIcon, Type, QrCode } from 'lucide-react';
+import { ArrowRight, Hash, MessageCircle, Sparkles, Edit3, BarChart3, Link2, Smile, Image as ImageIcon, Type, QrCode, Film, Users, Lightbulb, Tag, FileText, Download } from 'lucide-react';
 import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
-  { name: 'YouTube Thumbnail Maker', path: '/tools/youtube-thumbnail-maker', description: 'Create attention-grabbing YouTube thumbnails with AI-powered design and title suggestions', icon: ImageIcon },
-  { name: 'Instagram Post Resizer', path: '/tools/instagram-post-resizer', description: 'Resize and optimize visuals for Instagram posts, stories, and reels', icon: ImageIcon },
-  { name: 'TikTok Watermark Remover', path: '/tools/tiktok-watermark-remover', description: 'Remove TikTok watermarks from videos and image exports quickly', icon: Sparkles },
-  { name: 'Hashtag Generator', path: '/tools/hashtag-generator', description: 'Generate trending hashtags to boost your Instagram and TikTok reach', icon: Hash },
-  { name: 'Bio Link Page Builder', path: '/tools/bio-link-page-builder', description: 'Build a mobile-friendly link-in-bio landing page for your social profiles', icon: Link2 },
-  { name: 'YouTube Title/Tag Generator', path: '/tools/youtube-title-tag-generator', description: 'Generate clickable YouTube titles and SEO-friendly tags for better discovery', icon: Type },
-  { name: 'Social Media Caption Writer', path: '/tools/social-media-caption-writer', description: 'Write engaging captions for posts, reels, and stories in seconds', icon: MessageCircle },
-  { name: 'QR Code Generator', path: '/tools/qr-code-generator', description: 'Generate custom QR codes for links, campaigns, and profile sharing', icon: QrCode },
+  { name: 'YouTube Title Generator', path: '/tools/youtube-title-generator', description: 'Generate catchy, SEO-optimized titles with clickbait scores', icon: Type },
+  { name: 'YouTube Description Generator', path: '/tools/youtube-description-generator', description: 'Create SEO descriptions with hashtags and chapters', icon: FileText },
+  { name: 'YouTube Tag Generator', path: '/tools/youtube-tag-generator', description: 'Generate 40+ tags with search volume estimates', icon: Tag },
+  { name: 'YouTube Hashtag Generator', path: '/tools/youtube-hashtag-generator', description: 'Generate trending hashtags categorized by relevance', icon: Hash },
+  { name: 'YouTube Script Writer', path: '/tools/youtube-script-writer', description: 'Generate complete video scripts with hooks and CTAs', icon: Film },
+  { name: 'YouTube SEO Checker', path: '/tools/youtube-seo-checker', description: 'Analyze and optimize your video metadata for maximum reach', icon: BarChart3 },
+  { name: 'Channel Analyzer', path: '/tools/youtube-channel-analyzer', description: 'Get insights on any YouTube channel performance and growth', icon: Users },
+  { name: 'Comment Reply Generator', path: '/tools/youtube-comment-replies', description: 'Generate professional, engaging replies to comments', icon: MessageCircle },
+  { name: 'Video Ideas Generator', path: '/tools/youtube-video-ideas', description: 'Generate 50+ video ideas with difficulty and views estimates', icon: Lightbulb },
+  { name: 'YouTube Thumbnail Maker', path: '/tools/youtube-thumbnail-maker', description: 'Create attention-grabbing thumbnails with AI-powered design', icon: ImageIcon },
+  { name: 'YouTube Thumbnail Downloader', path: '/tools/youtube-thumbnail-downloader', description: 'Download high-quality thumbnails from any YouTube video', icon: Download },
+  { name: 'Hashtag Generator', path: '/tools/hashtag-generator', description: 'Generate trending hashtags for Instagram and TikTok', icon: Hash },
+  { name: 'Bio Link Page Builder', path: '/tools/bio-link-page-builder', description: 'Build a mobile-friendly link-in-bio landing page', icon: Link2 },
+  { name: 'Social Media Caption Writer', path: '/tools/social-media-caption-writer', description: 'Write engaging captions for posts, reels, and stories', icon: Edit3 },
+  { name: 'QR Code Generator', path: '/tools/qr-code-generator', description: 'Generate custom QR codes for links and campaigns', icon: QrCode },
 ];
 
 export default function SocialMediaTools() {

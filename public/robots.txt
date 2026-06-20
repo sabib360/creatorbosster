@@ -1,32 +1,49 @@
-# robots.txt for Creator Booster
+# Robots.txt for CreatorBoost AI
+# https://creatorboostai.xyz
+
 User-agent: *
 Allow: /
-Allow: /blog/
-Allow: /blog/sitemap.xml
-
-# Disallow admin and API routes
 Disallow: /admin/
 Disallow: /api/
-Disallow: /_next/
+Disallow: /private/
 Disallow: /.env
+Disallow: /.git
+Disallow: /seo-dashboard
 
-# Slow down aggressive crawlers
+# Block aggressive crawlers
 User-agent: AhrefsBot
 Disallow: /
 
 User-agent: SemrushBot
 Disallow: /
 
-# Allow Google and Bing
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+# Allow major search engines
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
 Allow: /
 
-# Sitemap location
-Sitemap: https://creatorbooster.co/sitemap.xml
-Sitemap: https://creatorbooster.co/blog-sitemap.xml
+User-agent: Applebot
+Allow: /
 
-# Crawl delay (optional)
-Request-rate: 1 request per 1 second
+User-agent: Yandex
+Allow: /
+
+# Crawl delay for polite bots
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://creatorboostai.xyz/sitemap.xml
+
+# Language
+Content-Language: en

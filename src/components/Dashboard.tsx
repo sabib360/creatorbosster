@@ -1,651 +1,1046 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Search, ImageIcon, FileText, Bot, Zap, ArrowRight, Sparkles, Palette, BarChart3, AlertCircle, Lock, Download, Clock, Shield, Eye, Filter, Edit3, Share2, Check, Smile, Gauge, Cloud, Smartphone, Cpu, CreditCard } from 'lucide-react';
+import { useState, useEffect, useRef, Fragment } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import {
+  Search, ArrowRight, Sparkles, ChevronDown, ChevronUp, Clock,
+  Zap, Shield, Smartphone, Brain, Globe, Star, TrendingUp, Tag,
+  ImageIcon, FileText, Youtube, SearchCode, ArrowUpRight, X,
+  CheckCircle2, Users, Eye, BarChart3, Calendar, ChevronLeft, ChevronRight,
+  MessageCircle, Mail, Lock, Flame, Sparkle, BookOpen, Hash,
+  Image as ImageIconLucide, Calculator, Bot, FileCode, PenTool,
+  ImagePlus, Crop, RotateCw, Stamp, RefreshCw, Package, Target,
+  Pipette, Grid3x3, Merge, Split, FileUp, FileDown, FileOutput,
+  FileLock, FileSearch, FileText as FileTextIcon, ImageDown, ImageUp,
+  FileSignature, QrCode, Code, Binary, Regex, Type, Layout,
+  Hash as HashIcon, Sparkle as SparkleIcon, Link2, Smile, LayoutList,
+  BarChart, CalendarDays, Mail as MailIcon, Settings, FileCode2,
+  Minimize2, Maximize, PenTool as PenToolIcon, Edit3, Share2,
+  Download, Filter, Palette, Image as ImageIcon2, FileImage,
+  FileUp as FileUpIcon, FileDown as FileDownIcon, FileText as FileTextIcon2,
+  CreditCard, DollarSign, TrendingUp as TrendingUpIcon, Award,
+  CircleDot, Activity, Layers, Lightbulb, Cpu, Code2, Braces,
+  Key, Clock3, Calculator as CalculatorIcon, Percent, Ruler,
+  Scale, Heart, FileSpreadsheet, FileBarChart, FileCheck
+} from 'lucide-react';
 import { cn } from '../lib/utils';
+import { getRecentlyUsed } from '../hooks/useRecentlyUsed';
+import { BLOG_POSTS } from '../config/blog-data';
+import { getTrendingTools, getPopularTools, searchTools, CATEGORIES } from '../config/tools-database';
+import SEOHead from './SEOHead';
+import { organizationSchema, websiteSchema, homepageFAQSchema } from '../lib/schema';
+import Testimonials from './Testimonials';
+
+const SITE_URL = 'https://creatorboostai.xyz';
+
+const allNavTools = [
+  { name: 'Image Compressor', path: '/tools/image-compressor', cat: 'image' },
+  { name: 'PDF Merger', path: '/tools/pdf-merger', cat: 'pdf' },
+  { name: 'Background Remover', path: '/tools/background-remover', cat: 'ai' },
+  { name: 'YouTube Title Generator', path: '/tools/youtube-title-generator', cat: 'youtube' },
+  { name: 'Hashtag Generator', path: '/tools/hashtag-generator', cat: 'seo' },
+  { name: 'QR Code Generator', path: '/tools/qr-code-generator', cat: 'image' },
+  { name: 'JSON Formatter', path: '/tools/json-formatter', cat: 'seo' },
+  { name: 'Age Calculator', path: '/tools/age-calculator', cat: 'seo' },
+  { name: 'BMI Calculator', path: '/tools/bmi-calculator', cat: 'seo' },
+  { name: 'Password Generator', path: '/tools/password-generator', cat: 'seo' },
+  { name: 'Image Resizer', path: '/tools/image-resizer', cat: 'image' },
+  { name: 'Image Cropper', path: '/tools/image-cropper', cat: 'image' },
+  { name: 'Image Rotator', path: '/tools/image-rotator', cat: 'image' },
+  { name: 'PDF Compressor', path: '/tools/pdf-compressor', cat: 'pdf' },
+  { name: 'PDF Splitter', path: '/tools/pdf-splitter', cat: 'pdf' },
+  { name: 'PDF to JPG', path: '/tools/pdf-to-jpg', cat: 'pdf' },
+  { name: 'JPG to PDF', path: '/tools/jpg-to-pdf', cat: 'pdf' },
+  { name: 'PDF Summarizer', path: '/tools/pdf-summarizer', cat: 'ai' },
+  { name: 'AI Assistant', path: '/tools/ai-assistant', cat: 'ai' },
+  { name: 'Image Analyzer', path: '/tools/image-analyzer', cat: 'ai' },
+  { name: 'YouTube Thumbnail Downloader', path: '/tools/youtube-thumbnail-downloader', cat: 'youtube' },
+  { name: 'YouTube Tag Generator', path: '/tools/youtube-tag-generator', cat: 'youtube' },
+  { name: 'YouTube Description Generator', path: '/tools/youtube-description-generator', cat: 'youtube' },
+  { name: 'Meta Tag Generator', path: '/tools/meta-tag-generator', cat: 'seo' },
+  { name: 'Word Counter', path: '/tools/word-counter', cat: 'seo' },
+  { name: 'Caption Writer', path: '/tools/caption-writer', cat: 'youtube' },
+  { name: 'Content Idea Generator', path: '/tools/content-idea-generator', cat: 'seo' },
+  { name: 'Blog Title Generator', path: '/tools/blog-title-generator', cat: 'seo' },
+  { name: 'Content Paraphraser', path: '/tools/content-paraphraser', cat: 'ai' },
+  { name: 'Grammar Checker', path: '/tools/grammar-checker', cat: 'ai' },
+  { name: 'Slug Generator', path: '/tools/slug-generator', cat: 'seo' },
+  { name: 'Image Converter', path: '/tools/image-converter', cat: 'image' },
+  { name: 'PDF Converter', path: '/tools/pdf-converter', cat: 'pdf' },
+  { name: 'PDF Unlocker', path: '/tools/pdf-unlocker', cat: 'pdf' },
+  { name: 'YouTube SEO Checker', path: '/tools/youtube-seo-checker', cat: 'youtube' },
+  { name: 'YouTube Channel Analyzer', path: '/tools/youtube-channel-analyzer', cat: 'youtube' },
+  { name: 'Currency Converter', path: '/tools/currency-converter', cat: 'seo' },
+  { name: 'Percentage Calculator', path: '/tools/percentage-calculator', cat: 'seo' },
+  { name: 'Unit Converter', path: '/tools/unit-converter', cat: 'seo' },
+  { name: 'Color Picker', path: '/tools/color-picker', cat: 'image' },
+  { name: 'Image Metadata', path: '/tools/image-metadata', cat: 'image' },
+  { name: 'Image to Base64', path: '/tools/image-to-base64', cat: 'image' },
+  { name: 'Base64 to Image', path: '/tools/base64-to-image', cat: 'image' },
+  { name: 'Watermark Tool', path: '/tools/watermark', cat: 'image' },
+  { name: 'Passport Size', path: '/tools/passport-size', cat: 'image' },
+  { name: 'PDF Watermark', path: '/tools/pdf-watermark', cat: 'pdf' },
+  { name: 'PDF Password Protector', path: '/tools/pdf-password-protector', cat: 'pdf' },
+  { name: 'PDF Page Numberer', path: '/tools/pdf-page-numberer', cat: 'pdf' },
+  { name: 'PDF Metadata Editor', path: '/tools/pdf-metadata-editor', cat: 'pdf' },
+  { name: 'Favicon Generator', path: '/tools/favicon-generator', cat: 'image' },
+  { name: 'Image Splitter', path: '/tools/image-splitter', cat: 'image' },
+  { name: 'Image Merger', path: '/tools/image-merger', cat: 'image' },
+  { name: 'Link Shortener', path: '/tools/link-shortener', cat: 'seo' },
+  { name: 'Emoji Picker', path: '/tools/emoji-picker', cat: 'youtube' },
+  { name: 'Bio Link Page Builder', path: '/tools/bio-link-page-builder', cat: 'youtube' },
+  { name: 'YouTube Script Writer', path: '/tools/youtube-script-writer', cat: 'youtube' },
+  { name: 'YouTube Comment Replies', path: '/tools/youtube-comment-replies', cat: 'youtube' },
+  { name: 'YouTube Video Ideas', path: '/tools/youtube-video-ideas', cat: 'youtube' },
+  { name: 'YouTube Hashtag Generator', path: '/tools/youtube-hashtag-generator', cat: 'youtube' },
+  { name: 'Blog Outline Generator', path: '/tools/blog-outline-generator', cat: 'seo' },
+  { name: 'Meta Description Generator', path: '/tools/meta-description-generator', cat: 'seo' },
+  { name: 'Social Post Generator', path: '/tools/social-post-generator', cat: 'seo' },
+  { name: 'Email Subject Generator', path: '/tools/email-subject-generator', cat: 'seo' },
+  { name: 'Content Calendar', path: '/tools/content-calendar', cat: 'seo' },
+  { name: 'Base64 Encoder', path: '/tools/base64-encoder', cat: 'seo' },
+  { name: 'HTML to Markdown', path: '/tools/html-to-markdown', cat: 'seo' },
+  { name: 'Markdown to HTML', path: '/tools/markdown-to-html', cat: 'seo' },
+  { name: 'CSS Minifier', path: '/tools/css-minifier', cat: 'seo' },
+  { name: 'JS Minifier', path: '/tools/js-minifier', cat: 'seo' },
+  { name: 'URL Encoder', path: '/tools/url-encoder', cat: 'seo' },
+  { name: 'Hash Generator', path: '/tools/hash-generator', cat: 'seo' },
+  { name: 'Regex Tester', path: '/tools/regex-tester', cat: 'seo' },
+  { name: 'Color Converter', path: '/tools/color-converter', cat: 'image' },
+  { name: 'Loan EMI Calculator', path: '/tools/loan-emi-calculator', cat: 'seo' },
+  { name: 'SIP Calculator', path: '/tools/sip-calculator', cat: 'seo' },
+  { name: 'Budget Planner', path: '/tools/budget-planner', cat: 'seo' },
+  { name: 'Tax Calculator', path: '/tools/tax-calculator', cat: 'seo' },
+  { name: 'FD Calculator', path: '/tools/fd-calculator', cat: 'seo' },
+  { name: 'Simple Interest Calculator', path: '/tools/simple-interest-calculator', cat: 'seo' },
+  { name: 'Compound Interest Calculator', path: '/tools/compound-interest-calculator', cat: 'seo' },
+  { name: 'Date Difference', path: '/tools/date-difference', cat: 'seo' },
+  { name: 'Loan Comparison', path: '/tools/loan-comparison', cat: 'seo' },
+  { name: 'Bulk Compressor', path: '/tools/bulk-compressor', cat: 'image' },
+  { name: 'Targeted Compression', path: '/tools/targeted-compression', cat: 'image' },
+  { name: 'Image Filters', path: '/tools/image-filters', cat: 'image' },
+  { name: 'YouTube Downloader', path: '/tools/youtube-downloader', cat: 'youtube' },
+  { name: 'Thumbnail Generator', path: '/tools/thumbnail-generator', cat: 'image' },
+  { name: 'AI Thumbnail Generator', path: '/tools/ai-thumbnail-generator', cat: 'ai' },
+  { name: 'AI BG Remover', path: '/tools/ai-bg-remover', cat: 'ai' },
+  { name: 'AI Image Upscaler', path: '/tools/ai-image-upscaler', cat: 'ai' },
+  { name: 'AI Text to Image', path: '/tools/ai-text-to-image', cat: 'ai' },
+  { name: 'AI Document Summarizer', path: '/tools/ai-document-summarizer', cat: 'ai' },
+  { name: 'AI Chatbot', path: '/tools/ai-chatbot', cat: 'ai' },
+  { name: 'AI Code Generator', path: '/tools/ai-code-generator', cat: 'ai' },
+  { name: 'AI Translator', path: '/tools/ai-translator', cat: 'ai' },
+  { name: 'AI Sentiment Analyzer', path: '/tools/ai-sentiment-analyzer', cat: 'ai' },
+  { name: 'Competitor Analysis', path: '/tools/competitor-analysis', cat: 'ai' },
+  { name: 'PDF to Word', path: '/tools/pdf-to-word', cat: 'pdf' },
+  { name: 'Social Analytics', path: '/tools/social-analytics', cat: 'youtube' },
+];
+
+const popularSearches = [
+  'Image Compressor', 'PDF Merger', 'Background Remover', 'QR Code Generator',
+  'YouTube Title Generator', 'Hashtag Generator', 'JSON Formatter'
+];
+
+const popularTools = [
+  { name: 'Image Compressor', desc: 'Reduce image file size while maintaining quality', path: '/tools/image-compressor', icon: Minimize2, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  { name: 'PDF Merger', desc: 'Combine multiple PDF files into one document', path: '/tools/pdf-merger', icon: Merge, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+  { name: 'Background Remover', desc: 'Remove image backgrounds with AI instantly', path: '/tools/background-remover', icon: ImagePlus, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+  { name: 'YouTube Title Generator', desc: 'Create catchy SEO-optimized video titles', path: '/tools/youtube-title-generator', icon: Youtube, color: 'text-red-400', bg: 'bg-red-500/10' },
+  { name: 'QR Code Generator', desc: 'Create custom QR codes for links and text', path: '/tools/qr-code-generator', icon: QrCode, color: 'text-green-400', bg: 'bg-green-500/10' },
+  { name: 'Hashtag Generator', desc: 'Generate trending hashtags for social media', path: '/tools/hashtag-generator', icon: Hash, color: 'text-pink-400', bg: 'bg-pink-500/10' },
+  { name: 'JSON Formatter', desc: 'Format, validate, and beautify JSON data', path: '/tools/json-formatter', icon: Braces, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+  { name: 'PDF Compressor', desc: 'Reduce PDF file size without losing quality', path: '/tools/pdf-compressor', icon: FileDown, color: 'text-orange-400', bg: 'bg-orange-500/10' },
+  { name: 'Age Calculator', desc: 'Calculate your exact age in years, months, days', path: '/tools/age-calculator', icon: Clock3, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+];
 
 const categories = [
   {
+    id: 'ai-tools',
+    name: 'AI Tools',
+    icon: Brain,
+    color: 'text-cyan-400',
+    bg: 'bg-cyan-500/10',
+    border: 'border-cyan-500/20',
+    gradient: 'from-cyan-500/20 to-cyan-500/5',
+    path: '/ai-tools',
+    tools: [
+      { name: 'AI Caption Generator', path: '/tools/caption-writer' },
+      { name: 'AI Hashtag Generator', path: '/tools/hashtag-generator' },
+      { name: 'AI Story Generator', path: '/tools/ai-assistant' },
+      { name: 'AI Emoji Generator', path: '/tools/emoji-picker' },
+      { name: 'AI Prompt Generator', path: '/tools/ai-assistant' },
+    ],
+  },
+  {
     id: 'image-tools',
     name: 'Image Tools',
-    description: 'Compress, resize, crop, and convert images',
-    icon: ImageIcon,
-    color: 'bg-primary',
+    icon: ImageIcon2,
+    color: 'text-blue-400',
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/20',
+    gradient: 'from-blue-500/20 to-blue-500/5',
+    path: '/image-tools',
     tools: [
-      { name: 'Compress Image', path: '/tools/image-compressor', description: 'Reduce image file size' },
-      { name: 'Resize Image', path: '/tools/image-resizer', description: 'Change image dimensions' },
-      { name: 'Crop Image', path: '/tools/image-cropper', description: 'Trim and crop images' },
-      { name: 'Rotate/Flip', path: '/tools/image-rotator', description: 'Adjust image orientation' },
-      { name: 'Passport Size', path: '/tools/passport-size', description: 'Create passport photos' },
-      { name: 'Add Watermark', path: '/tools/watermark', description: 'Protect your images' },
-    ]
+      { name: 'Image Compressor', path: '/tools/image-compressor' },
+      { name: 'Image Resizer', path: '/tools/image-resizer' },
+      { name: 'Background Remover', path: '/tools/background-remover' },
+      { name: 'JPG to PNG', path: '/tools/image-converter' },
+      { name: 'PNG to JPG', path: '/tools/image-converter' },
+      { name: 'QR Code Generator', path: '/tools/qr-code-generator' },
+    ],
   },
   {
     id: 'pdf-tools',
     name: 'PDF Tools',
-    description: 'Merge, split, convert, and optimize PDFs',
     icon: FileText,
-    color: 'bg-secondary',
+    color: 'text-purple-400',
+    bg: 'bg-purple-500/10',
+    border: 'border-purple-500/20',
+    gradient: 'from-purple-500/20 to-purple-500/5',
+    path: '/pdf-tools',
     tools: [
-      { name: 'Merge PDF', path: '/tools/pdf-merger', description: 'Combine multiple PDFs' },
-      { name: 'Split PDF', path: '/tools/pdf-splitter', description: 'Extract pages from PDF' },
-      { name: 'Remove Pages', path: '/tools/pdf-remover', description: 'Delete PDF pages' },
-      { name: 'Rotate PDF', path: '/tools/pdf-rotator', description: 'Change PDF orientation' },
-      { name: 'Compress PDF', path: '/tools/pdf-compressor', description: 'Reduce PDF file size' },
-      { name: 'PDF to JPG', path: '/tools/pdf-to-jpg', description: 'Convert PDF to images' },
-    ]
+      { name: 'PDF Merge', path: '/tools/pdf-merger' },
+      { name: 'PDF Split', path: '/tools/pdf-splitter' },
+      { name: 'PDF Compress', path: '/tools/pdf-compressor' },
+      { name: 'JPG to PDF', path: '/tools/jpg-to-pdf' },
+      { name: 'PDF to JPG', path: '/tools/pdf-to-jpg' },
+      { name: 'PDF Watermark', path: '/tools/pdf-watermark' },
+    ],
   },
   {
-    id: 'ai-tools',
-    name: 'AI Tools',
-    description: 'AI-powered image and document processing',
-    icon: Bot,
-    color: 'bg-tertiary',
+    id: 'seo-tools',
+    name: 'SEO Tools',
+    icon: SearchCode,
+    color: 'text-green-400',
+    bg: 'bg-green-500/10',
+    border: 'border-green-500/20',
+    gradient: 'from-green-500/20 to-green-500/5',
+    path: '/ai-tools',
     tools: [
-      { name: 'PDF Summarizer', path: '/tools/pdf-summarizer', description: 'AI-powered summaries' },
-      { name: 'Background Remover', path: '/tools/background-remover', description: 'Remove image backgrounds' },
-      { name: 'Image Analyzer', path: '/tools/image-analyzer', description: 'AI image analysis' },
-      { name: 'AI Assistant', path: '/tools/ai-assistant', description: 'Chat with AI helper' },
-    ]
-  }
+      { name: 'Meta Tag Generator', path: '/tools/meta-tag-generator' },
+      { name: 'Keyword Density Checker', path: '/tools/word-counter' },
+      { name: 'Robots.txt Generator', path: '/tools/meta-tag-generator' },
+      { name: 'Sitemap Generator', path: '/tools/meta-tag-generator' },
+      { name: 'Schema Generator', path: '/tools/meta-tag-generator' },
+    ],
+  },
+  {
+    id: 'youtube-tools',
+    name: 'YouTube Tools',
+    icon: Youtube,
+    color: 'text-red-400',
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/20',
+    gradient: 'from-red-500/20 to-red-500/5',
+    path: '/social-media-tools',
+    tools: [
+      { name: 'Thumbnail Downloader', path: '/tools/youtube-thumbnail-downloader' },
+      { name: 'Title Generator', path: '/tools/youtube-title-generator' },
+      { name: 'Description Generator', path: '/tools/youtube-description-generator' },
+      { name: 'Tag Extractor', path: '/tools/youtube-tag-generator' },
+      { name: 'Channel ID Finder', path: '/tools/youtube-channel-analyzer' },
+    ],
+  },
 ];
 
-const allTools = categories.flatMap(cat => cat.tools);
+const trendingTools = [
+  { name: 'Background Remover', path: '/tools/background-remover', usage: '12.4K', desc: 'Remove image backgrounds instantly with AI', icon: ImagePlus, color: 'text-cyan-400' },
+  { name: 'YouTube Title Generator', path: '/tools/youtube-title-generator', usage: '9.8K', desc: 'Generate catchy, SEO-optimized video titles', icon: Youtube, color: 'text-red-400' },
+  { name: 'Image Compressor', path: '/tools/image-compressor', usage: '8.2K', desc: 'Reduce image file size without quality loss', icon: Minimize2, color: 'text-blue-400' },
+  { name: 'QR Code Generator', path: '/tools/qr-code-generator', usage: '7.5K', desc: 'Create custom QR codes for any URL or text', icon: QrCode, color: 'text-green-400' },
+  { name: 'PDF Merger', path: '/tools/pdf-merger', usage: '6.9K', desc: 'Combine multiple PDFs into a single document', icon: Merge, color: 'text-purple-400' },
+  { name: 'Hashtag Generator', path: '/tools/hashtag-generator', usage: '5.3K', desc: 'Find trending hashtags for maximum reach', icon: Hash, color: 'text-pink-400' },
+];
+
+const newTools = [
+  { name: 'AI Sentiment Analyzer', path: '/tools/ai-sentiment-analyzer', desc: 'Analyze text sentiment with AI-powered detection', icon: Activity, color: 'text-cyan-400' },
+  { name: 'Content Calendar Generator', path: '/tools/content-calendar', desc: 'Generate 30-day content calendars with topics', icon: CalendarDays, color: 'text-purple-400' },
+  { name: 'Email Subject Line Generator', path: '/tools/email-subject-generator', desc: 'Create high-converting email subject lines', icon: MailIcon, color: 'text-blue-400' },
+  { name: 'AI Code Generator', path: '/tools/ai-code-generator', desc: 'Generate code snippets in any programming language', icon: Code2, color: 'text-green-400' },
+  { name: 'AI Translator', path: '/tools/ai-translator', desc: 'Translate text in 100+ languages instantly', icon: Globe, color: 'text-amber-400' },
+  { name: 'Social Media Post Generator', path: '/tools/social-post-generator', desc: 'Create platform-specific posts with hashtags', icon: PenTool, color: 'text-pink-400' },
+];
+
+const features = [
+  { icon: Zap, title: '100% Free', desc: 'All tools are completely free to use with no hidden charges', color: 'text-amber-400', bg: 'bg-amber-500/10' },
+  { icon: Clock, title: 'Fast Processing', desc: 'Instant results with in-browser processing', color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  { icon: Lock, title: 'No Registration', desc: 'Use any tool immediately without creating an account', color: 'text-green-400', bg: 'bg-green-500/10' },
+  { icon: Smartphone, title: 'Mobile Friendly', desc: 'Fully responsive design works on all devices', color: 'text-purple-400', bg: 'bg-purple-500/10' },
+  { icon: Shield, title: 'Privacy Focused', desc: 'Your files stay on your device - never uploaded', color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+  { icon: Brain, title: 'AI Powered', desc: 'Smart tools powered by cutting-edge AI technology', color: 'text-pink-400', bg: 'bg-pink-500/10' },
+];
+
+const faqData = [
+  { q: 'Are all tools free?', a: 'Yes, every tool on CreatorBoost AI is completely free to use. There are no hidden charges, subscription fees, or premium tiers. You can use all tools without spending a penny.' },
+  { q: 'Do I need an account to use the tools?', a: 'No, you do not need to create an account. All tools work instantly without registration. Simply visit any tool page and start using it right away.' },
+  { q: 'Are my uploaded files secure?', a: 'Absolutely. Most of our tools process files entirely in your browser using client-side JavaScript. Your files are never uploaded to our servers. For AI-powered tools, files are processed via secure API calls and immediately discarded.' },
+  { q: 'Which AI tools are most popular?', a: 'Our most popular AI tools include the Background Remover, YouTube Title Generator, AI Assistant, PDF Summarizer, and Image Analyzer. These tools use advanced AI to deliver instant, high-quality results.' },
+  { q: 'Can I use the tools on my mobile phone?', a: 'Yes, all tools are fully responsive and work perfectly on smartphones, tablets, and desktops. No app download is required - just open any tool in your mobile browser.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqData.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'CreatorBoost AI',
+  url: SITE_URL,
+  logo: `${SITE_URL}/favicon.svg`,
+  description: 'Free AI-powered toolkit for creators with 80+ tools for image processing, PDF editing, content creation, and more.',
+  sameAs: ['https://www.facebook.com/profile.php?id=61572335704389'],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'Customer Support',
+    email: 'support@creatorboostai.xyz',
+  },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+  ],
+};
+
+function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+    let start = 0;
+    const duration = 2000;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { setCount(target); clearInterval(timer); }
+      else setCount(Math.floor(start));
+    }, 16);
+    return () => clearInterval(timer);
+  }, [isInView, target]);
+
+  return <div ref={ref}>{count.toLocaleString()}{suffix}</div>;
+}
+
+function ToolCard({ tool, index }: { tool: typeof popularTools[0]; index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.05, duration: 0.4 }}
+    >
+      <Link
+        to={tool.path}
+        className="group block p-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-primary/30 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1"
+      >
+        <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center mb-3.5 transition-colors group-hover:scale-110", tool.bg)}>
+          <tool.icon className={cn("w-5 h-5", tool.color)} />
+        </div>
+        <h3 className="text-sm font-bold text-white mb-1 group-hover:text-primary transition-colors">{tool.name}</h3>
+        <p className="text-xs text-white/40 leading-relaxed line-clamp-2">{tool.desc}</p>
+        <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-primary/60 group-hover:text-primary transition-colors">
+          Use Tool <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [recentTools, setRecentTools] = useState(getRecentlyUsed);
+  const navigate = useNavigate();
+  const searchRef = useRef<HTMLInputElement>(null);
 
-  const filteredTools = searchQuery
-    ? allTools.filter(tool => 
-        tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tool.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : null;
+  useEffect(() => {
+    const refresh = () => setRecentTools(getRecentlyUsed());
+    window.addEventListener('storage', refresh);
+    window.addEventListener('focus', refresh);
+    return () => { window.removeEventListener('storage', refresh); window.removeEventListener('focus', refresh); };
+  }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
+  const filteredTools = searchQuery.length > 0
+    ? searchTools(searchQuery).slice(0, 8).map(t => ({ name: t.name, path: `/tools/${t.slug}`, cat: t.category.replace('-tools', '') }))
+    : [];
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+  const latestPosts = [...BLOG_POSTS].sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()).slice(0, 3);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (filteredTools.length > 0) navigate(filteredTools[0].path);
+    else if (searchQuery.trim()) navigate(`/tools/${searchQuery.toLowerCase().replace(/\s+/g, '-')}`);
   };
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      className="space-y-12"
-    >
-      {/* Hero Section */}
-      <div className="text-center space-y-6 py-12">
-        <motion.div variants={itemVariants} className="flex justify-center">
-          <div className="w-20 h-20 bg-primary rounded-3xl flex items-center justify-center shadow-2xl shadow-primary/30">
-            <Sparkles className="w-10 h-10 text-black fill-black" />
+    <>
+      <SEOHead
+        title="Free AI Tools Online | Image, PDF, Finance & Social Media Tools | CreatorBoost AI"
+        description="100+ free online tools: AI generators, image editors, PDF tools, financial calculators, social media tools. No signup required. Boost productivity with our all-in-one tool suite."
+        keywords="AI tools online, free AI tools, image editor, PDF tools, financial calculator, social media tools"
+        canonicalUrl={SITE_URL}
+        structuredData={[organizationSchema(), websiteSchema(), homepageFAQSchema()]}
+      />
+
+      <div className="space-y-0">
+
+        {/* ═══════════ HERO ═══════════ */}
+        <section className="relative py-16 sm:py-24 overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-b from-primary/8 via-purple-500/4 to-transparent rounded-full blur-3xl" />
+            <div className="absolute top-20 right-0 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-500/5 rounded-full blur-3xl" />
           </div>
-        </motion.div>
-        <motion.h1 variants={itemVariants} className="text-5xl md:text-6xl font-display font-black uppercase tracking-tighter text-ink">
-          CreatorBoost AI
-        </motion.h1>
-        <motion.p variants={itemVariants} className="text-xl text-ink/60 max-w-2xl mx-auto">
-          All-in-one toolkit for creators. Process images, PDFs, and leverage AI - all in your browser.
-        </motion.p>
-        
-        {/* Search Bar */}
-        <motion.div variants={itemVariants} className="max-w-xl mx-auto">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink/40" />
-            <input
-              type="text"
-              placeholder="Search tools..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-slate-900/50 border border-slate-800 rounded-2xl text-ink placeholder:text-ink/40 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-            />
-          </div>
-        </motion.div>
-      </div>
 
-      {/* Introduction Section */}
-      {!searchQuery && (
-        <motion.div variants={itemVariants} className="bg-slate-900/30 border border-slate-800 rounded-3xl p-8 md:p-12 space-y-6">
-          <h2 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tight text-ink">
-            Your Complete Creator Toolkit
-          </h2>
-          <div className="space-y-4 text-ink/70 leading-relaxed text-lg">
-            <p>
-              CreatorBoost AI is a comprehensive, browser-based platform designed to help content creators, digital professionals, and everyday users accomplish essential tasks with powerful, easy-to-use tools. Whether you're managing images, working with PDFs, or need AI-powered assistance, we've got you covered.
-            </p>
-            <p>
-              Our platform combines cutting-edge AI technology with practical utility tools to deliver results without requiring downloads, installations, or complicated software. All processing happens securely in your browser, ensuring your data remains private while you work on your projects.
-            </p>
-            <p>
-              From image optimization and PDF manipulation to AI-powered content analysis and financial calculations, CreatorBoost AI offers 50+ tools organized across six main categories. Whether you're a YouTube creator optimizing thumbnails, a business professional managing documents, or someone who needs quick utility solutions, our tools are built to save you time and deliver professional results.
-            </p>
-          </div>
-          
-          {/* Key Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-slate-700">
-            <div className="space-y-3">
-              <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-primary" />
+          <div className="text-center space-y-8 max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary text-xs font-bold uppercase tracking-widest mb-6">
+                <Sparkles className="w-3.5 h-3.5" />
+                80+ Free Online Tools
               </div>
-              <h3 className="font-bold text-ink">Fast & Efficient</h3>
-              <p className="text-sm text-ink/60">Process files instantly without downloads or waiting times</p>
-            </div>
-            <div className="space-y-3">
-              <div className="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-secondary" />
-              </div>
-              <h3 className="font-bold text-ink">50+ Tools</h3>
-              <p className="text-sm text-ink/60">Comprehensive solutions for image, PDF, AI, and finance needs</p>
-            </div>
-            <div className="space-y-3">
-              <div className="w-10 h-10 bg-tertiary/20 rounded-lg flex items-center justify-center">
-                <AlertCircle className="w-6 h-6 text-tertiary" />
-              </div>
-              <h3 className="font-bold text-ink">100% Free & Private</h3>
-              <p className="text-sm text-ink/60">No account required for most tools, your data stays secure</p>
-            </div>
-          </div>
-        </motion.div>
-      )}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black tracking-tight text-white leading-[1.1]">
+                Free AI Tools for{' '}
+                <span className="bg-gradient-to-r from-primary via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                  Creators
+                </span>
+              </h1>
+              <p className="text-base sm:text-lg text-white/50 max-w-2xl mx-auto leading-relaxed mt-6">
+                Generate Images, Create Content, Edit PDFs and Grow Faster with Powerful Free AI Tools.
+              </p>
+            </motion.div>
 
-      {/* Trust & Impact Section */}
-      {!searchQuery && (
-        <motion.div variants={itemVariants} className="border-t border-slate-800 pt-12">
-          <div className="bg-gradient-to-r from-primary/5 via-secondary/5 to-tertiary/5 border border-slate-800 rounded-3xl p-12">
-            <h2 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tight text-ink mb-12 text-center">
-              Trusted by Creators Worldwide
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="text-center space-y-3">
-                <div className="text-4xl md:text-5xl font-display font-black text-primary">50K+</div>
-                <p className="text-ink/70 font-semibold">Content Pieces Generated</p>
-                <p className="text-xs text-ink/50">Titles, descriptions, thumbnails</p>
-              </div>
-              <div className="text-center space-y-3">
-                <div className="text-4xl md:text-5xl font-display font-black text-secondary">10K+</div>
-                <p className="text-ink/70 font-semibold">Active Users</p>
-                <p className="text-xs text-ink/50">Growing every month</p>
-              </div>
-              <div className="text-center space-y-3">
-                <div className="text-4xl md:text-5xl font-display font-black text-tertiary">500M+</div>
-                <p className="text-ink/70 font-semibold">Combined Views Influenced</p>
-                <p className="text-xs text-ink/50">Content optimized with our tools</p>
-              </div>
-              <div className="text-center space-y-3">
-                <div className="text-4xl md:text-5xl font-display font-black text-primary">4.8/5</div>
-                <p className="text-ink/70 font-semibold">User Rating</p>
-                <p className="text-xs text-ink/50">Based on 1000+ reviews</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-
-
-      {/* Search Results */}
-      {searchQuery && filteredTools && (
-        <motion.div variants={itemVariants} className="space-y-6">
-          <h2 className="text-2xl font-display font-black uppercase tracking-tight text-ink">
-            Search Results ({filteredTools.length})
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredTools.map((tool) => (
-              <Link
-                key={tool.path}
-                to={tool.path}
-                className="group p-6 bg-slate-900/50 border border-slate-800 rounded-2xl hover:border-primary/50 transition-all duration-300"
-              >
-                <h3 className="text-lg font-bold text-ink group-hover:text-primary transition-colors">
-                  {tool.name}
-                </h3>
-                <p className="text-sm text-ink/60 mt-2">{tool.description}</p>
-              </Link>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {/* Categories */}
-      {!searchQuery && (
-        <div className="space-y-12">
-          <div className="border-t border-slate-800 pt-12" />
-          {categories.map((category) => (
-            <motion.div key={category.id} variants={itemVariants} className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className={cn('w-12 h-12 rounded-xl flex items-center justify-center', category.color)}>
-                  <category.icon className="w-6 h-6 text-black fill-black" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-display font-black uppercase tracking-tight text-ink">
-                    {category.name}
-                  </h2>
-                  <p className="text-sm text-ink/60">{category.description}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {category.tools.map((tool) => (
-                  <Link
-                    key={tool.path}
-                    to={tool.path}
-                    className="group relative p-6 bg-slate-900/50 border border-slate-800 rounded-2xl hover:border-primary/50 transition-all duration-300 overflow-hidden"
+            {/* Search Bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.5 }}
+              className="max-w-2xl mx-auto relative"
+            >
+              <form onSubmit={handleSearch}>
+                <div className={cn(
+                  "relative group rounded-2xl transition-all duration-300",
+                  searchFocused ? "ring-2 ring-primary/40 shadow-lg shadow-primary/10" : ""
+                )}>
+                  <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-primary transition-colors" />
+                  <input
+                    ref={searchRef}
+                    type="text"
+                    placeholder="Search 80+ tools..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setSearchFocused(true)}
+                    onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
+                    className="w-full pl-14 pr-32 py-4 sm:py-5 bg-white/[0.06] border border-white/[0.1] rounded-2xl text-white placeholder:text-white/30 focus:outline-none text-sm sm:text-base"
+                    aria-label="Search tools"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 px-5 py-2.5 bg-primary text-black text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-bold text-ink group-hover:text-primary transition-colors">
-                          {tool.name}
-                        </h3>
-                        <ArrowRight className="w-5 h-5 text-ink/40 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                      </div>
-                      <p className="text-sm text-ink/60 mt-2">{tool.description}</p>
-                    </div>
-                  </Link>
+                    Search
+                  </button>
+                </div>
+              </form>
+
+              {/* Search Dropdown */}
+              <AnimatePresence>
+                {searchFocused && searchQuery.length > 0 && filteredTools.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl z-50"
+                  >
+                    {filteredTools.map((tool) => (
+                      <Link
+                        key={tool.path}
+                        to={tool.path}
+                        className="flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors"
+                      >
+                        <Search className="w-4 h-4 text-white/30" />
+                        <span className="text-sm text-white/80">{tool.name}</span>
+                        <ArrowRight className="w-3 h-3 text-white/20 ml-auto" />
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Popular Searches */}
+              <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+                <span className="text-xs text-white/30">Popular:</span>
+                {popularSearches.map((term) => (
+                  <button
+                    key={term}
+                    onClick={() => {
+                      setSearchQuery(term);
+                      searchRef.current?.focus();
+                    }}
+                    className="text-xs text-white/40 hover:text-primary bg-white/[0.04] hover:bg-primary/10 px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    {term}
+                  </button>
                 ))}
               </div>
             </motion.div>
-          ))}
-        </div>
-      )}
 
-      {/* Features Section */}
-      <motion.div variants={itemVariants} className="py-12 border-t border-slate-800">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
-              <Zap className="w-8 h-8 text-primary" />
-            </div>
-            <h3 className="text-xl font-bold text-ink">Fast & Secure</h3>
-            <p className="text-ink/60">All processing happens in your browser. Your files never leave your device.</p>
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex flex-wrap items-center justify-center gap-4"
+            >
+              <Link
+                to="/ai-tools"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-black text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+              >
+                <Sparkles className="w-4 h-4" />
+                Explore Tools
+              </Link>
+              <Link
+                to="/blog"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/[0.06] border border-white/[0.1] text-white text-sm font-bold rounded-xl hover:bg-white/[0.1] transition-colors"
+              >
+                <BookOpen className="w-4 h-4" />
+                Visit Blog
+              </Link>
+            </motion.div>
           </div>
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mx-auto">
-              <Bot className="w-8 h-8 text-secondary" />
-            </div>
-            <h3 className="text-xl font-bold text-ink">AI Powered</h3>
-            <p className="text-ink/60">Leverage Google Gemini AI for intelligent document and image processing.</p>
-          </div>
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 bg-tertiary/10 rounded-2xl flex items-center justify-center mx-auto">
-              <Sparkles className="w-8 h-8 text-tertiary" />
-            </div>
-            <h3 className="text-xl font-bold text-ink">Free to Use</h3>
-            <p className="text-ink/60">Access all tools for free. No subscription required.</p>
-          </div>
-        </div>
-      </motion.div>
+        </section>
 
-      {/* Most-Searched Daily Use Features */}
-      <motion.div variants={itemVariants} className="py-16 border-t border-slate-800">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">Most-Searched Daily Use Features</h2>
-          <p className="text-ink/60 max-w-2xl mx-auto">The most searched daily utility tools your users want, organized by category.</p>
-        </div>
-
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                <ImageIcon className="w-6 h-6 text-primary" />
+        {/* ═══════════ STATS BAR ═══════════ */}
+        <section className="border-y border-white/[0.06] bg-white/[0.02]">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
+            {[
+              { value: 80, suffix: '+', label: 'Free Tools', color: 'text-blue-400' },
+              { value: 50, suffix: 'K+', label: 'Monthly Users', color: 'text-purple-400' },
+              { value: 1, suffix: 'M+', label: 'Files Processed', color: 'text-cyan-400' },
+              { value: 4, suffix: '.8/5', label: 'User Rating', color: 'text-amber-400' },
+            ].map((stat, i) => (
+              <div key={stat.label} className={cn("py-6 text-center border-r border-white/[0.06] last:border-r-0", i >= 2 && "border-t md:border-t-0")}>
+                <div className={cn("text-2xl sm:text-3xl font-display font-black", stat.color)}>
+                  <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                </div>
+                <div className="text-xs text-white/40 mt-1 font-medium">{stat.label}</div>
               </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══════════ POPULAR TOOLS ═══════════ */}
+        <section className="py-16 sm:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-xs font-bold uppercase tracking-widest mb-4">
+                <TrendingUp className="w-3 h-3" /> Most Popular
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                Popular Tools
+              </h2>
+              <p className="text-white/40 mt-3 max-w-lg mx-auto text-sm sm:text-base">
+                The most used tools by creators worldwide. Try them for free.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {popularTools.map((tool, i) => (
+                <ToolCard key={tool.path} tool={tool} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════ TOOL CATEGORIES ═══════════ */}
+        <section className="py-16 sm:py-20 bg-white/[0.01]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-primary text-xs font-bold uppercase tracking-widest mb-4">
+                <Layout className="w-3 h-3" /> Browse by Category
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                Tool Categories
+              </h2>
+              <p className="text-white/40 mt-3 max-w-lg mx-auto text-sm sm:text-base">
+                Find the right tools organized by what you need to do.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {categories.map((cat, i) => (
+                <motion.div
+                  key={cat.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, duration: 0.4 }}
+                  className={cn(
+                    "rounded-2xl border bg-gradient-to-br p-6 transition-all duration-300 hover:shadow-lg",
+                    cat.border, cat.gradient,
+                    "hover:-translate-y-1"
+                  )}
+                >
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", cat.bg)}>
+                      <cat.icon className={cn("w-5 h-5", cat.color)} />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-white">{cat.name}</h3>
+                      <p className="text-xs text-white/40">{cat.tools.length} tools</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    {cat.tools.map((tool) => (
+                      <Link
+                        key={tool.path}
+                        to={tool.path}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors group"
+                      >
+                        <div className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-primary transition-colors" />
+                        {tool.name}
+                        <ArrowRight className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </Link>
+                    ))}
+                  </div>
+                  <Link
+                    to={cat.path}
+                    className={cn(
+                      "mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors border",
+                      cat.border, cat.color, "hover:bg-white/[0.04]"
+                    )}
+                  >
+                    View All <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════ TRENDING TOOLS ═══════════ */}
+        <section className="py-16 sm:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/20 rounded-full text-red-400 text-xs font-bold uppercase tracking-widest mb-4">
+                <Flame className="w-3 h-3" /> Trending Now
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                Trending Tools
+              </h2>
+              <p className="text-white/40 mt-3 max-w-lg mx-auto text-sm sm:text-base">
+                Tools that creators are using the most right now.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {trendingTools.map((tool, i) => (
+                <motion.div
+                  key={tool.path}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                >
+                  <Link
+                    to={tool.path}
+                    className="group flex items-start gap-4 p-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-primary/30 hover:bg-white/[0.06] transition-all duration-300 hover:-translate-y-0.5"
+                  >
+                    <div className="w-11 h-11 rounded-xl bg-white/[0.05] flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <tool.icon className={cn("w-5 h-5", tool.color)} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-sm font-bold text-white group-hover:text-primary transition-colors truncate">{tool.name}</h3>
+                        <span className="flex-shrink-0 px-2 py-0.5 bg-red-500/10 text-red-400 text-[10px] font-bold rounded-full uppercase">Trending</span>
+                      </div>
+                      <p className="text-xs text-white/40 mt-1 line-clamp-1">{tool.desc}</p>
+                      <div className="flex items-center gap-1 mt-2 text-[11px] text-white/30">
+                        <Users className="w-3 h-3" /> {tool.usage} uses this month
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-primary flex-shrink-0 mt-2 transition-colors" />
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════ NEW TOOLS ═══════════ */}
+        <section className="py-16 sm:py-20 bg-white/[0.01]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-xs font-bold uppercase tracking-widest mb-4">
+                <Sparkle className="w-3 h-3" /> Just Added
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                New Tools
+              </h2>
+              <p className="text-white/40 mt-3 max-w-lg mx-auto text-sm sm:text-base">
+                Fresh tools just added to help you work smarter.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {newTools.map((tool, i) => (
+                <motion.div
+                  key={tool.path}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                >
+                  <Link
+                    to={tool.path}
+                    className="group block p-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-primary/30 hover:bg-white/[0.06] transition-all duration-300 hover:-translate-y-0.5"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className={cn("w-11 h-11 rounded-xl bg-white/[0.05] flex items-center justify-center group-hover:scale-110 transition-transform")}>
+                        <tool.icon className={cn("w-5 h-5", tool.color)} />
+                      </div>
+                      <span className="px-2 py-0.5 bg-green-500/10 text-green-400 text-[10px] font-bold rounded-full uppercase">New</span>
+                    </div>
+                    <h3 className="text-sm font-bold text-white group-hover:text-primary transition-colors mb-1">{tool.name}</h3>
+                    <p className="text-xs text-white/40 leading-relaxed">{tool.desc}</p>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════ BLOG SECTION ═══════════ */}
+        <section className="py-16 sm:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex items-center justify-between mb-12">
               <div>
-                <h3 className="text-xl font-semibold text-ink">Image Tools</h3>
-                <p className="text-ink/60 text-sm">Top image utilities for creators and everyday users.</p>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-xs font-bold uppercase tracking-widest mb-4">
+                  <BookOpen className="w-3 h-3" /> Latest Articles
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                  From the Blog
+                </h2>
+              </div>
+              <Link
+                to="/blog"
+                className="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-primary/80 transition-colors"
+              >
+                View All <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {latestPosts.map((post, i) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.4 }}
+                >
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    className="group block rounded-2xl bg-white/[0.03] border border-white/[0.06] overflow-hidden hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <div className="h-44 bg-gradient-to-br from-primary/20 via-purple-500/10 to-cyan-500/10 flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                      <div className="relative text-4xl opacity-30">
+                        {post.category === 'youtube' ? '🎬' : post.category === 'seo' ? '🔍' : post.category === 'content' ? '✍️' : '📊'}
+                      </div>
+                      <div className="absolute top-3 left-3">
+                        <span className="px-2.5 py-1 bg-black/50 backdrop-blur-sm text-white text-[10px] font-bold uppercase rounded-lg">
+                          {post.category === 'youtube' ? 'YouTube' : post.category === 'seo' ? 'SEO' : post.category === 'content' ? 'Content' : 'Marketing'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <div className="flex items-center gap-3 text-xs text-white/30 mb-3">
+                        <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {post.publishDate}</span>
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {post.readTime}</span>
+                      </div>
+                      <h3 className="text-base font-bold text-white group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-xs text-white/40 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+                      <div className="mt-4 flex items-center gap-1 text-xs font-bold text-primary/60 group-hover:text-primary transition-colors">
+                        Read Article <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center sm:hidden">
+              <Link
+                to="/blog"
+                className="inline-flex items-center gap-2 text-sm font-bold text-primary"
+              >
+                View All Articles <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════ WHY CHOOSE US ═══════════ */}
+        <section className="py-16 sm:py-20 bg-white/[0.01]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-xs font-bold uppercase tracking-widest mb-4">
+                <Award className="w-3 h-3" /> Why Choose Us
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                Why Creators Love Us
+              </h2>
+              <p className="text-white/40 mt-3 max-w-lg mx-auto text-sm sm:text-base">
+                Built for creators, by creators. Here is what makes us different.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {features.map((feat, i) => (
+                <motion.div
+                  key={feat.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, duration: 0.4 }}
+                  className="p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+                >
+                  <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-4", feat.bg)}>
+                    <feat.icon className={cn("w-6 h-6", feat.color)} />
+                  </div>
+                  <h3 className="text-base font-bold text-white mb-2">{feat.title}</h3>
+                  <p className="text-sm text-white/40 leading-relaxed">{feat.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════ FAQ ═══════════ */}
+        <section className="py-16 sm:py-20">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-xs font-bold uppercase tracking-widest mb-4">
+                <MessageCircle className="w-3 h-3" /> FAQ
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                Frequently Asked Questions
+              </h2>
+            </div>
+
+            <div className="space-y-3">
+              {faqData.map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05, duration: 0.3 }}
+                  className="rounded-2xl bg-white/[0.03] border border-white/[0.06] overflow-hidden"
+                >
+                  <button
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    className="w-full flex items-center justify-between p-5 text-left hover:bg-white/[0.02] transition-colors"
+                    aria-expanded={openFaq === i}
+                  >
+                    <span className="text-sm font-bold text-white pr-4">{item.q}</span>
+                    {openFaq === i ? (
+                      <ChevronUp className="w-4 h-4 text-white/40 flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-white/40 flex-shrink-0" />
+                    )}
+                  </button>
+                  <AnimatePresence>
+                    {openFaq === i && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="px-5 pb-5 text-sm text-white/50 leading-relaxed border-t border-white/[0.04] pt-4">
+                          {item.a}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════ CTA ═══════════ */}
+        <section className="py-16 sm:py-20">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary/20 via-purple-500/10 to-cyan-500/10 border border-primary/20 p-8 sm:p-12 text-center">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(99,102,241,0.15),transparent_50%)]" />
+              <div className="relative space-y-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                  Ready to Start Creating?
+                </h2>
+                <p className="text-white/50 max-w-lg mx-auto text-sm sm:text-base">
+                  Join thousands of creators using our free tools to produce professional content every day.
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-4">
+                  <Link
+                    to="/ai-tools"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-black text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Explore All Tools
+                  </Link>
+                  <Link
+                    to="/blog"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-white/[0.06] border border-white/[0.1] text-white text-sm font-bold rounded-xl hover:bg-white/[0.1] transition-colors"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    Read Our Blog
+                  </Link>
+                </div>
               </div>
             </div>
-            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
-              <li>Background Remover</li>
-              <li>Image Compressor</li>
-              <li>Image to PDF</li>
-              <li>Passport Photo Maker</li>
-              <li>Image Resizer</li>
-              <li>Photo Enhancer/Upscaler</li>
-              <li>Meme Generator</li>
-              <li>Screenshot to Text (OCR)</li>
-              <li>Watermark Remover</li>
-              <li>Color Picker from Image</li>
-            </ol>
           </div>
+        </section>
 
-          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
-                <FileText className="w-6 h-6 text-secondary" />
+        {/* ═══════════ TESTIMONIALS ═══════════ */}
+        <section className="py-16 sm:py-20 bg-white/[0.01]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-xs font-bold uppercase tracking-widest mb-4">
+                <Star className="w-3 h-3" /> User Reviews
               </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white">
+                Trusted by Creators Worldwide
+              </h2>
+              <p className="text-white/40 mt-3 max-w-lg mx-auto text-sm sm:text-base">
+                See what our users have to say about CreatorBoost AI.
+              </p>
+            </div>
+            <Testimonials variant="grid" showStats={true} />
+          </div>
+        </section>
+
+        {/* ═══════════ FOOTER ═══════════ */}
+        <footer className="border-t border-white/[0.06] bg-white/[0.01]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8">
+              {/* Brand */}
+              <div className="col-span-2 sm:col-span-3 lg:col-span-1">
+                <div className="flex items-center gap-2.5 mb-4">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-black fill-black" />
+                  </div>
+                  <span className="font-display font-bold text-sm text-white">CreatorBoost AI</span>
+                </div>
+                <p className="text-xs text-white/40 leading-relaxed max-w-xs">
+                  Free AI-powered toolkit for creators. 80+ tools for image processing, PDF editing, content creation, and more.
+                </p>
+              </div>
+
+              {/* Tools */}
               <div>
-                <h3 className="text-xl font-semibold text-ink">PDF Tools</h3>
-                <p className="text-ink/60 text-sm">The highest-demand PDF utilities for office and document work.</p>
+                <h4 className="text-xs font-bold text-white/60 uppercase tracking-widest mb-4">Tools</h4>
+                <ul className="space-y-2.5">
+                  {[
+                    { label: 'AI Tools', path: '/ai-tools' },
+                    { label: 'Image Tools', path: '/image-tools' },
+                    { label: 'PDF Tools', path: '/pdf-tools' },
+                    { label: 'SEO Tools', path: '/ai-tools' },
+                    { label: 'YouTube Tools', path: '/social-media-tools' },
+                  ].map(link => (
+                    <li key={link.path + link.label}>
+                      <Link to={link.path} className="text-xs text-white/40 hover:text-primary transition-colors">{link.label}</Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
-              <li>PDF to Word</li>
-              <li>Word to PDF</li>
-              <li>PDF Compressor</li>
-              <li>PDF Merger</li>
-              <li>PDF to Excel</li>
-              <li>PDF Password Remover</li>
-              <li>PDF Editor</li>
-              <li>E-Signature Tool</li>
-            </ol>
-          </div>
 
-          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-tertiary/10 flex items-center justify-center">
-                <Bot className="w-6 h-6 text-tertiary" />
-              </div>
+              {/* Resources */}
               <div>
-                <h3 className="text-xl font-semibold text-ink">AI Tools</h3>
-                <p className="text-ink/60 text-sm">Trending AI utilities for students, creators, and professionals.</p>
+                <h4 className="text-xs font-bold text-white/60 uppercase tracking-widest mb-4">Resources</h4>
+                <ul className="space-y-2.5">
+                  {[
+                    { label: 'Blog', path: '/blog' },
+                    { label: 'How to Use', path: '/how-to-use' },
+                    { label: 'Sitemap', path: '/' },
+                  ].map(link => (
+                    <li key={link.label}>
+                      <Link to={link.path} className="text-xs text-white/40 hover:text-primary transition-colors">{link.label}</Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
-              <li>AI Background Remover</li>
-              <li>AI Resume/CV Builder</li>
-              <li>AI Cover Letter Writer</li>
-              <li>AI Grammar Checker</li>
-              <li>AI Paraphraser</li>
-              <li>AI Plagiarism Checker</li>
-              <li>AI Translator</li>
-              <li>AI Summarizer</li>
-              <li>AI Chatbot</li>
-            </ol>
-          </div>
 
-          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                <CreditCard className="w-6 h-6 text-primary" />
-              </div>
+              {/* Company */}
               <div>
-                <h3 className="text-xl font-semibold text-ink">Finance Tools</h3>
-                <p className="text-ink/60 text-sm">Daily financial calculators for global users.</p>
+                <h4 className="text-xs font-bold text-white/60 uppercase tracking-widest mb-4">Company</h4>
+                <ul className="space-y-2.5">
+                  {[
+                    { label: 'About Us', path: '/about' },
+                    { label: 'Contact Us', path: '/contact-us' },
+                  ].map(link => (
+                    <li key={link.label}>
+                      <Link to={link.path} className="text-xs text-white/40 hover:text-primary transition-colors">{link.label}</Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
-              <li>VAT Calculator</li>
-              <li>GST Calculator</li>
-              <li>Currency Converter</li>
-              <li>Invoice Generator</li>
-              <li>Salary Calculator</li>
-              <li>Loan/EMI Calculator</li>
-              <li>Tip Calculator</li>
-            </ol>
-          </div>
 
-          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-secondary" />
-              </div>
+              {/* Legal */}
               <div>
-                <h3 className="text-xl font-semibold text-ink">Social Media Tools</h3>
-                <p className="text-ink/60 text-sm">Tools that creators use every day for content growth.</p>
+                <h4 className="text-xs font-bold text-white/60 uppercase tracking-widest mb-4">Legal</h4>
+                <ul className="space-y-2.5">
+                  {[
+                    { label: 'Privacy Policy', path: '/privacy-policy' },
+                    { label: 'Terms & Conditions', path: '/terms-of-service' },
+                    { label: 'Disclaimer', path: '/disclaimer' },
+                    { label: 'Cookie Policy', path: '/cookie-policy' },
+                    { label: 'DMCA', path: '/dmca' },
+                  ].map(link => (
+                    <li key={link.label}>
+                      <Link to={link.path} className="text-xs text-white/40 hover:text-primary transition-colors">{link.label}</Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
-            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
-              <li>YouTube Thumbnail Maker</li>
-              <li>Instagram Post Resizer</li>
-              <li>TikTok Watermark Remover</li>
-              <li>Hashtag Generator</li>
-              <li>Bio Link Page Builder</li>
-              <li>YouTube Title/Tag Generator</li>
-              <li>Social Media Caption Writer</li>
-              <li>QR Code Generator</li>
-            </ol>
-          </div>
 
-          <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6 md:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-tertiary/10 flex items-center justify-center">
-                <AlertCircle className="w-6 h-6 text-tertiary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-ink">Everyday Utility Tools</h3>
-                <p className="text-ink/60 text-sm">Simple utilities that drive daily search volume.</p>
+            {/* Bottom Bar */}
+            <div className="mt-12 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-xs text-white/30">
+                &copy; {new Date().getFullYear()} CreatorBoost AI. All rights reserved.
+              </p>
+              <div className="flex items-center gap-4">
+                <a href="https://www.facebook.com/profile.php?id=61572335704389" target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-primary transition-colors" aria-label="Facebook">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a href="https://twitter.com/creatorboostai" target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-primary transition-colors" aria-label="Twitter">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
               </div>
             </div>
-            <ol className="space-y-2 text-sm text-ink/70 list-decimal list-inside">
-              <li>Word Counter</li>
-              <li>Age Calculator</li>
-              <li>BMI Calculator</li>
-              <li>Password Generator</li>
-              <li>Unit Converter</li>
-              <li>Timer/Stopwatch</li>
-              <li>Note Pad Online</li>
-              <li>Internet Speed Test</li>
-            </ol>
           </div>
-        </div>
-      </motion.div>
-
-      {/* 25 Key Features Section */}
-      <motion.div variants={itemVariants} className="py-16 border-t border-slate-800">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4">25 Powerful Features</h2>
-          <p className="text-ink/60 max-w-2xl mx-auto">Everything you need to process images, PDFs, and create content with AI assistance.</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          {/* Image Processing Features */}
-          <Link to="/tools/image-compressor" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
-              <ImageIcon className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">Image Compression</h4>
-            <p className="text-xs text-ink/60">Reduce file size while maintaining quality</p>
-          </Link>
-
-          <Link to="/tools/background-remover" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
-              <Palette className="w-5 h-5 text-secondary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">Background Removal</h4>
-            <p className="text-xs text-ink/60">Remove backgrounds from images instantly</p>
-          </Link>
-
-          <Link to="/tools/image-resizer" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
-              <Edit3 className="w-5 h-5 text-tertiary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">Image Resizing</h4>
-            <p className="text-xs text-ink/60">Resize images to any dimensions instantly</p>
-          </Link>
-
-          <Link to="/tools/image-cropper" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
-              <Filter className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">Image Cropping</h4>
-            <p className="text-xs text-ink/60">Crop and adjust images with precision</p>
-          </Link>
-
-          <Link to="/tools/image-converter" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
-              <Share2 className="w-5 h-5 text-secondary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">Image Conversion</h4>
-            <p className="text-xs text-ink/60">Convert between JPEG, PNG, WebP, GIF</p>
-          </Link>
-
-          {/* PDF Processing Features */}
-          <Link to="/tools/pdf-compressor" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
-              <FileText className="w-5 h-5 text-tertiary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">PDF Compression</h4>
-            <p className="text-xs text-ink/60">Reduce PDF file sizes significantly</p>
-          </Link>
-
-          <Link to="/tools/pdf-merger" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
-              <Zap className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">PDF Merging</h4>
-            <p className="text-xs text-ink/60">Combine multiple PDFs into one file</p>
-          </Link>
-
-          <Link to="/tools/pdf-splitter" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
-              <FileText className="w-5 h-5 text-secondary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">PDF Splitting</h4>
-            <p className="text-xs text-ink/60">Extract specific pages from PDFs</p>
-          </Link>
-
-          <Link to="/tools/pdf-to-word" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
-              <FileText className="w-5 h-5 text-tertiary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">PDF to Word</h4>
-            <p className="text-xs text-ink/60">Convert PDF documents to Word format</p>
-          </Link>
-
-          <Link to="/tools/pdf-rotator" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
-              <Download className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">PDF Rotation</h4>
-            <p className="text-xs text-ink/60">Rotate pages in PDF documents</p>
-          </Link>
-
-          {/* AI Features */}
-          <Link to="/tools/ai-assistant" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
-              <Bot className="w-5 h-5 text-secondary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">AI Writing Assistant</h4>
-            <p className="text-xs text-ink/60">Generate content with AI assistance</p>
-          </Link>
-
-          <Link to="/tools/image-analyzer" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
-              <Sparkles className="w-5 h-5 text-tertiary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">AI Image Analysis</h4>
-            <p className="text-xs text-ink/60">Analyze and describe images with AI</p>
-          </Link>
-
-          <Link to="/tools/pdf-summarizer" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
-              <BarChart3 className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">PDF Summarization</h4>
-            <p className="text-xs text-ink/60">Get AI summaries of documents</p>
-          </Link>
-
-          <Link to="/tools/caption-writer" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition">
-              <Edit3 className="w-5 h-5 text-secondary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-secondary transition">AI Caption Writer</h4>
-            <p className="text-xs text-ink/60">Generate captions for social media</p>
-          </Link>
-
-          <Link to="/tools/ai-thumbnail-generator" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
-              <Palette className="w-5 h-5 text-tertiary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">AI Thumbnail Generator</h4>
-            <p className="text-xs text-ink/60">Create stunning thumbnails with AI</p>
-          </Link>
-
-          {/* Security & Performance */}
-          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
-              <Lock className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1">100% Private</h4>
-            <p className="text-xs text-ink/60">Files never leave your device</p>
-          </div>
-
-          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
-              <Clock className="w-5 h-5 text-secondary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1">Lightning Fast</h4>
-            <p className="text-xs text-ink/60">Process files instantly in-browser</p>
-          </div>
-
-          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
-              <Shield className="w-5 h-5 text-tertiary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1">No Registration</h4>
-            <p className="text-xs text-ink/60">Start using tools immediately</p>
-          </div>
-
-          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
-              <Eye className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1">Ad-Free Experience</h4>
-            <p className="text-xs text-ink/60">Premium members get ad-free tools</p>
-          </div>
-
-          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
-              <Check className="w-5 h-5 text-secondary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1">Auto-Save Work</h4>
-            <p className="text-xs text-ink/60">Your progress is saved automatically</p>
-          </div>
-
-          {/* Developer & Utility */}
-          <Link to="/tools/json-formatter" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-tertiary/20 transition">
-              <Cpu className="w-5 h-5 text-tertiary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-tertiary transition">JSON Tools</h4>
-            <p className="text-xs text-ink/60">Format, validate, and minify JSON</p>
-          </Link>
-
-          <Link to="/tools/bulk-compressor" className="group bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition cursor-pointer hover:bg-slate-900/70">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20 transition">
-              <Gauge className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1 group-hover:text-primary transition">Batch Processing</h4>
-            <p className="text-xs text-ink/60">Process multiple files at once</p>
-          </Link>
-
-          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-secondary/50 transition">
-            <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center mb-3">
-              <Cloud className="w-5 h-5 text-secondary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1">Cloud Integration</h4>
-            <p className="text-xs text-ink/60">Works on all devices seamlessly</p>
-          </div>
-
-          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-tertiary/50 transition">
-            <div className="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center mb-3">
-              <Smartphone className="w-5 h-5 text-tertiary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1">Mobile Friendly</h4>
-            <p className="text-xs text-ink/60">Fully responsive on all screens</p>
-          </div>
-
-          <div className="bg-slate-900/50 backdrop-blur border border-slate-700 rounded-xl p-5 hover:border-primary/50 transition">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
-              <Smile className="w-5 h-5 text-primary" />
-            </div>
-            <h4 className="font-bold text-ink mb-1">Easy to Use</h4>
-            <p className="text-xs text-ink/60">Intuitive interface for everyone</p>
-          </div>
-        </div>
-      </motion.div>
-
-
-    </motion.div>
+        </footer>
+      </div>
+    </>
   );
 }

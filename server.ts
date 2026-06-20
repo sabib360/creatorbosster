@@ -17,6 +17,7 @@ process.on('unhandledRejection', (reason, promise) => {
 
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
+  process.exit(1);
 });
 
 // Initialize Gemini
@@ -45,7 +46,6 @@ try {
 // Verify Firestore connection on startup
 (async () => {
   try {
-    // Just a read test instead of a write test to be safer
     await db.collection('test_connection').limit(1).get();
     console.log('Successfully connected to Firestore');
   } catch (error) {
@@ -55,21 +55,90 @@ try {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
-  app.use(express.json());
+  // ─── Security Middleware ───
+  app.disable('x-powered-by');
+  app.use(express.json({ limit: '1mb' }));
+  app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 
-  // API routes
-  app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'CreatorBoost AI Server is running' });
+  // Security headers
+  app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()');
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    next();
   });
+
+  // ─── Rate Limiting ───
+  const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+
+  function rateLimit(key: string, max: number = 60, windowMs: number = 60000): boolean {
+    const now = Date.now();
+    const entry = rateLimitStore.get(key);
+    if (!entry || now > entry.resetTime) {
+      rateLimitStore.set(key, { count: 1, resetTime: now + windowMs });
+      return true;
+    }
+    if (entry.count >= max) return false;
+    entry.count++;
+    return true;
+  }
+
+  // Cleanup rate limit store periodically
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, entry] of rateLimitStore.entries()) {
+      if (now > entry.resetTime) rateLimitStore.delete(key);
+    }
+  }, 60000).unref();
+
+  // ─── API Routes ───
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', message: 'CreatorBoost AI Server is running', timestamp: new Date().toISOString() });
+  });
+
+  // CMS API Routes
+  const cmsRoutes = ['blog', 'tools', 'categories', 'analytics', 'newsletter', 'comments', 'testimonials'];
+  for (const route of cmsRoutes) {
+    app.use(`/api/${route}`, async (req, res, next) => {
+      try {
+        const module = await import(`./server/routes/${route}.ts`);
+        module.default(req, res, next);
+      } catch (err) {
+        console.error(`Failed to load route /api/${route}:`, err);
+        res.status(500).json({ error: 'API route not available' });
+      }
+    });
+  }
 
   // Subscription Checkout
   app.post('/api/subscriptions/checkout', async (req, res) => {
+    // Rate limit checkout attempts
+    const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+    if (!rateLimit(`checkout:${clientIp}`, 5, 60000)) {
+      return res.status(429).json({ error: 'Too many checkout attempts. Please wait.' });
+    }
+
     const { planId, billingPeriod, userId, region, paymentMethod, amount } = req.body;
     
     if (!planId || !billingPeriod || !userId) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Validate plan ID
+    const validPlans = ['free', 'premium', 'pro', 'agency'];
+    if (!validPlans.includes(planId)) {
+      return res.status(400).json({ error: 'Invalid plan' });
+    }
+
+    // Validate billing period
+    const validPeriods = ['monthly', 'yearly'];
+    if (!validPeriods.includes(billingPeriod)) {
+      return res.status(400).json({ error: 'Invalid billing period' });
     }
 
     try {
@@ -163,7 +232,24 @@ async function startServer() {
 
   // Webhook for payment confirmation (IPN)
   app.post('/api/webhooks/payment', async (req, res) => {
+    // Rate limit webhook calls
+    const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+    if (!rateLimit(`webhook:${clientIp}`, 20, 60000)) {
+      return res.status(429).json({ error: 'Too many requests' });
+    }
+
     const { tran_id, status, val_id } = req.body;
+
+    // Validate required fields
+    if (!tran_id || !status) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Validate status value
+    const validStatuses = ['VALID', 'success', 'FAILED', 'failed'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
 
     try {
       // 1. Verify transaction with gateway (SSLCommerz/Stripe)
@@ -258,8 +344,19 @@ async function startServer() {
 
   // Credit Consumption Endpoint
   app.post('/api/credits/consume', async (req, res) => {
+    // Rate limit credit consumption
+    const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+    if (!rateLimit(`credits:${clientIp}`, 30, 60000)) {
+      return res.status(429).json({ error: 'Too many requests. Please wait.' });
+    }
+
     const { userId, amount = 1 } = req.body;
     if (!userId) return res.status(400).json({ error: 'Missing userId' });
+
+    // Validate amount
+    if (typeof amount !== 'number' || amount < 1 || amount > 10) {
+      return res.status(400).json({ error: 'Invalid amount' });
+    }
 
     if (userId === 'guest') {
       return res.json({ success: true, message: 'Guest credit consumed (client-side)' });
@@ -286,12 +383,17 @@ async function startServer() {
     const { userId } = req.body;
     if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
+    // Rate limit admin endpoints
+    if (!rateLimit(`admin:${userId}`, 10, 60000)) {
+      return res.status(429).json({ error: 'Too many requests' });
+    }
+
     try {
       const userDoc = await db.collection('users').doc(userId).get();
       const userData = userDoc.data();
       
-      // Check if user is admin in DB OR is the hardcoded super admin
-      if (userData?.role === 'admin' || userData?.email === 'sabibahamed2@gmail.com') {
+      // Check if user is admin in DB (no hardcoded emails)
+      if (userData?.role === 'admin') {
         next();
       } else {
         res.status(403).json({ error: 'Forbidden: Admin access required' });

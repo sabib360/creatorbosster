@@ -1,15 +1,22 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calculator, DollarSign, TrendingUp, PiggyBank, CreditCard, Wallet, Target, Receipt, Shield, Globe } from 'lucide-react';
+import { ArrowRight, Calculator, DollarSign, TrendingUp, PiggyBank, CreditCard, Wallet, Target, Receipt, Shield, Globe, Calendar, Heart, Percent, Ruler, Lock, Scale } from 'lucide-react';
 import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
-  { name: 'Loan/EMI Calculator', path: '/tools/loan-emi-calculator', description: 'Calculate monthly EMI, total interest, and payment schedule for any loan', icon: Calculator },
-  { name: 'SIP Calculator', path: '/tools/sip-calculator', description: 'Calculate Systematic Investment Plan returns and wealth creation over time', icon: TrendingUp },
-  { name: 'Budget Planner', path: '/tools/budget-planner', description: 'Track monthly income and expenses to achieve your financial goals', icon: Wallet },
-  { name: 'Income Tax Calculator', path: '/tools/tax-calculator', description: 'Calculate income tax liability under old and new tax regimes', icon: Receipt },
-  { name: 'Fixed Deposit Calculator', path: '/tools/fd-calculator', description: 'Calculate returns on fixed deposit investments with compound interest', icon: Shield },
-  { name: 'Currency Converter', path: '/tools/currency-converter', description: 'Convert between major world currencies with real-time exchange rates', icon: Globe },
+  { name: 'Loan/EMI Calculator', path: '/tools/loan-emi-calculator', description: 'Calculate monthly EMI, total interest, and payment schedule', icon: Calculator },
+  { name: 'SIP Calculator', path: '/tools/sip-calculator', description: 'Calculate SIP returns and wealth creation over time', icon: TrendingUp },
+  { name: 'Loan Comparison', path: '/tools/loan-comparison', description: 'Compare up to 3 loans side-by-side to find the best deal', icon: Scale },
+  { name: 'Budget Planner', path: '/tools/budget-planner', description: 'Track monthly income and expenses', icon: Wallet },
+  { name: 'Tax Calculator', path: '/tools/tax-calculator', description: 'Calculate income tax under old and new regimes', icon: Receipt },
+  { name: 'FD Calculator', path: '/tools/fd-calculator', description: 'Calculate fixed deposit returns', icon: Shield },
+  { name: 'Currency Converter', path: '/tools/currency-converter', description: 'Convert between major world currencies', icon: Globe },
+  { name: 'Age Calculator', path: '/tools/age-calculator', description: 'Calculate exact age in years, months, and days', icon: Calendar },
+  { name: 'Date Difference', path: '/tools/date-difference', description: 'Calculate difference between two dates', icon: Calendar },
+  { name: 'BMI Calculator', path: '/tools/bmi-calculator', description: 'Calculate Body Mass Index with health recommendations', icon: Heart },
+  { name: 'Percentage Calculator', path: '/tools/percentage-calculator', description: 'Calculate percentages with step-by-step solutions', icon: Percent },
+  { name: 'Unit Converter', path: '/tools/unit-converter', description: 'Convert between length, weight, temperature, and more', icon: Ruler },
+  { name: 'Password Generator', path: '/tools/password-generator', description: 'Generate strong, secure passwords with strength indicator', icon: Lock },
 ];
 
 export default function FinanceTools() {

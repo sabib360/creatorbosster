@@ -1,17 +1,21 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Combine, Scissors, Trash2, RotateCw, FileText, Minimize2, Image, FileInput } from 'lucide-react';
+import { ArrowRight, Combine, Scissors, Trash2, RotateCw, FileText, Minimize2, Image, FileInput, Hash, Droplets, Lock, Unlock, Tag } from 'lucide-react';
 import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
   { name: 'Merge PDF', path: '/tools/pdf-merger', description: 'Combine multiple PDFs into one document', icon: Combine },
-  { name: 'Split PDF', path: '/tools/pdf-splitter', description: 'Extract pages from PDF files', icon: Scissors },
-  { name: 'Remove Pages', path: '/tools/pdf-remover', description: 'Delete specific pages from PDF', icon: Trash2 },
-  { name: 'Rotate PDF', path: '/tools/pdf-rotator', description: 'Change PDF page orientation', icon: RotateCw },
-  { name: 'PDF Converter', path: '/tools/pdf-converter', description: 'Convert Word, Excel, PPT to PDF and vice versa', icon: FileText },
-  { name: 'Compress PDF', path: '/tools/pdf-compressor', description: 'Reduce PDF file size', icon: Minimize2 },
-  { name: 'PDF to JPG', path: '/tools/pdf-to-jpg', description: 'Convert PDF pages to images', icon: Image },
-  { name: 'JPG to PDF', path: '/tools/jpg-to-pdf', description: 'Convert images to PDF document', icon: FileInput },
+  { name: 'Split PDF', path: '/tools/pdf-splitter', description: 'Extract pages or split into individual files', icon: Scissors },
+  { name: 'Remove Pages', path: '/tools/pdf-remover', description: 'Select and delete specific pages from PDF', icon: Trash2 },
+  { name: 'Rotate PDF', path: '/tools/pdf-rotator', description: 'Rotate all or specific pages by 90°, 180°, 270°', icon: RotateCw },
+  { name: 'Compress PDF', path: '/tools/pdf-compressor', description: 'Reduce PDF file size with quality settings', icon: Minimize2 },
+  { name: 'PDF to JPG', path: '/tools/pdf-to-jpg', description: 'Convert PDF pages to JPG images', icon: Image },
+  { name: 'JPG to PDF', path: '/tools/jpg-to-pdf', description: 'Convert images to PDF with page size options', icon: FileInput },
+  { name: 'Page Numberer', path: '/tools/pdf-page-numberer', description: 'Add page numbers with custom position and font', icon: Hash },
+  { name: 'Watermark', path: '/tools/pdf-watermark', description: 'Add text or image watermarks to PDF pages', icon: Droplets },
+  { name: 'Password Protect', path: '/tools/pdf-password-protector', description: 'Encrypt PDF with password and permissions', icon: Lock },
+  { name: 'Unlock PDF', path: '/tools/pdf-unlocker', description: 'Remove password protection from PDF', icon: Unlock },
+  { name: 'Metadata Editor', path: '/tools/pdf-metadata-editor', description: 'Edit title, author, keywords, and properties', icon: Tag },
 ];
 
 export default function PDFTools() {

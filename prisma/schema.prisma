@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Users ──────────────────────────────────────
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("user") // admin | editor | user
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  blogPosts   BlogPost[]
+  comments    Comment[]
+  analytics   Analytics[]
+
+  @@map("users")
+}
+
+// ─── Categories ─────────────────────────────────
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  parentId    String?
+  parent      Category? @relation("CategoryTree", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryTree")
+  createdAt   DateTime @default(now())
+
+  blogPosts BlogPost[]
+  tools     Tool[]
+
+  @@map("categories")
+}
+
+// ─── Tags ───────────────────────────────────────
+model Tag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  blogPosts BlogPost[]
+
+  @@map("tags")
+}
+
+// ─── Tools ──────────────────────────────────────
+model Tool {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  category    String
+  icon        String?
+  component   String?
+  path        String
+  isActive    Boolean  @default(true)
+  views       Int      @default(0)
+  usageCount  Int      @default(0)
+  seoTitle    String?
+  seoDesc     String?
+  keywords    String? // comma-separated
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  categoryId String?
+  categoryRel Category? @relation(fields: [categoryId], references: [id])
+
+  analytics Analytics[]
+
+  @@map("tools")
+}
+
+// ─── Blog Posts ─────────────────────────────────
+model BlogPost {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  content        String
+  excerpt        String?
+  author         String
+  featuredImage  String?
+  status         String   @default("draft") // draft | published | archived
+  views          Int      @default(0)
+  likes          Int      @default(0)
+  readTime       String?
+  seoTitle       String?
+  seoDesc        String?
+  seoKeywords    String?
+  publishedAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  tags     Tag[]
+  comments Comment[]
+
+  @@map("blog_posts")
+}
+
+// ─── Comments ───────────────────────────────────
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  isApproved Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  postId String
+  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@map("comments")
+}
+
+// ─── Analytics ──────────────────────────────────
+model Analytics {
+  id        String   @id @default(cuid())
+  pageUrl   String
+  eventType String // pageview | tool_use | click | search
+  metadata  String? // JSON string
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  toolId String?
+  tool   Tool?   @relation(fields: [toolId], references: [id])
+
+  @@map("analytics")
+}
+
+// ─── Newsletter Subscribers ─────────────────────
+model NewsletterSubscriber {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  isActive     Boolean  @default(true)
+  subscribedAt DateTime @default(now())
+
+  @@map("newsletter_subscribers")
+}
+
+// ─── Testimonials ───────────────────────────────
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String?
+  avatar    String?
+  content   String
+  rating    Int      @default(5)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("testimonials")
+}
+
+// ─── Media ──────────────────────────────────────
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  originalName String
+  mimeType  String
+  size      Int
+  url       String
+  alt       String?
+  createdAt DateTime @default(now())
+
+  @@map("media")
+}

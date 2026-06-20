@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Minimize2, Maximize, Crop, RotateCw, User, Stamp, RefreshCw, Package, Target, Sparkles } from 'lucide-react';
+import { ArrowRight, Minimize2, Maximize, Crop, RotateCw, User, Stamp, RefreshCw, Package, Target, Sparkles, Palette, Binary, FileText, Pipette, Grid3x3, Images, Globe } from 'lucide-react';
 import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
@@ -13,6 +13,14 @@ const tools = [
   { name: 'Image Converter', path: '/tools/image-converter', description: 'Convert between JPG, PNG, WebP, HEIC formats', icon: RefreshCw },
   { name: 'Bulk Compressor', path: '/tools/bulk-compressor', description: 'Compress multiple images at once', icon: Package },
   { name: 'Targeted Compression', path: '/tools/targeted-compression', description: 'Compress to specific file size (50KB, 100KB)', icon: Target },
+  { name: 'Image Filters', path: '/tools/image-filters', description: 'Apply 20+ filters and custom adjustments to images', icon: Sparkles },
+  { name: 'Image to Base64', path: '/tools/image-to-base64', description: 'Convert images to Base64 encoded strings', icon: Binary },
+  { name: 'Base64 to Image', path: '/tools/base64-to-image', description: 'Convert Base64 strings back to image files', icon: Binary },
+  { name: 'Image Metadata', path: '/tools/image-metadata', description: 'View EXIF data, dimensions, and image properties', icon: FileText },
+  { name: 'Color Picker', path: '/tools/color-picker', description: 'Pick colors from images - get HEX, RGB, HSL values', icon: Pipette },
+  { name: 'Image Splitter', path: '/tools/image-splitter', description: 'Split images into grid pieces and download as ZIP', icon: Grid3x3 },
+  { name: 'Image Merger', path: '/tools/image-merger', description: 'Combine multiple images into a collage', icon: Images },
+  { name: 'Favicon Generator', path: '/tools/favicon-generator', description: 'Generate favicons in multiple sizes from any image', icon: Globe },
   { name: 'Thumbnail Generator', path: '/tools/thumbnail-generator', description: 'Create stunning YouTube thumbnails with templates', icon: Sparkles },
 ];
 

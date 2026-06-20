@@ -1,197 +1,368 @@
-import { FileText } from 'lucide-react';
+import { FileText, Mail, Shield, AlertTriangle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import SEOHead from './SEOHead';
+
+const SITE_URL = 'https://creatorboostai.xyz';
+const LAST_UPDATED = 'June 19, 2026';
 
 export default function TermsOfService() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
-          Terms of Service
-        </h1>
-        <p className="text-ink/60 text-lg">Last updated: {new Date().toLocaleDateString()}</p>
-      </div>
+    <>
+      <SEOHead
+        title="Terms of Service - CreatorBoost AI | Usage Terms & Conditions"
+        description="Read CreatorBoost AI's terms of service. Learn about acceptable use, intellectual property rights, limitation of liability, and dispute resolution."
+        keywords="terms of service, terms and conditions, creatorboost AI terms, usage policy"
+        canonicalUrl={`${SITE_URL}/terms-of-service`}
+      />
 
-      <div className="space-y-8 text-ink/80">
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">1. Agreement to Terms</h2>
-          <p className="text-lg leading-relaxed">
-            By accessing and using Creator Booster AI ("Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service. These Terms of Service may be modified at any time without notice. Your continued use of the Service following any modification constitutes your acceptance of such modifications.
+      <div className="max-w-4xl mx-auto space-y-10">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary text-sm font-semibold">
+            <FileText className="w-4 h-4" />
+            Terms of Service
+          </div>
+          <h1 className="text-5xl md:text-7xl font-display font-black uppercase tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary to-primary/60">
+            Terms of Service
+          </h1>
+          <p className="text-ink/60 text-lg">Last updated: {LAST_UPDATED}</p>
+        </div>
+
+        {/* Introduction */}
+        <section className="space-y-4">
+          <p className="text-ink/70 leading-relaxed text-lg">
+            Welcome to CreatorBoost AI. These Terms of Service ("Terms") govern your access to and use
+            of the website creatorboostai.xyz and all associated tools, features, and services (collectively,
+            the "Service") operated by CreatorBoost AI ("we," "our," or "us"). By accessing or using our
+            Service, you agree to be bound by these Terms. If you disagree with any part of these Terms,
+            you may not access the Service.
           </p>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">2. Use License</h2>
-          <p className="text-lg leading-relaxed mb-4">
-            Permission is granted to temporarily download one copy of materials (information or software) on Creator Booster AI's site for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
-          </p>
-          <ul className="space-y-3 text-lg">
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Modify or copy the materials</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Use the materials for any commercial purpose or for any public display</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Attempt to decompile or reverse engineer any software contained on Creator Booster AI</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Remove any copyright or other proprietary notations from the materials</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Transfer the materials to another person or "mirror" the materials on any other server</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Use the materials for spam, abuse, harassment, or illegal purposes</span>
-            </li>
+        {/* Table of Contents */}
+        <nav className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
+          <h2 className="text-lg font-bold text-ink mb-4">Table of Contents</h2>
+          <ul className="space-y-2 text-sm">
+            {[
+              'Acceptance of Terms',
+              'Description of Service',
+              'Eligibility',
+              'User Accounts',
+              'Acceptable Use Policy',
+              'Intellectual Property Rights',
+              'User-Generated Content',
+              'Disclaimers and Limitation of Liability',
+              'Indemnification',
+              'Termination',
+              'Third-Party Links and Services',
+              'Governing Law and Dispute Resolution',
+              'Severability',
+              'Changes to These Terms',
+              'Contact Information',
+            ].map((item, i) => (
+              <li key={i}>
+                <a href={`#tos-section-${i}`} className="text-primary hover:underline">{i + 1}. {item}</a>
+              </li>
+            ))}
           </ul>
-        </section>
+        </nav>
 
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">3. AI-Generated Content</h2>
-          <div className="space-y-4 text-lg">
-            <p>
-              <strong>Ownership:</strong> You retain ownership of content you input into Creator Booster AI. AI-generated outputs are provided for your use and modification. We claim no ownership of generated content.
-            </p>
-            <p>
-              <strong>Responsibility:</strong> You are responsible for ensuring that YouTube titles, descriptions, and thumbnails generated comply with YouTube's Community Guidelines, Copyright Policy, and Terms of Service. Creator Booster AI provides tools but does not guarantee compliance.
-            </p>
-            <p>
-              <strong>Copyright:</strong> Do not use Creator Booster AI to generate content that infringes on third-party copyrights, trademarks, or intellectual property rights.
-            </p>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">4. Credits & Payments</h2>
-          <div className="space-y-4 text-lg">
-            <p>
-              <strong>Free Tier:</strong> Creator Booster AI provides free access to all tools. No credits or subscriptions required.
-            </p>
-            <p>
-              <strong>Premium Plans:</strong> Paid premium plans come with specific credit amounts and pricing. Purchased credits are non-refundable except where required by law. Premium subscriptions are subject to recurring billing.
-            </p>
-            <p>
-              <strong>Refund Policy:</strong> We do not offer refunds for credits once purchased. If you believe you've been incorrectly charged, contact support within 30 days of the transaction.
-            </p>
-            <p>
-              <strong>Payment Processing:</strong> We use third-party payment processors. Your payment information is not stored on our servers and is processed through secure payment gateways.
-            </p>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">5. User Accounts</h2>
-          <div className="space-y-4 text-lg">
-            <p>
-              If you create an account on Creator Booster AI, you are responsible for maintaining the confidentiality of your password and account information. You agree to accept responsibility for all activities that occur under your account.
-            </p>
-            <p>
-              You must provide accurate, complete, and current account information. You agree to update information as needed to keep it accurate and current.
-            </p>
-            <p>
-              We reserve the right to suspend or terminate accounts that violate these Terms of Service or engage in prohibited conduct.
-            </p>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">6. Prohibited Conduct</h2>
-          <p className="text-lg leading-relaxed mb-4">
-            You agree not to use Creator Booster AI for:
+        {/* Section 1 */}
+        <section id="tos-section-0" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">1. Acceptance of Terms</h2>
+          <p className="text-ink/70 leading-relaxed">
+            By accessing or using CreatorBoost AI, you confirm that you have read, understood, and agree
+            to be bound by these Terms and our <Link to="/privacy-policy" className="text-primary hover:underline">Privacy Policy</Link>.
+            If you are using the Service on behalf of an organization, you represent and warrant that you
+            have the authority to bind that organization to these Terms, and "you" refers to both you
+            individually and that organization.
           </p>
-          <ul className="space-y-3 text-lg">
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Generating content that violates YouTube's Community Guidelines</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Creating deceptive or fraudulent content</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Spam, harassment, or abusive behavior</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Infringement of copyrights, trademarks, or intellectual property</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Illegal activities</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-primary font-black">•</span>
-              <span>Attempting to gain unauthorized access to the Service</span>
-            </li>
+          <p className="text-ink/70 leading-relaxed">
+            We reserve the right to modify these Terms at any time. Changes will be effective immediately
+            upon posting to the website. Your continued use of the Service after any changes constitutes
+            acceptance of the modified Terms. We encourage you to review this page periodically.
+          </p>
+        </section>
+
+        {/* Section 2 */}
+        <section id="tos-section-1" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">2. Description of Service</h2>
+          <p className="text-ink/70 leading-relaxed">
+            CreatorBoost AI provides a comprehensive suite of free, browser-based tools designed for
+            content creators, developers, and everyday users. Our Service includes, but is not limited to:
+          </p>
+          <ul className="space-y-2 text-ink/70 leading-relaxed ml-6 list-disc">
+            <li><strong>Image Tools:</strong> Compress, resize, crop, rotate, convert, and enhance images</li>
+            <li><strong>PDF Tools:</strong> Merge, split, compress, convert, and edit PDF documents</li>
+            <li><strong>AI Tools:</strong> AI-powered content generation, image analysis, background removal, and summarization</li>
+            <li><strong>Finance Tools:</strong> Loan calculators, budget planners, tax calculators, and currency converters</li>
+            <li><strong>Social Media Tools:</strong> Hashtag generators, content idea generators, caption writers, and analytics</li>
+            <li><strong>Developer Tools:</strong> JSON formatters, base64 encoders, regex testers, and more</li>
           </ul>
+          <p className="text-ink/70 leading-relaxed">
+            Most tools process data entirely in your browser — your files and content are not uploaded
+            to our servers. The Service is provided "as is" and "as available" without warranties of any
+            kind, either express or implied.
+          </p>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">7. Disclaimers</h2>
-          <div className="space-y-4 text-lg">
-            <p>
-              <strong>As-Is Basis:</strong> Creator Booster AI is provided on an "as-is" and "as available" basis. We make no warranties, expressed or implied, regarding the Service.
-            </p>
-            <p>
-              <strong>No Guarantees:</strong> We do not guarantee that AI-generated content will increase your YouTube views, rankings, or engagement. Results vary based on content quality, audience, and YouTube algorithm changes.
-            </p>
-            <p>
-              <strong>Third-Party Services:</strong> Creator Booster AI uses Google's Gemini API and Firebase services. We are not responsible for third-party service outages or disruptions.
-            </p>
-            <p>
-              <strong>Accuracy:</strong> While we strive for accuracy, AI-generated content may contain errors. Always review and edit generated content before use.
+        {/* Section 3 */}
+        <section id="tos-section-2" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">3. Eligibility</h2>
+          <p className="text-ink/70 leading-relaxed">
+            You must be at least 13 years old (or 16 in the European Economic Area) to use our Service.
+            By using the Service, you represent and warrant that you meet these age requirements and have
+            the legal capacity to enter into these Terms. If you are under the applicable age, you may
+            only use the Service with the involvement and consent of a parent or legal guardian.
+          </p>
+        </section>
+
+        {/* Section 4 */}
+        <section id="tos-section-3" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">4. User Accounts</h2>
+          <p className="text-ink/70 leading-relaxed">
+            Certain features of the Service may require you to create an account. When creating an account,
+            you agree to:
+          </p>
+          <ul className="space-y-2 text-ink/70 leading-relaxed ml-6 list-disc">
+            <li>Provide accurate, current, and complete information</li>
+            <li>Maintain the security of your password and account</li>
+            <li>Promptly update your account information if it changes</li>
+            <li>Accept responsibility for all activities that occur under your account</li>
+            <li>Notify us immediately of any unauthorized use of your account</li>
+          </ul>
+          <p className="text-ink/70 leading-relaxed">
+            We reserve the right to suspend or terminate accounts that violate these Terms or that we
+            reasonably believe have been compromised.
+          </p>
+        </section>
+
+        {/* Section 5 */}
+        <section id="tos-section-4" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">5. Acceptable Use Policy</h2>
+          <p className="text-ink/70 leading-relaxed">
+            You agree to use the Service only for lawful purposes and in accordance with these Terms.
+            You agree not to:
+          </p>
+          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
+            <ul className="space-y-3 text-ink/70 leading-relaxed ml-6 list-disc">
+              <li>Use the Service for any illegal purpose or in violation of any local, state, national, or international law</li>
+              <li>Upload or transmit malicious code, viruses, worms, or any other harmful software</li>
+              <li>Attempt to gain unauthorized access to any portion of the Service, other accounts, or computer systems connected to the Service</li>
+              <li>Interfere with or disrupt the Service, servers, or networks connected to the Service</li>
+              <li>Use automated systems, bots, scrapers, or similar tools to access the Service without written permission</li>
+              <li>Use the Service to send unsolicited communications (spam)</li>
+              <li>Impersonate any person or entity, or misrepresent your affiliation with any person or entity</li>
+              <li>Use the Service to process content that infringes on intellectual property rights of others</li>
+              <li>Attempt to reverse engineer, decompile, or disassemble any portion of the Service</li>
+              <li>Use the Service to build a competing product or service</li>
+            </ul>
+          </div>
+          <p className="text-ink/70 leading-relaxed">
+            We reserve the right to investigate and take appropriate action against anyone who, in our
+            sole discretion, violates this Acceptable Use Policy, including removing content, suspending
+            access, or terminating accounts.
+          </p>
+        </section>
+
+        {/* Section 6 */}
+        <section id="tos-section-5" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">6. Intellectual Property Rights</h2>
+          <p className="text-ink/70 leading-relaxed">
+            The Service and its original content, features, functionality, and underlying technology are
+            owned by CreatorBoost AI and are protected by international copyright, trademark, patent, trade
+            secret, and other intellectual property or proprietary rights laws.
+          </p>
+          <p className="text-ink/70 leading-relaxed">
+            You are granted a limited, non-exclusive, non-transferable, revocable license to access and
+            use the Service for personal, non-commercial purposes. This license does not include any right
+            to:
+          </p>
+          <ul className="space-y-2 text-ink/70 leading-relaxed ml-6 list-disc">
+            <li>Modify, copy, distribute, transmit, display, perform, reproduce, publish, license, create derivative works from, or sell any information, software, products, or services obtained from the Service</li>
+            <li>Use any data mining, robots, spiders, or similar data gathering or extraction tools</li>
+            <li>Download (other than page caching) any portion of the Service or any information contained therein</li>
+          </ul>
+          <p className="text-ink/70 leading-relaxed">
+            Our trademarks, trade names, logos, and brand features may not be used in connection with any
+            product or service without our prior written consent.
+          </p>
+        </section>
+
+        {/* Section 7 */}
+        <section id="tos-section-6" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">7. User-Generated Content</h2>
+          <p className="text-ink/70 leading-relaxed">
+            When you use our tools, you may upload files, enter text, or submit content ("User Content").
+            You retain all rights to your User Content. We do not claim ownership over any User Content
+            you submit through the Service.
+          </p>
+          <p className="text-ink/70 leading-relaxed">
+            For browser-based tools, your User Content is processed entirely in your browser and is never
+            transmitted to our servers. You are solely responsible for the content you process using our
+            tools and for ensuring that your use of such content complies with applicable laws.
+          </p>
+          <p className="text-ink/70 leading-relaxed">
+            By submitting content through tools that involve server processing (such as AI-powered features),
+            you grant us a limited, non-exclusive license to process that content solely for the purpose of
+            providing the requested service. We do not use your content for any other purpose.
+          </p>
+        </section>
+
+        {/* Section 8 */}
+        <section id="tos-section-7" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">8. Disclaimers and Limitation of Liability</h2>
+
+          <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-3xl p-8 md:p-12 space-y-4">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-6 h-6 text-primary" />
+              <h3 className="text-xl font-bold text-ink">Important Disclaimers</h3>
+            </div>
+            <p className="text-ink/70 leading-relaxed">
+              <strong>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND,
+              EITHER EXPRESS OR IMPLIED.</strong> We do not warrant that the Service will be uninterrupted,
+              error-free, or secure, or that any defects will be corrected. We make no representations or
+              warranties about the accuracy, reliability, completeness, or timeliness of the Service,
+              content, or results obtained from using the Service.
             </p>
           </div>
-        </section>
 
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">8. Limitation of Liability</h2>
-          <p className="text-lg leading-relaxed">
-            In no event shall Creator Booster AI, its owners, operators, or affiliates be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use Creator Booster AI, even if Creator Booster AI or an authorized representative has been notified orally or in writing of the possibility of such damage.
+          <p className="text-ink/70 leading-relaxed">
+            To the maximum extent permitted by applicable law, CreatorBoost AI shall not be liable for any
+            indirect, incidental, special, consequential, or punitive damages, including but not limited to
+            loss of profits, data, use, goodwill, or other intangible losses, resulting from:
+          </p>
+          <ul className="space-y-2 text-ink/70 leading-relaxed ml-6 list-disc">
+            <li>Your access to or use of or inability to access or use the Service</li>
+            <li>Any conduct or content of any third party on the Service</li>
+            <li>Any content obtained from the Service</li>
+            <li>Unauthorized access, use, or alteration of your transmissions or content</li>
+          </ul>
+          <p className="text-ink/70 leading-relaxed">
+            In no event shall our total aggregate liability exceed the greater of one hundred dollars
+            (USD $100.00) or the amount you have paid us in the past six months for the Service giving
+            rise to the claim.
           </p>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">9. Modifications to Service</h2>
-          <p className="text-lg leading-relaxed">
-            Creator Booster AI may modify or discontinue services (or any part thereof) with or without notice. Creator Booster AI shall not be liable for any modification, suspension, or discontinuance of the Service.
+        {/* Section 9 */}
+        <section id="tos-section-8" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">9. Indemnification</h2>
+          <p className="text-ink/70 leading-relaxed">
+            You agree to defend, indemnify, and hold harmless CreatorBoost AI, its affiliates, licensors,
+            and service providers, and its and their respective officers, directors, employees, contractors,
+            agents, licensors, suppliers, successors, and assigns from and against any claims, liabilities,
+            damages, judgments, awards, losses, costs, expenses, or fees (including reasonable attorneys'
+            fees) arising out of or relating to your violation of these Terms or your use of the Service.
           </p>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">10. Governing Law</h2>
-          <p className="text-lg leading-relaxed">
-            These Terms of Service and the use of Creator Booster AI are governed by and construed in accordance with the laws of the jurisdiction in which the Service is operated, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.
+        {/* Section 10 */}
+        <section id="tos-section-9" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">10. Termination</h2>
+          <p className="text-ink/70 leading-relaxed">
+            We may terminate or suspend your access to the Service immediately, without prior notice or
+            liability, for any reason whatsoever, including without limitation if you breach these Terms.
+            Upon termination, your right to use the Service will cease immediately.
+          </p>
+          <p className="text-ink/70 leading-relaxed">
+            You may terminate your use of the Service at any time by simply discontinuing use. If you have
+            an account, you may request account deletion by contacting us at{' '}
+            <a href="mailto:support@creatorboostai.xyz" className="text-primary hover:underline">
+              support@creatorboostai.xyz
+            </a>.
+          </p>
+          <p className="text-ink/70 leading-relaxed">
+            All provisions of these Terms which by their nature should survive termination shall survive,
+            including, without limitation, ownership provisions, warranty disclaimers, indemnity, and
+            limitations of liability.
           </p>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-display font-black uppercase tracking-wider mb-4 text-ink">11. Contact Information</h2>
-          <div className="space-y-3 text-lg">
-            <p>
-              If you have questions about these Terms of Service, please contact us:
-            </p>
-            <div className="flex gap-3 items-center p-4 bg-primary/10 border border-primary/30 rounded-xl">
-              <FileText className="w-5 h-5 text-primary flex-shrink-0" />
-              <a href="mailto:support@creatorboostai.xyz" className="text-primary hover:underline font-semibold break-all">
-                support@creatorboostai.xyz
+        {/* Section 11 */}
+        <section id="tos-section-10" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">11. Third-Party Links and Services</h2>
+          <p className="text-ink/70 leading-relaxed">
+            The Service may contain links to third-party websites, services, or content that are not owned
+            or controlled by CreatorBoost AI. We have no control over, and assume no responsibility for,
+            the content, privacy policies, or practices of any third-party sites or services. We strongly
+            advise you to read the terms and conditions and privacy policy of any third-party site that
+            you visit.
+          </p>
+        </section>
+
+        {/* Section 12 */}
+        <section id="tos-section-11" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">12. Governing Law and Dispute Resolution</h2>
+          <p className="text-ink/70 leading-relaxed">
+            These Terms shall be governed by and construed in accordance with the laws of the United States,
+            without regard to its conflict of law provisions. Any disputes arising from or relating to these
+            Terms or the Service shall be resolved through the following process:
+          </p>
+          <ul className="space-y-3 text-ink/70 leading-relaxed ml-6 list-decimal">
+            <li><strong>Informal Resolution:</strong> Before filing any formal action, you agree to contact us and attempt to resolve the dispute informally by sending a written notice to{' '}
+              <a href="mailto:legal@creatorboostai.xyz" className="text-primary hover:underline">legal@creatorboostai.xyz</a>.
+              We will attempt to resolve the dispute within 30 days of receiving your notice.
+            </li>
+            <li><strong>Mediation:</strong> If informal resolution fails, the parties agree to submit the dispute to non-binding mediation before pursuing any other remedy.</li>
+            <li><strong>Binding Arbitration:</strong> If mediation fails, any remaining dispute shall be resolved by binding arbitration in accordance with the rules of the American Arbitration Association.</li>
+          </ul>
+          <p className="text-ink/70 leading-relaxed">
+            Notwithstanding the foregoing, we may seek injunctive or other equitable relief in any court
+            of competent jurisdiction to prevent the actual or threatened infringement or misappropriation
+            of our intellectual property rights.
+          </p>
+        </section>
+
+        {/* Section 13 */}
+        <section id="tos-section-12" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">13. Severability</h2>
+          <p className="text-ink/70 leading-relaxed">
+            If any provision of these Terms is held to be unenforceable or invalid, such provision will be
+            modified to the minimum extent necessary to make it enforceable, and the remaining provisions
+            shall remain in full force and effect. The invalidity of any provision shall not affect the
+            validity of the remaining provisions.
+          </p>
+        </section>
+
+        {/* Section 14 */}
+        <section id="tos-section-13" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">14. Changes to These Terms</h2>
+          <p className="text-ink/70 leading-relaxed">
+            We reserve the right to modify or replace these Terms at any time at our sole discretion.
+            If a revision is material, we will try to provide at least 30 days' notice prior to any new
+            terms taking effect. What constitutes a material change will be determined at our sole
+            discretion. By continuing to access or use our Service after those revisions become effective,
+            you agree to be bound by the revised terms.
+          </p>
+        </section>
+
+        {/* Section 15 */}
+        <section id="tos-section-14" className="space-y-4">
+          <h2 className="text-2xl font-display font-black uppercase tracking-wider text-ink">15. Contact Information</h2>
+          <p className="text-ink/70 leading-relaxed">
+            If you have any questions about these Terms of Service, please contact us:
+          </p>
+          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 flex items-center gap-4">
+            <div className="bg-primary rounded-xl p-3">
+              <Mail className="w-6 h-6 text-black" />
+            </div>
+            <div>
+              <h3 className="font-bold text-ink">Legal Inquiries</h3>
+              <a href="mailto:legal@creatorboostai.xyz" className="text-primary hover:underline text-sm">
+                legal@creatorboostai.xyz
               </a>
             </div>
           </div>
         </section>
 
-        <section className="pt-4 border-t-2 border-slate-800">
-          <p className="text-sm text-ink/50 italic">
-            By using Creator Booster AI, you acknowledge that you have read, understood, and agree to be bound by all the terms and conditions contained in this Terms of Service.
+        {/* Footer Links */}
+        <div className="border-t border-slate-800 pt-8 mt-12">
+          <p className="text-ink/50 text-sm text-center">
+            Related: <Link to="/privacy-policy" className="text-primary hover:underline">Privacy Policy</Link> · <Link to="/cookie-policy" className="text-primary hover:underline">Cookie Policy</Link> · <Link to="/disclaimer" className="text-primary hover:underline">Disclaimer</Link>
           </p>
-        </section>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

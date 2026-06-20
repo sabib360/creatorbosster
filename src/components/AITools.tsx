@@ -1,12 +1,19 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, FileText, Eraser, Eye, Bot, Image as ImageIcon } from 'lucide-react';
+import { ArrowRight, FileText, Eraser, Eye, Bot, Image as ImageIcon, ZoomIn, Palette, Code, Globe, TrendingUp } from 'lucide-react';
 import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
+  { name: 'AI Background Remover', path: '/tools/ai-bg-remover', description: 'Remove image backgrounds and replace with solid colors or transparency', icon: Eraser },
+  { name: 'AI Image Upscaler', path: '/tools/ai-image-upscaler', description: 'Upscale low-resolution images 2x, 4x, or 8x with enhancement', icon: ZoomIn },
+  { name: 'AI Text to Image', path: '/tools/ai-text-to-image', description: 'Generate images from text descriptions with multiple styles', icon: Palette },
+  { name: 'AI Document Summarizer', path: '/tools/ai-document-summarizer', description: 'Summarize documents and articles with key point extraction', icon: FileText },
+  { name: 'AI Chatbot Assistant', path: '/tools/ai-chatbot', description: 'Conversational AI for content creators and marketers', icon: Bot },
+  { name: 'AI Code Generator', path: '/tools/ai-code-generator', description: 'Generate clean, commented code from natural language', icon: Code },
+  { name: 'AI Translator', path: '/tools/ai-translator', description: 'Translate text between 100+ languages with pronunciation', icon: Globe },
+  { name: 'AI Sentiment Analyzer', path: '/tools/ai-sentiment-analyzer', description: 'Analyze sentiment, emotions, and key phrases in text', icon: TrendingUp },
   { name: 'PDF Summarizer', path: '/tools/pdf-summarizer', description: 'AI-powered PDF content extraction and summarization', icon: FileText },
-  { name: 'AI Thumbnail Generator', path: '/tools/ai-thumbnail-generator', description: 'Generate professional YouTube thumbnails directly with AI', icon: ImageIcon },
-  { name: 'Background Remover', path: '/tools/background-remover', description: 'Automatically remove image backgrounds with AI', icon: Eraser },
+  { name: 'AI Thumbnail Generator', path: '/tools/ai-thumbnail-generator', description: 'Generate professional YouTube thumbnails with AI', icon: ImageIcon },
   { name: 'Image Analyzer', path: '/tools/image-analyzer', description: 'Intelligent image description and metadata extraction', icon: Eye },
   { name: 'AI Assistant', path: '/tools/ai-assistant', description: 'General-purpose AI chat for task assistance', icon: Bot },
 ];
