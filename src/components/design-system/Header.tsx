@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Sparkles } from 'lucide-react';
+import { Search, Sparkles, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MegaMenu } from './MegaMenu';
 import { MobileMenu } from './MobileMenu';
@@ -45,34 +45,49 @@ const aiGroups = [
 ];
 
 export function Header({ className, onSearchOpen }: HeaderProps) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60', className)}>
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
+    <header className={cn(
+      'fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300',
+      scrolled 
+        ? 'glass-strong shadow-2xl shadow-black/20 border-b border-white/[0.04]' 
+        : 'bg-transparent',
+      className
+    )}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="relative">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg shadow-brand-500/25 group-hover:shadow-brand-500/40 transition-all duration-300">
+              <Sparkles className="h-4.5 w-4.5 text-white" />
+            </div>
           </div>
-          <span className="font-display font-bold text-lg hidden sm:inline">CreatorBoost</span>
+          <span className="font-display font-extrabold text-[15px] tracking-tight text-white hidden sm:block">
+            CreatorBoost<span className="text-brand-400">AI</span>
+          </span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-1">
           <MegaMenu trigger="Tools" groups={toolGroups} />
           <MegaMenu trigger="AI Tools" groups={aiGroups} />
-          <Link to="/blog" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">Blog</Link>
-          <Link to="/about" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">About</Link>
+          <Link to="/blog" className="px-3.5 py-2 text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.05] rounded-lg transition-all duration-200">Blog</Link>
+          <Link to="/about" className="px-3.5 py-2 text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.05] rounded-lg transition-all duration-200">About</Link>
         </nav>
 
-        {/* Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={onSearchOpen}
-            className="hidden sm:flex items-center gap-2 h-9 px-3 rounded-lg border bg-muted text-muted-foreground text-sm hover:bg-muted/80 transition-colors"
+            className="hidden sm:flex items-center gap-2 h-9 px-3 rounded-xl bg-white/[0.04] text-white/40 text-sm hover:bg-white/[0.08] hover:text-white/60 transition-all duration-200 border border-white/[0.06]"
           >
             <Search className="h-4 w-4" />
             <span className="hidden lg:inline">Search...</span>
-            <kbd className="hidden lg:inline-flex h-5 items-center gap-1 rounded border bg-background px-1.5 text-xs">
+            <kbd className="hidden lg:inline-flex h-5 items-center gap-0.5 rounded bg-white/[0.06] px-1.5 text-[10px] text-white/30 border border-white/[0.08] font-mono">
               ⌘K
             </kbd>
           </button>

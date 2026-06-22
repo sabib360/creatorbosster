@@ -30,10 +30,10 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 brutal-btn bg-surface rounded-full flex items-center justify-center"
+      className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] transition-all duration-200 flex items-center justify-center"
       aria-label="Toggle Dark Mode"
     >
-      {isDark ? <Sun className="w-5 h-5 text-ink" /> : <Moon className="w-5 h-5 text-ink" />}
+      {isDark ? <Sun className="w-4 h-4 text-white/60" /> : <Moon className="w-4 h-4 text-white/60" />}
     </button>
   );
 }

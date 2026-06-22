@@ -3,70 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    
-    <!-- Primary Meta Tags (SEO) -->
-    <title>Free AI Tools Online | Image, PDF, Finance & Social Media Tools | Creator Booster</title>
-    <meta name="title" content="Free AI Tools Online | Image, PDF, Finance & Social Media Tools | Creator Booster" />
-    <meta name="description" content="100+ free online tools: AI generators, image editors, PDF tools, financial calculators, social media tools. No signup required. Boost productivity with our all-in-one tool suite." />
-    <meta name="keywords" content="AI tools online, free AI tools, image editor, PDF tools, financial calculator, social media tools, hashtag generator, loan calculator, budget planner, image compressor, PDF merger, emoji picker, link shortener" />
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" as="style" />
+
+    <!-- Critical CSS - Font display swap to prevent FOIT -->
+    <style>
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400 700;
+        font-display: swap;
+        src: local('Inter');
+      }
+      @font-face {
+        font-family: 'Plus Jakarta Sans';
+        font-style: normal;
+        font-weight: 600 800;
+        font-display: swap;
+        src: local('Plus Jakarta Sans');
+      }
+      /* Prevent layout shift from font loading */
+      :root {
+        --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+        --font-display: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+      }
+    </style>
+
+    <!-- Primary Meta Tags (SEO) — High CTR Optimized -->
+    <title>Free AI Tools - Image Generator, Background Remover, Caption & More | CreatorBoost AI</title>
+    <meta name="title" content="Free AI Tools - Image Generator, Background Remover, Caption & More | CreatorBoost AI" />
+    <meta name="description" content="Free AI tools for creators. Generate images, remove backgrounds, write captions, and grow faster online. 80+ tools, no signup required." />
+    <meta name="keywords" content="free AI tools, AI image generator, background remover, caption generator, QR code generator, YouTube tools, SEO tools, hashtag generator, image compressor, PDF tools, social media tools" />
     <meta name="author" content="Creator Booster AI" />
     <meta name="language" content="English" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="revisit-after" content="7 days" />
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://creatorboostai.xyz/" />
-    <meta property="og:title" content="Free AI Tools Online | 100+ Tools for Creators | Creator Booster" />
-    <meta property="og:description" content="100+ free online tools: AI generators, image editors, PDF tools, financial calculators, social media tools. No signup required. Boost productivity with our all-in-one tool suite." />
+    <meta property="og:title" content="Free AI Tools - Image Generator, Background Remover, Caption & More" />
+    <meta property="og:description" content="Free AI tools for creators. Generate images, remove backgrounds, write captions, and grow faster online. 80+ tools, no signup required." />
     <meta property="og:image" content="https://creatorboostai.xyz/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content="Creator Booster AI" />
+    <meta property="og:site_name" content="CreatorBoost AI" />
     <meta property="og:locale" content="en_US" />
-    
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://creatorboostai.xyz/" />
-    <meta name="twitter:title" content="Free AI Tools Online | 100+ Tools for Creators" />
-    <meta name="twitter:description" content="100+ free online tools: AI generators, image editors, PDF tools, financial calculators, social media tools. No signup required." />
+    <meta name="twitter:title" content="Free AI Tools - Image Generator, Background Remover, Caption & More" />
+    <meta name="twitter:description" content="Free AI tools for creators. Generate images, remove backgrounds, write captions, and grow faster online. 80+ tools, no signup required." />
     <meta name="twitter:image" content="https://creatorboostai.xyz/og-image.png" />
     <meta name="twitter:creator" content="@creatorboostai" />
-    
+
     <!-- Canonical URL -->
     <link rel="canonical" href="https://creatorboostai.xyz/" />
-    
+
     <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#facc15" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CreatorBoost AI" />
-    
-    <!-- Preconnect for Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="/favicon.svg" as="image" type="image/svg+xml" />
-    
+
     <!-- Sitemap & Robots -->
     <link rel="sitemap" type="application/xml" href="https://creatorboostai.xyz/sitemap.xml" />
-    
+
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="dVZCpLRLWi0Ov2XXsAoHKfOPjNUNLpC9pX3A1vpYtAs" />
-    
+
     <!-- Theme Color -->
     <meta name="msapplication-TileColor" content="#0f172a" />
-    
+
     <!-- JSON-LD Organization Schema -->
     <script type="application/ld+json">
     {
@@ -93,7 +115,7 @@
       }
     }
     </script>
-    
+
     <!-- Website Schema with SearchAction -->
     <script type="application/ld+json">
     {
@@ -120,7 +142,7 @@
       }
     }
     </script>
-    
+
     <!-- SoftwareApplication Schema -->
     <script type="application/ld+json">
     {
@@ -157,7 +179,7 @@
       ]
     }
     </script>
-    
+
     <!-- FAQ Schema for Rich Snippets -->
     <script type="application/ld+json">
     {
@@ -199,7 +221,7 @@
       ]
     }
     </script>
-    
+
     <!-- BreadcrumbList Schema -->
     <script type="application/ld+json">
     {
@@ -227,15 +249,15 @@
       ]
     }
     </script>
-    
-    <!-- Google AdSense -->
+
+    <!-- Google AdSense - DEFERRED -->
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2121336720951736"
       crossOrigin="anonymous"
     ></script>
-    
-    <!-- Google Analytics 4 -->
+
+    <!-- Google Analytics 4 - DEFERRED -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1ETYXFVKZ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];

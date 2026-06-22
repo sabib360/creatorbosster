@@ -1,9 +1,13 @@
 import { ReactNode } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 function Pagination({ children, className }: { children: ReactNode; className?: string }) {
-  return <nav aria-label="Pagination" className={cn('flex items-center justify-center gap-1', className)}>{children}</nav>;
+  return (
+    <nav aria-label="Pagination" className={cn('flex items-center justify-center', className)}>
+      {children}
+    </nav>
+  );
 }
 
 function PaginationContent({ children, className }: { children: ReactNode; className?: string }) {
@@ -20,10 +24,10 @@ function PaginationLink({ children, onClick, active, disabled, className }: { ch
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'inline-flex items-center justify-center h-9 min-w-9 px-3 rounded-lg text-sm font-medium transition-all focus-ring',
-        active && 'bg-primary text-primary-foreground shadow-sm',
-        !active && 'hover:bg-muted text-muted-foreground hover:text-foreground',
-        disabled && 'opacity-50 cursor-not-allowed',
+        'inline-flex items-center justify-center h-9 min-w-9 px-3 rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500',
+        active && 'bg-brand-600 text-white shadow-lg shadow-brand-600/20',
+        !active && 'text-white/40 hover:text-white hover:bg-white/[0.06]',
+        disabled && 'opacity-30 cursor-not-allowed pointer-events-none',
         className
       )}
     >
@@ -48,4 +52,12 @@ function PaginationPrevious({ onClick, disabled }: { onClick?: () => void; disab
   );
 }
 
-export { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious };
+function PaginationEllipsis() {
+  return (
+    <span className="inline-flex items-center justify-center h-9 min-w-9">
+      <MoreHorizontal className="h-4 w-4 text-white/20" />
+    </span>
+  );
+}
+
+export { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis };

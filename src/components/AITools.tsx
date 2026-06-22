@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, FileText, Eraser, Eye, Bot, Image as ImageIcon, ZoomIn, Palette, Code, Globe, TrendingUp } from 'lucide-react';
+import { ArrowRight, FileText, Eraser, Eye, Bot, Image as ImageIcon, ZoomIn, Palette, Code, Globe, TrendingUp, Hash } from 'lucide-react';
 import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
+  { name: 'AI Hashtag Generator', path: '/tools/ai-hashtag-generator', description: 'Generate viral hashtags for Instagram, TikTok, Facebook, and YouTube', icon: Hash },
   { name: 'AI Background Remover', path: '/tools/ai-bg-remover', description: 'Remove image backgrounds and replace with solid colors or transparency', icon: Eraser },
   { name: 'AI Image Upscaler', path: '/tools/ai-image-upscaler', description: 'Upscale low-resolution images 2x, 4x, or 8x with enhancement', icon: ZoomIn },
   { name: 'AI Text to Image', path: '/tools/ai-text-to-image', description: 'Generate images from text descriptions with multiple styles', icon: Palette },

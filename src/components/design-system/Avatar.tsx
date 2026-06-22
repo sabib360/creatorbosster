@@ -2,16 +2,18 @@ import { ImgHTMLAttributes, HTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  status?: 'online' | 'offline' | 'away';
 }
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
-  ({ className, size = 'md', ...props }, ref) => (
+  ({ className, size = 'md', status, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        'relative flex shrink-0 overflow-hidden rounded-full',
+        'relative flex shrink-0 overflow-hidden rounded-full border border-white/[0.06]',
         {
+          'h-6 w-6': size === 'xs',
           'h-8 w-8': size === 'sm',
           'h-10 w-10': size === 'md',
           'h-12 w-12': size === 'lg',
@@ -20,7 +22,19 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         className
       )}
       {...props}
-    />
+    >
+      {props.children}
+      {status && (
+        <span className={cn(
+          'absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#0B1120]',
+          {
+            'bg-emerald-400': status === 'online',
+            'bg-white/30': status === 'offline',
+            'bg-amber-400': status === 'away',
+          }
+        )} />
+      )}
+    </div>
   )
 );
 Avatar.displayName = 'Avatar';
@@ -41,7 +55,7 @@ const AvatarFallback = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>
     <div
       ref={ref}
       className={cn(
-        'flex h-full w-full items-center justify-center rounded-full bg-muted text-sm font-medium',
+        'flex h-full w-full items-center justify-center rounded-full bg-white/[0.06] text-sm font-medium text-white/60',
         className
       )}
       {...props}

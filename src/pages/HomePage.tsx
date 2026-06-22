@@ -6,7 +6,7 @@ import { Stats } from '@/components/home/Stats';
 import { ToolCategories } from '@/components/home/ToolCategories';
 import { FeatureGrid } from '@/components/home/FeatureGrid';
 import { SearchBar } from '@/components/home/SearchBar';
-import { Footer } from '@/components/layout/Footer';
+import Footer from '@/components/layout/Footer';
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');

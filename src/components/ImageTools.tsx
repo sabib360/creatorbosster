@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Minimize2, Maximize, Crop, RotateCw, User, Stamp, RefreshCw, Package, Target, Sparkles, Palette, Binary, FileText, Pipette, Grid3x3, Images, Globe } from 'lucide-react';
+import { ArrowRight, Minimize2, Maximize, Crop, RotateCw, User, Stamp, RefreshCw, Package, Target, Sparkles, Palette, Binary, FileText, Pipette, Grid3x3, Images, Globe, Scissors } from 'lucide-react';
 import SEOHead, { categorySEOData } from './SEOHead';
 
 const tools = [
+  { name: 'AI Background Remover', path: '/tools/background-remover', description: 'Remove backgrounds from images instantly with AI', icon: Scissors },
   { name: 'Compress Image', path: '/tools/image-compressor', description: 'Reduce image file size while maintaining quality', icon: Minimize2 },
   { name: 'Resize Image', path: '/tools/image-resizer', description: 'Change image dimensions with custom or preset sizes', icon: Maximize },
   { name: 'Crop Image', path: '/tools/image-cropper', description: 'Trim and crop images with interactive controls', icon: Crop },

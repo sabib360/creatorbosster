@@ -385,6 +385,95 @@ export async function generateYouTubeHashtags(topic: string): Promise<HashtagRes
   return result.hashtags;
 }
 
+// === AI Multi-Platform Hashtag Generator ===
+export interface AIHashtagSet {
+  viral: string[];
+  trending: string[];
+  niche: string[];
+  broad: string[];
+  engagementScore: number;
+  reachLevel: string;
+}
+
+export async function generateAIHashtags(
+  topic: string,
+  platform: string,
+  count: number,
+  language: string = 'english'
+): Promise<AIHashtagSet> {
+  const platformGuide: Record<string, string> = {
+    instagram: 'Optimize for Instagram. Use popular hashtags, niche hashtags, and trending ones. Instagram allows up to 30 hashtags. Mix high-volume (1M+) and low-volume (10K-100K) hashtags.',
+    tiktok: 'Optimize for TikTok. Use 3-5 hashtags. Include trending TikTok hashtags like #fyp, #foryou. Focus on niche-specific hashtags.',
+    facebook: 'Optimize for Facebook. Use 1-3 relevant hashtags. Focus on topic-specific hashtags. Facebook hashtags are less important but still help discovery.',
+    youtube: 'Optimize for YouTube. Use 3-5 hashtags in title/description. Include trending YouTube hashtags. Focus on search-friendly hashtags.',
+    twitter: 'Optimize for Twitter/X. Use 1-3 hashtags max. Focus on trending and topical hashtags. Keep hashtags short and relevant.',
+  };
+
+  const langNote = language === 'bangla'
+    ? 'Include both English and Bangla/Bengali hashtags where relevant. Generate some hashtags in Bangla script (e.g., #বাংলা, #ভ্রমণ, #খাবার).'
+    : 'Generate hashtags in English only.';
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-flash-preview',
+    contents: `Generate ${count} social media hashtags for the topic: "${topic}"
+Platform: ${platform} — ${platformGuide[platform] || platformGuide.instagram}
+${langNote}
+
+Categorize each hashtag into one of these groups:
+- viral: Extremely popular hashtags with 1M+ posts. High competition but massive reach.
+- trending: Currently trending hashtags that are gaining popularity fast.
+- niche: Specific hashtags with 10K-500K posts. Lower competition, higher engagement.
+- broad: General topic hashtags with moderate reach.
+
+Rules:
+- No spam hashtags (like #follow4follow, #like4like, #spam)
+- Realistic social media usage — hashtags people actually use
+- Include a mix of high + low competition hashtags
+- Platform-optimized format
+- No duplicate hashtags
+- Each hashtag must start with #
+- Make sure hashtags are relevant to the topic
+
+Return JSON with:
+{
+  "viral": ["#hashtag1", ...],
+  "trending": ["#hashtag1", ...],
+  "niche": ["#hashtag1", ...],
+  "broad": ["#hashtag1", ...],
+  "engagementScore": 75,
+  "reachLevel": "High/Medium/Low"
+}
+
+engagementScore: estimate 0-100 based on hashtag quality mix
+reachLevel: overall reach potential based on hashtag selection`,
+    config: {
+      responseMimeType: 'application/json',
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          viral: { type: Type.ARRAY, items: { type: Type.STRING } },
+          trending: { type: Type.ARRAY, items: { type: Type.STRING } },
+          niche: { type: Type.ARRAY, items: { type: Type.STRING } },
+          broad: { type: Type.ARRAY, items: { type: Type.STRING } },
+          engagementScore: { type: Type.NUMBER },
+          reachLevel: { type: Type.STRING },
+        },
+        required: ['viral', 'trending', 'niche', 'broad', 'engagementScore', 'reachLevel'],
+      },
+    },
+  });
+
+  const result = JSON.parse(response.text || '{}');
+  return {
+    viral: result.viral || [],
+    trending: result.trending || [],
+    niche: result.niche || [],
+    broad: result.broad || [],
+    engagementScore: result.engagementScore || 75,
+    reachLevel: result.reachLevel || 'Medium',
+  };
+}
+
 // === YouTube Script Writer ===
 export interface ScriptSection {
   section: string;

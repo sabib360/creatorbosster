@@ -46,38 +46,41 @@ const defaultColumns: FooterColumn[] = [
 
 export function Footer({ columns = defaultColumns, className }: FooterProps) {
   return (
-    <footer className={cn('border-t bg-background', className)}>
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {/* Brand */}
+    <footer className={cn('relative border-t border-white/[0.04]', className)}>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-brand-500/30 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 bg-brand-500/5 blur-[100px] rounded-full pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-14">
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-primary-foreground" />
+            <Link to="/" className="flex items-center gap-2.5 mb-4 group">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg shadow-brand-500/25">
+                <Sparkles className="h-4 w-4 text-white" />
               </div>
-              <span className="font-display font-bold text-lg">CreatorBoost</span>
+              <span className="font-display font-extrabold text-sm text-white">
+                CreatorBoost<span className="text-brand-400">AI</span>
+              </span>
             </Link>
-            <p className="text-sm text-muted-foreground mb-4">
-              Free tools for content creators. Process images, PDFs, and leverage AI — all in your browser.
+            <p className="text-[13px] text-white/35 leading-relaxed mb-5">
+              Free AI-powered toolkit for creators. 80+ tools for image processing, PDF editing, content creation, and more.
             </p>
             <div className="flex items-center gap-3">
-              <a href="https://twitter.com/creatorboostai" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
-                <Twitter className="h-5 w-5" />
+              <a href="https://twitter.com/creatorboostai" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-brand-400 hover:border-brand-500/20 transition-all duration-300" aria-label="Twitter">
+                <Twitter className="h-4 w-4" />
               </a>
-              <a href="https://github.com/creatorboostai" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
-                <Github className="h-5 w-5" />
+              <a href="https://github.com/creatorboostai" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-brand-400 hover:border-brand-500/20 transition-all duration-300" aria-label="GitHub">
+                <Github className="h-4 w-4" />
               </a>
             </div>
           </div>
 
-          {/* Link Columns */}
           {columns.map((col) => (
             <div key={col.title}>
-              <h3 className="font-semibold text-foreground mb-3">{col.title}</h3>
-              <ul className="space-y-2">
+              <h4 className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-4">{col.title}</h4>
+              <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.path} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    <Link to={link.path} className="text-[13px] text-white/35 hover:text-brand-400 transition-colors duration-200">
                       {link.label}
                     </Link>
                   </li>
@@ -87,14 +90,16 @@ export function Footer({ columns = defaultColumns, className }: FooterProps) {
           ))}
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="mt-14 pt-8 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[11px] text-white/25">
             © {new Date().getFullYear()} CreatorBoost AI. All rights reserved.
           </p>
-          <p className="text-sm text-muted-foreground flex items-center gap-1">
-            Made with <Heart className="h-4 w-4 text-destructive fill-destructive" /> for creators
-          </p>
+          <div className="flex items-center gap-6">
+            <span className="text-[11px] text-white/20 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+              All systems operational
+            </span>
+          </div>
         </div>
       </div>
     </footer>

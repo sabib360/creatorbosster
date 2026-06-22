@@ -402,6 +402,22 @@ export const QUICK_WINS: ToolVariant[] = [
     component: 'YouTubeScriptWriter',
   },
   {
+    id: 'youtube-script-generator',
+    name: 'YouTube Script Generator',
+    description: 'Generate viral YouTube video scripts with AI — hooks, sections, CTAs, and retention-optimized writing',
+    keywords: ['youtube script generator', 'youtube script writer', 'video script generator', 'youtube video script', 'script generator for youtube', 'ai script writer', 'youtube content script', 'viral script generator'],
+    path: '/tools/youtube-script-generator',
+    category: 'Social Media Tools',
+    subcategory: 'YouTube',
+    seoTitle: 'YouTube Script Generator - Create Viral Video Scripts Free | CreatorBoost AI',
+    seoDescription: 'Generate engaging YouTube video scripts instantly using AI. Free script generator with hooks, sections, CTAs, and retention-optimized writing. Supports Educational, Entertainment, Vlog, Tutorial, and more.',
+    difficulty: 'easy',
+    estimatedSearchVolume: 18500,
+    estimatedCPC: 1.5,
+    apiRequired: 'gemini',
+    component: 'YouTubeScriptGenerator',
+  },
+  {
     id: 'youtube-seo-checker',
     name: 'YouTube SEO Score Checker',
     description: 'Analyze and optimize video metadata for maximum reach',
@@ -672,6 +688,21 @@ export const QUICK_WINS: ToolVariant[] = [
 // PHASE 2: IMAGE TOOLS (High Traffic)
 export const IMAGE_TOOLS: ToolVariant[] = [
   {
+    id: 'background-remover',
+    name: 'AI Background Remover',
+    description: 'Remove backgrounds from images instantly using AI',
+    keywords: ['background remover', 'remove background', 'bg remover', 'ai background remover', 'remove image background', 'background eraser', 'transparent background', 'cut out image'],
+    path: '/tools/background-remover',
+    category: 'Image Tools',
+    subcategory: 'Enhancement',
+    seoTitle: 'Free AI Background Remover | Remove Image Background Online',
+    seoDescription: 'Remove image backgrounds instantly using AI. Fast, free and high quality background remover. Works in your browser — no uploads needed.',
+    difficulty: 'easy',
+    estimatedSearchVolume: 110000,
+    estimatedCPC: 1.5,
+    component: 'BackgroundRemover',
+  },
+  {
     id: 'image-upscaler',
     name: 'Image Upscaler - AI Powered',
     description: 'Enhance and upscale images with AI',
@@ -913,6 +944,22 @@ export const CALCULATOR_TOOLS: ToolVariant[] = [
 
 // PHASE 4: AI TOOLS (Viral + Medium Traffic)
 export const AI_TOOLS: ToolVariant[] = [
+  {
+    id: 'ai-image-generator',
+    name: 'AI Image Generator',
+    description: 'Generate stunning AI images from text prompts with 8 art styles and multiple providers',
+    keywords: ['ai image generator', 'ai art generator', 'text to image', 'ai image creator', 'generate ai images free', 'ai image maker', 'online ai image generator', 'free ai art'],
+    path: '/tools/ai-image-generator',
+    category: 'AI Tools',
+    subcategory: 'Image Generation',
+    seoTitle: 'AI Image Generator - Free AI Art Creator Online | CreatorBoostAI',
+    seoDescription: 'Generate stunning AI images online using text prompts. Free, fast and easy AI Image Generator with 8 art styles. No signup required.',
+    difficulty: 'medium',
+    estimatedSearchVolume: 45000,
+    estimatedCPC: 1.8,
+    apiRequired: 'gemini',
+    component: 'AIImageGenerator',
+  },
   {
     id: 'ai-email-writer',
     name: 'AI Email Writer',

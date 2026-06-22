@@ -6,7 +6,8 @@ import {
   Zap, Shield, Smartphone, Brain, Clock, Award, ArrowRight,
   ChevronDown, ChevronUp, ExternalLink,
   CheckCircle2, ArrowUpRight, Sparkles, Eye, ThumbsUp,
-  Flag, Link2, Facebook, Twitter, TrendingUp as TrendingUpIcon, BarChart3 as BarChart
+  Flag, Link2, Facebook, Twitter, TrendingUp as TrendingUpIcon, BarChart3 as BarChart,
+  Download, RefreshCw, Heart, MessageCircle, Globe, Rocket, Target, Wand2
 } from 'lucide-react';
 import SEOHead from './SEOHead';
 import Breadcrumb from './Breadcrumb';
@@ -20,7 +21,7 @@ import { useToast } from './Toast';
 
 const SITE_URL = SEO_CONFIG.siteUrl;
 
-/* ─── Config Types ─────────────────────────────── */
+/* ═══════════ TYPES ═══════════ */
 
 export interface HowToStep {
   title: string;
@@ -56,18 +57,18 @@ interface ToolPageProps {
   config?: ToolPageConfig;
 }
 
-/* ─── Category Helpers ─────────────────────────── */
+/* ═══════════ CATEGORY HELPERS ═══════════ */
 
-const CATEGORY_MAP: Record<string, { name: string; path: string; color: string }> = {
-  image: { name: 'Image Tools', path: '/image-tools', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-  pdf: { name: 'PDF Tools', path: '/pdf-tools', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
-  ai: { name: 'AI Tools', path: '/ai-tools', color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20' },
-  finance: { name: 'Finance Tools', path: '/finance-tools', color: 'text-green-400 bg-green-500/10 border-green-500/20' },
-  social: { name: 'Social Media Tools', path: '/social-media-tools', color: 'text-pink-400 bg-pink-500/10 border-pink-500/20' },
-  developer: { name: 'Developer Tools', path: '/ai-tools', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
+const CATEGORY_MAP: Record<string, { name: string; path: string; color: string; icon: string }> = {
+  image: { name: 'Image Tools', path: '/image-tools', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20', icon: '🖼️' },
+  pdf: { name: 'PDF Tools', path: '/pdf-tools', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20', icon: '📄' },
+  ai: { name: 'AI Tools', path: '/ai-tools', color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20', icon: '🤖' },
+  finance: { name: 'Finance Tools', path: '/finance-tools', color: 'text-green-400 bg-green-500/10 border-green-500/20', icon: '💰' },
+  social: { name: 'Social Media Tools', path: '/social-media-tools', color: 'text-pink-400 bg-pink-500/10 border-pink-500/20', icon: '📱' },
+  developer: { name: 'Developer Tools', path: '/ai-tools', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20', icon: '⚡' },
 };
 
-function resolveCategory(pathname: string): { name: string; path: string; color: string; key: string } {
+function resolveCategory(pathname: string): { name: string; path: string; color: string; key: string; icon: string } {
   const p = pathname.toLowerCase();
   if (p.includes('image') || p.includes('photo') || p.includes('compress') || p.includes('resize') || p.includes('crop') || p.includes('watermark') || p.includes('favicon') || p.includes('color-picker') || p.includes('passport') || p.includes('rotator') || p.includes('converter') || p.includes('base64-to-image') || p.includes('image-to-base64') || p.includes('metadata') || p.includes('splitter') || p.includes('merger') || p.includes('filter') || p.includes('bulk') || p.includes('targeted'))
     return { ...CATEGORY_MAP.image, key: 'image' };
@@ -81,10 +82,10 @@ function resolveCategory(pathname: string): { name: string; path: string; color:
     return { ...CATEGORY_MAP.social, key: 'social' };
   if (p.includes('json') || p.includes('base64') || p.includes('html-to') || p.includes('markdown') || p.includes('css-') || p.includes('js-') || p.includes('url-enc') || p.includes('hash-gen') || p.includes('regex') || p.includes('meta-tag') || p.includes('blog-title') || p.includes('blog-outline') || p.includes('meta-desc') || p.includes('social-post') || p.includes('paraphras') || p.includes('grammar') || p.includes('word-count') || p.includes('slug-') || p.includes('email-subject') || p.includes('content-calendar'))
     return { ...CATEGORY_MAP.developer, key: 'developer' };
-  return { name: 'Tools', path: '/', color: 'text-ink/60 bg-ink/5 border-ink/10', key: 'other' };
+  return { name: 'Tools', path: '/', color: 'text-white/40 bg-white/[0.04] border-white/[0.06]', key: 'other', icon: '🔧' };
 }
 
-/* ─── Default Content ──────────────────────────── */
+/* ═══════════ DEFAULT CONTENT ═══════════ */
 
 const DEFAULT_FEATURES: Feature[] = [
   { icon: 'zap', title: 'Fast Processing', description: 'Get results instantly with optimized in-browser processing' },
@@ -106,8 +107,6 @@ const DEFAULT_FAQS: Array<{ q: string; a: string }> = [
   { q: 'Can I use the output commercially?', a: 'Yes, you own the output created using our tools. You are free to use the results for personal or commercial purposes.' },
 ];
 
-/* ─── Feature Icon Map ─────────────────────────── */
-
 const ICON_MAP: Record<string, React.FC<{ className?: string }>> = {
   zap: Zap, shield: Shield, smartphone: Smartphone, brain: Brain,
   award: Award, eye: Eye, clock: Clock, star: Star, users: Users,
@@ -119,9 +118,29 @@ function FeatureIcon({ name, className }: { name: string; className?: string }) 
   return <Icon className={className} />;
 }
 
-/* ═══════════════════════════════════════════════ */
-/* ─── TOOL PAGE COMPONENT ─────────────────────── */
-/* ═══════════════════════════════════════════════ */
+/* ═══════════ SHARED COMPONENTS ═══════════ */
+
+function SectionBadge({ icon: Icon, text, color = 'text-brand-400' }: { icon: React.FC<{ className?: string }>; text: string; color?: string }) {
+  return (
+    <div className={cn("inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-[11px] font-bold uppercase tracking-widest mb-5", color)}>
+      <Icon className="w-3 h-3" /> {text}
+    </div>
+  );
+}
+
+function SectionTitle({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <h2 className={cn("text-2xl sm:text-3xl font-display font-black tracking-tight text-white", className)}>
+      {children}
+    </h2>
+  );
+}
+
+function cn(...classes: (string | boolean | undefined | null)[]) {
+  return classes.filter(Boolean).join(' ');
+}
+
+/* ═══════════ MAIN COMPONENT ═══════════ */
 
 export default function ToolPage({ children, toolId, toolPath, faqItems, config }: ToolPageProps) {
   const location = useLocation();
@@ -159,7 +178,6 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
   const toolSeoDesc = tool?.seoDescription || `Use ${toolName} online for free. Fast, secure, and no signup required. Try it now on CreatorBoost AI.`;
   const toolKeywords = tool?.keywords?.join(', ') || '';
 
-  /* Merge FAQs: prop > config > defaults */
   const allFaqs = faqItems && faqItems.length > 0
     ? faqItems
     : config?.faqs && config.faqs.length > 0
@@ -171,10 +189,8 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
   const benefits = config?.benefits || [];
   const description = config?.description || '';
 
-  /* Related tools */
   const relatedTools = getRelatedTools(resolvedToolId, category.key, 6);
 
-  /* Schemas */
   const schemas = tool ? [
     toolSoftwareSchema(tool, canonicalUrl),
     toolFAQSchema(allFaqs),
@@ -214,7 +230,6 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
 
   return (
     <>
-      {/* ─── SEO Head ─── */}
       <SEOHead
         title={toolSeoTitle}
         description={toolSeoDesc}
@@ -222,7 +237,6 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
         canonicalUrl={canonicalUrl}
       />
 
-      {/* ─── Structured Data ─── */}
       {schemas.map((schema, i) => (
         <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       ))}
@@ -233,7 +247,7 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
           {/* ═══════════ MAIN CONTENT ═══════════ */}
           <div className="flex-1 min-w-0">
 
-            {/* ─── 1. Breadcrumb ─── */}
+            {/* ─── 1. BREADCRUMB ─── */}
             <Breadcrumb
               items={[
                 { name: category.name, path: category.path },
@@ -242,65 +256,94 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
               className="mb-6"
             />
 
-            {/* ─── 2. Hero Section ─── */}
+            {/* ─── 2. TOOL HERO ─── */}
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="mb-8"
             >
-              <div className="flex flex-wrap items-start gap-3 mb-4">
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${category.color}`}>
-                  {category.name}
+              {/* Badges */}
+              <div className="flex flex-wrap items-center gap-2 mb-5">
+                <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${category.color}`}>
+                  {category.icon} {category.name}
                 </span>
-                <div className="flex items-center gap-1 text-amber-400">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <Zap className="w-2.5 h-2.5" /> Free
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  <Rocket className="w-2.5 h-2.5" /> Fast
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                  <Shield className="w-2.5 h-2.5" /> No Signup
+                </span>
+              </div>
+
+              {/* Title */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-black tracking-tight text-white mb-4 leading-tight">
+                {toolName}
+              </h1>
+
+              {/* Description */}
+              <p className="text-base text-white/50 max-w-2xl leading-relaxed mb-5">
+                {toolDescription || toolSeoDesc}
+              </p>
+
+              {/* Stats Row */}
+              <div className="flex flex-wrap items-center gap-4 mb-5">
+                <div className="flex items-center gap-1.5 text-amber-400">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-3 h-3 fill-current" />
                   ))}
                   <span className="text-xs text-white/50 ml-1">4.8</span>
                 </div>
-                <div className="flex items-center gap-1 text-white/40">
+                <div className="flex items-center gap-1.5 text-white/40">
                   <Users className="w-3 h-3" />
                   <span className="text-xs">2.5K+ users</span>
                 </div>
+                <div className="flex items-center gap-1.5 text-white/40">
+                  <Clock className="w-3 h-3" />
+                  <span className="text-xs">Instant results</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-white/40">
+                  <Globe className="w-3 h-3" />
+                  <span className="text-xs">Works worldwide</span>
+                </div>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-black tracking-tight text-white mb-3">
-                {toolName}
-              </h1>
-              <p className="text-sm sm:text-base text-white/50 max-w-2xl leading-relaxed mb-5">
-                {toolDescription || toolSeoDesc}
-              </p>
-
-              {/* Share & Favorite Buttons */}
-              <div className="flex items-center gap-2">
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2 flex-wrap">
                 {tool?.id && <FavoriteButton toolId={tool.id} toolName={toolName} />}
-                <button onClick={() => handleShare('twitter')} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-lg text-xs text-white/50 hover:text-white transition-colors" aria-label="Share on Twitter">
+                <button onClick={() => handleShare('twitter')} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-xl text-xs text-white/50 hover:text-white transition-all duration-200" aria-label="Share on Twitter">
                   <Twitter className="w-3 h-3" /> Share
                 </button>
-                <button onClick={() => handleShare('facebook')} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-lg text-xs text-white/50 hover:text-white transition-colors" aria-label="Share on Facebook">
+                <button onClick={() => handleShare('facebook')} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-xl text-xs text-white/50 hover:text-white transition-all duration-200" aria-label="Share on Facebook">
                   <Facebook className="w-3 h-3" /> Share
                 </button>
-                <button onClick={handleCopyLink} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-lg text-xs text-white/50 hover:text-white transition-colors" aria-label="Copy link">
-                  {copied ? <Check className="w-3 h-3 text-green-400" /> : <Link2 className="w-3 h-3" />}
+                <button onClick={handleCopyLink} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-xl text-xs text-white/50 hover:text-white transition-all duration-200" aria-label="Copy link">
+                  {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Link2 className="w-3 h-3" />}
                   {copied ? 'Copied!' : 'Copy Link'}
                 </button>
               </div>
             </motion.section>
 
-            {/* ─── 3. Tool Interface ─── */}
+            {/* ─── 3. TOOL WORKSPACE ─── */}
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.4 }}
               className="mb-12"
             >
-              <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5 sm:p-8 md:p-10">
-                {children}
+              <div className="glass-card rounded-2xl p-5 sm:p-8 md:p-10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/5 rounded-full blur-[80px] pointer-events-none" />
+                <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-brand-500/10 via-transparent to-cyan-500/5 opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                <div className="relative">
+                  {children}
+                </div>
               </div>
             </motion.section>
 
-            {/* ─── 4. Tool Description ─── */}
+            {/* ─── 4. TOOL DESCRIPTION ─── */}
             {description && (
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
@@ -309,24 +352,27 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
                 transition={{ duration: 0.4 }}
                 className="mb-12"
               >
-                <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white mb-4">
-                  What is {toolName}?
-                </h2>
-                <div className="text-sm text-white/50 leading-relaxed space-y-4">
+                <SectionBadge icon={Eye} text="About This Tool" />
+                <SectionTitle>What is {toolName}?</SectionTitle>
+                <div className="text-sm text-white/50 leading-relaxed space-y-4 mt-5">
                   <p>{description}</p>
                   {config?.whoIsItFor && (
                     <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5">
-                      <h3 className="text-sm font-bold text-white mb-2">Who Should Use This Tool?</h3>
+                      <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                        <Target className="w-4 h-4 text-brand-400" /> Who Should Use This Tool?
+                      </h3>
                       <p className="text-white/50">{config.whoIsItFor}</p>
                     </div>
                   )}
                   {config?.useCases && config.useCases.length > 0 && (
                     <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5">
-                      <h3 className="text-sm font-bold text-white mb-3">Real Use Cases</h3>
+                      <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                        <Wand2 className="w-4 h-4 text-brand-400" /> Real Use Cases
+                      </h3>
                       <ul className="space-y-2">
                         {config.useCases.map((uc, i) => (
                           <li key={i} className="flex items-start gap-2 text-white/50">
-                            <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                            <CheckCircle2 className="w-4 h-4 text-brand-400 flex-shrink-0 mt-0.5" />
                             <span>{uc}</span>
                           </li>
                         ))}
@@ -337,7 +383,7 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
               </motion.section>
             )}
 
-            {/* ─── 5. How To Use ─── */}
+            {/* ─── 5. HOW TO USE ─── */}
             {howToSteps.length > 0 && (
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
@@ -346,14 +392,13 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
                 transition={{ duration: 0.4 }}
                 className="mb-12"
               >
-                <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white mb-6">
-                  How to Use {toolName}
-                </h2>
-                <div className="space-y-4">
+                <SectionBadge icon={Rocket} text="How It Works" />
+                <SectionTitle>How to Use {toolName}</SectionTitle>
+                <div className="space-y-4 mt-5">
                   {howToSteps.map((step, i) => (
-                    <div key={i} className="flex gap-4 p-4 bg-white/[0.03] border border-white/[0.06] rounded-xl">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs font-bold text-primary">{i + 1}</span>
+                    <div key={i} className="flex gap-4 p-4 glass-card rounded-xl">
+                      <div className="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs font-bold text-brand-400">{i + 1}</span>
                       </div>
                       <div>
                         <h3 className="text-sm font-bold text-white mb-1">{step.title}</h3>
@@ -365,31 +410,37 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
               </motion.section>
             )}
 
-            {/* ─── 6. Features ─── */}
+            {/* ─── 6. FEATURES ─── */}
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="mb-12"
             >
-              <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white mb-6">
-                Features
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <SectionBadge icon={Sparkles} text="Features" />
+              <SectionTitle>Powerful Features</SectionTitle>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
                 {features.map((feat, i) => (
-                  <div key={i} className="p-4 bg-white/[0.03] border border-white/[0.06] rounded-xl hover:border-white/[0.12] transition-colors">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-                      <FeatureIcon name={feat.icon} className="w-4 h-4 text-primary" />
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05, duration: 0.4 }}
+                    className="p-4 glass-card rounded-xl hover:border-brand-500/20 transition-all duration-300 group"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-brand-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                      <FeatureIcon name={feat.icon} className="w-4 h-4 text-brand-400" />
                     </div>
                     <h3 className="text-sm font-bold text-white mb-1">{feat.title}</h3>
                     <p className="text-xs text-white/40 leading-relaxed">{feat.description}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.section>
 
-            {/* ─── 7. Benefits ─── */}
+            {/* ─── 7. BENEFITS ─── */}
             {benefits.length > 0 && (
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
@@ -398,13 +449,12 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
                 transition={{ duration: 0.4 }}
                 className="mb-12"
               >
-                <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white mb-6">
-                  Why Choose {toolName}?
-                </h2>
-                <div className="space-y-3">
+                <SectionBadge icon={Award} text="Why Choose Us" />
+                <SectionTitle>Why Choose {toolName}?</SectionTitle>
+                <div className="space-y-3 mt-5">
                   {benefits.map((ben, i) => (
-                    <div key={i} className="flex items-start gap-3 p-4 bg-white/[0.03] border border-white/[0.06] rounded-xl">
-                      <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                    <div key={i} className="flex items-start gap-3 p-4 glass-card rounded-xl">
+                      <CheckCircle2 className="w-4 h-4 text-brand-400 flex-shrink-0 mt-0.5" />
                       <div>
                         <h3 className="text-sm font-bold text-white mb-1">{ben.title}</h3>
                         <p className="text-xs text-white/40 leading-relaxed">{ben.description}</p>
@@ -423,12 +473,11 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
               transition={{ duration: 0.4 }}
               className="mb-12"
             >
-              <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white mb-6">
-                Frequently Asked Questions
-              </h2>
-              <div className="space-y-2">
+              <SectionBadge icon={MessageCircle} text="FAQ" />
+              <SectionTitle>Frequently Asked Questions</SectionTitle>
+              <div className="space-y-2 mt-5">
                 {allFaqs.map((item, i) => (
-                  <div key={i} className="bg-white/[0.03] border border-white/[0.06] rounded-xl overflow-hidden">
+                  <div key={i} className="glass-card rounded-xl overflow-hidden">
                     <button
                       onClick={() => setOpenFaq(openFaq === i ? null : i)}
                       className="w-full flex items-center justify-between p-4 text-left hover:bg-white/[0.02] transition-colors"
@@ -460,33 +509,32 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
               </div>
             </motion.section>
 
-            {/* ─── 9. Related Tools ─── */}
+            {/* ─── 9. RELATED TOOLS ─── */}
             {relatedTools.length > 0 && (
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                 className="mb-12"
               >
-                <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white mb-6">
-                  Related Tools
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <SectionBadge icon={ArrowUpRight} text="Related Tools" />
+                <SectionTitle>Try More Tools</SectionTitle>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
                   {relatedTools.map((rt) => (
                     <Link
                       key={rt.id}
                       to={rt.path}
-                      className="group p-4 bg-white/[0.03] border border-white/[0.06] rounded-xl hover:border-primary/30 hover:bg-white/[0.06] transition-all duration-300"
+                      className="group p-4 glass-card rounded-xl hover:border-brand-500/20 transition-all duration-300"
                     >
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="text-sm font-bold text-white group-hover:text-primary transition-colors truncate">
+                        <h3 className="text-sm font-bold text-white group-hover:text-brand-400 transition-colors truncate">
                           {rt.name}
                         </h3>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-white/20 group-hover:text-primary flex-shrink-0 mt-0.5" />
+                        <ArrowUpRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-400 flex-shrink-0 mt-0.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                       </div>
                       <p className="text-xs text-white/40 line-clamp-2 leading-relaxed mb-3">{rt.description}</p>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary/60 bg-primary/5 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400/60 bg-brand-500/5 px-2 py-0.5 rounded-full">
                         {rt.category}
                       </span>
                     </Link>
@@ -495,7 +543,7 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
               </motion.section>
             )}
 
-            {/* ─── 11. Feedback ─── */}
+            {/* ─── 10. FEEDBACK ─── */}
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -503,33 +551,36 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
               transition={{ duration: 0.4 }}
               className="mb-8"
             >
-              <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 text-center">
-                <p className="text-sm font-bold text-white mb-3">Was this tool helpful?</p>
-                <div className="flex items-center justify-center gap-3">
-                  <button
-                    onClick={() => setFeedbackGiven('up')}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-colors ${
-                      feedbackGiven === 'up'
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                        : 'bg-white/[0.04] text-white/50 hover:text-green-400 border border-white/[0.06] hover:border-green-500/30'
-                    }`}
-                  >
-                    <ThumbsUp className="w-3.5 h-3.5" /> Yes
-                  </button>
-                  <button
-                    onClick={() => setFeedbackGiven('down')}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-colors ${
-                      feedbackGiven === 'down'
-                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                        : 'bg-white/[0.04] text-white/50 hover:text-red-400 border border-white/[0.06] hover:border-red-500/30'
-                    }`}
-                  >
-                    <Flag className="w-3.5 h-3.5" /> Report Issue
-                  </button>
+              <div className="glass border border-white/[0.06] rounded-2xl p-6 text-center relative overflow-hidden">
+                <div className="absolute inset-0 mesh-gradient opacity-30 pointer-events-none" />
+                <div className="relative">
+                  <p className="text-sm font-bold text-white mb-3">Was this tool helpful?</p>
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      onClick={() => setFeedbackGiven('up')}
+                      className={`flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                        feedbackGiven === 'up'
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                          : 'bg-white/[0.04] text-white/50 hover:text-emerald-400 border border-white/[0.06] hover:border-emerald-500/30'
+                      }`}
+                    >
+                      <ThumbsUp className="w-3.5 h-3.5" /> Yes
+                    </button>
+                    <button
+                      onClick={() => setFeedbackGiven('down')}
+                      className={`flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                        feedbackGiven === 'down'
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          : 'bg-white/[0.04] text-white/50 hover:text-red-400 border border-white/[0.06] hover:border-red-500/30'
+                      }`}
+                    >
+                      <Flag className="w-3.5 h-3.5" /> Report Issue
+                    </button>
+                  </div>
+                  {feedbackGiven && (
+                    <p className="text-xs text-white/30 mt-3">Thanks for your feedback!</p>
+                  )}
                 </div>
-                {feedbackGiven && (
-                  <p className="text-xs text-white/30 mt-3">Thanks for your feedback!</p>
-                )}
               </div>
             </motion.section>
 
@@ -538,23 +589,50 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
           {/* ═══════════ SIDEBAR ═══════════ */}
           <aside className="w-full lg:w-80 flex-shrink-0 space-y-6">
 
-            {/* Popular Tools */}
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5">
-              <h3 className="text-xs font-bold text-white/60 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <TrendingUpIcon className="w-3.5 h-3.5 text-primary" /> Popular Tools
+            {/* Social Proof Stats */}
+            <div className="glass-card rounded-2xl p-5 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-500/20 to-transparent" />
+              <h3 className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <BarChart className="w-3.5 h-3.5 text-brand-400" /> Tool Stats
               </h3>
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="text-center p-3 rounded-xl bg-white/[0.03]">
+                  <div className="text-lg font-bold text-white">2.5K+</div>
+                  <div className="text-[10px] text-white/30">Users</div>
+                </div>
+                <div className="text-center p-3 rounded-xl bg-white/[0.03]">
+                  <div className="text-lg font-bold text-emerald-400">4.8</div>
+                  <div className="text-[10px] text-white/30">Rating</div>
+                </div>
+                <div className="text-center p-3 rounded-xl bg-white/[0.03]">
+                  <div className="text-lg font-bold text-cyan-400">15K+</div>
+                  <div className="text-[10px] text-white/30">Uses</div>
+                </div>
+                <div className="text-center p-3 rounded-xl bg-white/[0.03]">
+                  <div className="text-lg font-bold text-amber-400">Free</div>
+                  <div className="text-[10px] text-white/30">Forever</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Popular Tools */}
+            <div className="glass-card rounded-2xl p-5 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-500/20 to-transparent" />
+              <h3 className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <TrendingUpIcon className="w-3.5 h-3.5 text-brand-400" /> Popular Tools
+              </h3>
+              <div className="space-y-1">
                 {getPopularTools(5).map((t) => (
                   <Link
                     key={t.id}
                     to={t.path}
-                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.04] transition-colors group"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] transition-all duration-200 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Zap className="w-3.5 h-3.5 text-primary" />
+                    <div className="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-500/20 transition-colors">
+                      <Zap className="w-3.5 h-3.5 text-brand-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-white/70 group-hover:text-primary transition-colors truncate">{t.name}</p>
+                      <p className="text-xs font-bold text-white/70 group-hover:text-brand-400 transition-colors truncate">{t.name}</p>
                       <p className="text-[10px] text-white/30 truncate">{t.description}</p>
                     </div>
                   </Link>
@@ -563,22 +641,23 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
             </div>
 
             {/* Recently Added */}
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5">
-              <h3 className="text-xs font-bold text-white/60 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Sparkles className="w-3.5 h-3.5 text-green-400" /> Recently Added
+            <div className="glass-card rounded-2xl p-5 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+              <h3 className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" /> Recently Added
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {getNewTools(5).map((t) => (
                   <Link
                     key={t.id}
                     to={t.path}
-                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.04] transition-colors group"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] transition-all duration-200 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center flex-shrink-0">
-                      <Sparkles className="w-3.5 h-3.5 text-green-400" />
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500/20 transition-colors">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-white/70 group-hover:text-primary transition-colors truncate">{t.name}</p>
+                      <p className="text-xs font-bold text-white/70 group-hover:text-brand-400 transition-colors truncate">{t.name}</p>
                       <p className="text-[10px] text-white/30 truncate">{t.description}</p>
                     </div>
                   </Link>
@@ -587,22 +666,23 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
             </div>
 
             {/* Most Used */}
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5">
-              <h3 className="text-xs font-bold text-white/60 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <div className="glass-card rounded-2xl p-5 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+              <h3 className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
                 <BarChart className="w-3.5 h-3.5 text-amber-400" /> Most Used
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {getMostUsedTools(5).map((t) => (
                   <Link
                     key={t.id}
                     to={t.path}
-                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.04] transition-colors group"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] transition-all duration-200 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-500/20 transition-colors">
                       <BarChart className="w-3.5 h-3.5 text-amber-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-white/70 group-hover:text-primary transition-colors truncate">{t.name}</p>
+                      <p className="text-xs font-bold text-white/70 group-hover:text-brand-400 transition-colors truncate">{t.name}</p>
                       <p className="text-[10px] text-white/30 truncate">{t.description}</p>
                     </div>
                   </Link>
@@ -611,16 +691,22 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
             </div>
 
             {/* CTA */}
-            <div className="bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 rounded-2xl p-5 text-center">
-              <Sparkles className="w-8 h-8 text-primary mx-auto mb-3" />
-              <h3 className="text-sm font-bold text-white mb-2">Need More Tools?</h3>
-              <p className="text-xs text-white/40 mb-4">Explore 80+ free tools for creators.</p>
-              <Link
-                to="/"
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-black text-xs font-bold rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Browse All Tools <ArrowRight className="w-3 h-3" />
-              </Link>
+            <div className="glass-card rounded-2xl p-6 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-600/10 via-purple-500/5 to-brand-600/10 pointer-events-none" />
+              <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-brand-500/20 via-cyan-500/10 to-brand-500/20 opacity-30 pointer-events-none" />
+              <div className="relative">
+                <div className="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center mx-auto mb-3">
+                  <Sparkles className="w-6 h-6 text-brand-400" />
+                </div>
+                <h3 className="text-sm font-bold text-white mb-2">Try More AI Tools</h3>
+                <p className="text-xs text-white/40 mb-4">Explore 80+ free tools for creators.</p>
+                <Link
+                  to="/"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-brand-600 text-white text-xs font-bold rounded-xl hover:bg-brand-500 transition-all duration-200 btn-glow"
+                >
+                  Explore All Tools <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
             </div>
           </aside>
 
@@ -630,7 +716,7 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
   );
 }
 
-/* ─── Sidebar Helpers ──────────────────────────── */
+/* ═══════════ SIDEBAR HELPERS ═══════════ */
 
 function getPopularTools(count: number): ToolVariant[] {
   return [...ALL_TOOLS]
@@ -682,7 +768,7 @@ function getRelatedTools(currentId: string | undefined, categoryKey: string, cou
     .map(r => r.tool);
 }
 
-/* ─── Favorite Button Component ─── */
+/* ═══════════ FAVORITE BUTTON ═══════════ */
 
 function FavoriteButton({ toolId, toolName }: { toolId: string; toolName: string }) {
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -700,7 +786,7 @@ function FavoriteButton({ toolId, toolName }: { toolId: string; toolName: string
   return (
     <button
       onClick={handleToggle}
-      className={`flex items-center gap-1.5 px-3 py-1.5 border rounded-lg text-xs transition-colors ${
+      className={`flex items-center gap-1.5 px-3 py-1.5 border rounded-xl text-xs transition-all duration-200 ${
         fav
           ? 'bg-pink-500/10 border-pink-500/30 text-pink-400 hover:bg-pink-500/20'
           : 'bg-white/[0.04] border-white/[0.06] text-white/50 hover:text-pink-400 hover:bg-white/[0.08]'

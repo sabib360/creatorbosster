@@ -1,9 +1,9 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig, loadEnv} from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 
-export default defineConfig(({mode}) => {
+export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [react(), tailwindcss()],
@@ -19,7 +19,8 @@ export default defineConfig(({mode}) => {
       hmr: process.env.DISABLE_HMR !== 'true',
     },
     optimizeDeps: {
-      include: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+      include: ['react', 'react-dom', 'react-router-dom'],
+      exclude: ['pdfjs-dist', 'fabric', 'html2canvas', 'heic2any'],
     },
     build: {
       commonjsOptions: {
@@ -31,11 +32,12 @@ export default defineConfig(({mode}) => {
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom', 'react-router-dom'],
-            motion: ['framer-motion', 'motion'],
+            motion: ['framer-motion'],
             ui: ['lucide-react', 'class-variance-authority', 'clsx', 'tailwind-merge'],
+            firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
             charts: ['chart.js', 'react-chartjs-2'],
             pdf: ['pdf-lib'],
-            firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+            seo: ['react-helmet-async'],
           },
           entryFileNames: 'assets/[name]-[hash].js',
           chunkFileNames: 'assets/[name]-[hash].js',
@@ -45,8 +47,7 @@ export default defineConfig(({mode}) => {
       cssCodeSplit: true,
       sourcemap: false,
       reportCompressedSize: true,
-      chunkSizeWarningLimit: 400,
+      chunkSizeWarningLimit: 250,
     },
-
   };
 });
