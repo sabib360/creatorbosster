@@ -17,6 +17,7 @@ import { searchTools } from '../config/tools-database';
 import SEOHead from './SEOHead';
 import { organizationSchema, websiteSchema, homepageFAQSchema } from '../lib/schema';
 import Testimonials from './Testimonials';
+import SocialProofBar from './growth/SocialProofBar';
 
 const SITE_URL = 'https://creatorboostai.xyz';
 
@@ -343,6 +344,11 @@ export default function Dashboard() {
               ))}
             </motion.div>
           </div>
+        </Section>
+
+        {/* Social Proof Bar */}
+        <Section className="py-4 border-b border-white/[0.04]">
+          <SocialProofBar />
         </Section>
 
         {/* ═══════════ SECTION 3: TRENDING NOW ═══════════ */}

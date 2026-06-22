@@ -36,8 +36,6 @@ import { cn } from '../lib/utils';
    TYPES
    ═══════════════════════════════════════════════════════════════════ */
 
-type DashboardTab = 'overview' | 'creations' | 'history' | 'analytics' | 'trending' | 'settings';
-
 interface ActivityItem {
   id: string;
   toolName: string;
@@ -85,12 +83,15 @@ const QUICK_ACTIONS = [
   { label: 'Generate Script', path: '/tools/youtube-script-writer', icon: Clapperboard, color: 'from-orange-500 to-red-500' },
 ] as const;
 
+type DashboardTab = 'overview' | 'creations' | 'history' | 'analytics' | 'trending' | 'growth' | 'settings';
+
 const TAB_ITEMS: { id: DashboardTab; label: string; icon: typeof Home }[] = [
   { id: 'overview', label: 'Overview', icon: Home },
   { id: 'creations', label: 'My Creations', icon: FolderOpen },
   { id: 'history', label: 'History', icon: Clock },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   { id: 'trending', label: 'Trending', icon: TrendingUp },
+  { id: 'growth', label: 'Growth', icon: Award },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
@@ -1223,6 +1224,41 @@ export default function UserDashboard() {
                   <ArrowUpRight className="w-4 h-4 text-white/20 group-hover:text-white/60 flex-shrink-0" />
                 </Link>
               </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* ═══════ GROWTH TAB ═══════ */}
+      {activeTab === 'growth' && (
+        <motion.div
+          key="growth"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="space-y-6"
+        >
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <Award className="w-5 h-5 text-brand-400" /> Growth & Rewards
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              { label: 'Referrals', desc: 'Invite friends & earn rewards', path: '/dashboard/referrals', icon: Award, color: 'from-brand-500 to-purple-600' },
+              { label: 'Leaderboard', desc: 'See top creators', path: '/dashboard/leaderboard', icon: TrendingUp, color: 'from-yellow-500 to-orange-600' },
+              { label: 'Badges', desc: 'Collect achievements', path: '/dashboard/badges', icon: Award, color: 'from-purple-500 to-pink-600' },
+              { label: 'Trending', desc: 'Popular tools right now', path: '/trending', icon: Flame, color: 'from-orange-500 to-red-600' },
+            ].map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-brand-500/30 hover:bg-brand-500/5 transition-all group"
+              >
+                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-3 shadow-lg`}>
+                  <item.icon className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-sm font-bold text-white group-hover:text-brand-400 transition-colors">{item.label}</h3>
+                <p className="text-xs text-white/40 mt-1">{item.desc}</p>
+              </Link>
             ))}
           </div>
         </motion.div>

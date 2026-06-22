@@ -164,6 +164,13 @@ const CheckoutModal = lazy(() => import('./components/CheckoutModal'));
 const NewsletterPopup = lazy(() => import('./components/Newsletter').then(m => ({ default: m.NewsletterPopup })));
 const ExitIntentPopup = lazy(() => import('./components/Newsletter').then(m => ({ default: m.ExitIntentPopup })));
 
+// Growth
+const ReferralRedirect = lazy(() => import('./components/growth/ReferralRedirect'));
+const ReferralDashboard = lazy(() => import('./components/growth/ReferralDashboard'));
+const LeaderboardPage = lazy(() => import('./components/growth/LeaderboardPage'));
+const BadgesPage = lazy(() => import('./components/growth/BadgesPage'));
+const TrendingPage = lazy(() => import('./components/growth/TrendingPage'));
+
 type View = 'dashboard' | 'image-tools' | 'pdf-tools' | 'ai-tools' | 'finance-tools' | 'social-media-tools' | 'privacy-policy' | 'terms-of-service' | 'contact-us' | 'about' | 'blog';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -578,6 +585,13 @@ export default function App() {
 
                 {/* User Dashboard */}
                 <Route path="/dashboard/tools" element={<UserDashboard />} />
+
+                {/* Growth Routes */}
+                <Route path="/ref/:code" element={<ReferralRedirect />} />
+                <Route path="/dashboard/referrals" element={<ReferralDashboard />} />
+                <Route path="/dashboard/leaderboard" element={<LeaderboardPage />} />
+                <Route path="/dashboard/badges" element={<BadgesPage />} />
+                <Route path="/trending" element={<TrendingPage />} />
 
                 {/* Category Pages */}
                 <Route path="/category/:categoryId" element={<CategoryPage />} />

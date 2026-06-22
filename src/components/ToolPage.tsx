@@ -18,6 +18,7 @@ import { recordToolUse } from '../hooks/useRecentlyUsed';
 import { useFavorites } from '../hooks/useFavorites';
 import { recordToolUsage } from '../lib/trending';
 import { useToast } from './Toast';
+import SocialShare from './growth/SocialShare';
 
 const SITE_URL = SEO_CONFIG.siteUrl;
 
@@ -339,6 +340,37 @@ export default function ToolPage({ children, toolId, toolPath, faqItems, config 
                 <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-brand-500/10 via-transparent to-cyan-500/5 opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 <div className="relative">
                   {children}
+                </div>
+              </div>
+            </motion.section>
+
+            {/* ─── SHARE SECTION ─── */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="mb-12"
+            >
+              <div className="glass-card rounded-2xl p-6 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-500/20 to-transparent" />
+                <div className="absolute -top-20 -right-20 w-40 h-40 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center flex-shrink-0">
+                    <Share2 className="w-5 h-5 text-brand-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-bold text-white mb-1">Share this tool with others</h3>
+                    <p className="text-xs text-white/40">Help other creators discover {toolName}</p>
+                  </div>
+                  <SocialShare
+                    url={canonicalUrl}
+                    title={`Check out ${toolName} on CreatorBoost AI`}
+                    description={toolDescription || `Use ${toolName} online for free`}
+                    toolName={toolName}
+                    variant="compact"
+                    showLabel={false}
+                  />
                 </div>
               </div>
             </motion.section>
