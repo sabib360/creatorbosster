@@ -296,7 +296,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] lg:hidden"
+            className="fixed inset-0 bg-black/70 z-[60] lg:hidden"
             onClick={() => setIsSidebarOpen(false)}
             aria-hidden="true"
           />

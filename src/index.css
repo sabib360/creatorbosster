@@ -153,6 +153,8 @@
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .glass-strong {
@@ -160,6 +162,8 @@
   backdrop-filter: blur(40px) saturate(1.8);
   -webkit-backdrop-filter: blur(40px) saturate(1.8);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .glass-subtle {
@@ -167,6 +171,8 @@
   backdrop-filter: blur(12px) saturate(1.5);
   -webkit-backdrop-filter: blur(12px) saturate(1.5);
   border: 1px solid rgba(255, 255, 255, 0.04);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .glass-card {
@@ -174,6 +180,8 @@
   backdrop-filter: blur(24px) saturate(1.6);
   -webkit-backdrop-filter: blur(24px) saturate(1.6);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -378,6 +386,8 @@
   backdrop-filter: blur(20px) saturate(1.8);
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.4s;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .tool-card:hover {

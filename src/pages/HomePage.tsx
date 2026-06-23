@@ -30,7 +30,7 @@ export default function HomePage() {
           />
 
           {/* Main Description */}
-          <section className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8">
+          <section className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
             <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               Your Complete Creator Toolkit
             </h2>

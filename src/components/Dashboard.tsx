@@ -234,7 +234,7 @@ export default function Dashboard() {
                   searchFocused ? "glow-brand" : "shadow-2xl shadow-black/30"
                 )}>
                   <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-brand-500/30 via-cyan-500/10 to-brand-500/30 opacity-50" />
-                  <div className="relative flex items-center bg-[#0B1120]/90 backdrop-blur-xl rounded-2xl border border-white/[0.06]">
+                  <div className="relative flex items-center bg-[#0B1120]/90 rounded-2xl border border-white/[0.06]">
                     <Search className="absolute left-5 w-5 h-5 text-brand-400" />
                     <input
                       ref={searchRef}

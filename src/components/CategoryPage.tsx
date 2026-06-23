@@ -218,10 +218,11 @@ function ToolCard({ tool, index, category, showTrending }: { tool: ToolEntry; in
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.3 }}
+      style={{ transform: 'translate3d(0,0,0)' }}
     >
       <Link
         to={`/tools/${tool.slug}`}
-        className="group block p-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-primary/30 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-0.5 h-full"
+        className="group block p-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-primary/30 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-0.5 h-full will-change-transform"
       >
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${category.bg} group-hover:scale-110 transition-transform`}>

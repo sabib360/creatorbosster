@@ -52,7 +52,7 @@ export function ToolCategories() {
   return (
     <section className="space-y-8">
       {categories.map((category, index) => (
-        <div key={index} className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
+        <div key={index} className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 bg-gradient-to-br ${category.color} rounded-lg flex items-center justify-center text-xl`}>

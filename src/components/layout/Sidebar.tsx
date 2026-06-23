@@ -35,7 +35,7 @@ export function Sidebar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-[60] lg:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/70 z-[60] lg:hidden"
             onClick={() => setIsOpen(false)}
           />
         )}
@@ -43,7 +43,8 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-gray-950/95 backdrop-blur-xl border-r border-gray-800/60 z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+        className={`fixed top-0 left-0 h-screen w-64 bg-gray-950 border-r border-gray-800/60 z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+        style={{ WebkitBackdropFilter: 'none', backdropFilter: 'none' }}
         aria-label="Sidebar navigation"
       >
         {/* Logo */}
