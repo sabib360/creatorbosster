@@ -30,7 +30,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
     return (
       <Link
         to={`/tools/${tool.slug}`}
-        className="group relative overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-6 hover:border-primary/40 transition-all duration-300"
+        className="group relative overflow-hidden bg-primary/10 border border-primary/20 rounded-2xl p-6 hover:border-primary/40 transition-all duration-300"
       >
         <div className="flex items-start justify-between gap-2 mb-3">
           <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">

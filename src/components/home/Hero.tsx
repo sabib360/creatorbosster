@@ -9,7 +9,7 @@ const itemVariants = {
 export function Hero() {
   return (
     <section className="relative text-center py-12 sm:py-16">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent rounded-3xl" />
+      <div className="absolute inset-0 -z-10 bg-blue-500/5 rounded-3xl" />
       <motion.div variants={itemVariants} className="flex justify-center mb-6">
         <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/20">
           <Sparkles className="w-8 h-8 text-white fill-white" />
